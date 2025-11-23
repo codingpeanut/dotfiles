@@ -1,0 +1,6 @@
+[engine/chewing]
+cand-per-page=uint32 5
+chi-eng-mode-toggle='shift_l'
+show-page-number=true
+space-as-selection=false
+vertical-lookup-table=true

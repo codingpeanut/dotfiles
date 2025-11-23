@@ -1,0 +1,4 @@
+[/]
+current=uint32 0
+mru-sources=[('ibus', 'chewing'), ('xkb', 'us')]
+sources=[('ibus', 'chewing'), ('xkb', 'us')]
