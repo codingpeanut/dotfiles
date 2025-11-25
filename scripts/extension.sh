@@ -91,4 +91,3 @@ gnome-extensions enable clipboard-indicator@tudmotu.com
 
 echo "[✓] GNOME extensions installation completed!"
 echo "Restart GNOME Shell (Alt+F2 → r) or log out to apply the extensions."
-
