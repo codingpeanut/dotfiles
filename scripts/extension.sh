@@ -72,10 +72,22 @@ git clone https://github.com/metehan-arslan/gnome-compact-top-bar.git "$TMP_DIR"
 
 mkdir -p ~/.local/share/gnome-shell/extensions
 cp -r "$TMP_DIR/gnome-compact-top-bar@metehan-arslan.github.io" ~/.local/share/gnome-shell/extensions
-
 rm -rf "$TMP_DIR"
 
+# gnome-extensions enable gnome-compact-top-bar@metehan-arslan.github.io
+
 # =============================
+# Clipboard Indicator
+# =============================
+echo "[*] Installing Clipboard Indicator from source..."
+TMP_DIR="/tmp/clipboard-indicator"
+
+rm -rf "$TMP_DIR"
+git clone https://github.com/Tudmotu/gnome-shell-extension-clipboard-indicator.git "$TMP_DIR"
+make -C "$TMP_DIR" install
+rm -rf "$TMP_DIR"
+
+gnome-extensions enable clipboard-indicator@tudmotu.com
 
 echo "[✓] GNOME extensions installation completed!"
 echo "Restart GNOME Shell (Alt+F2 → r) or log out to apply the extensions."

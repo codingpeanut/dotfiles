@@ -35,4 +35,10 @@ if ! command -v code >/dev/null 2>&1; then
     sudo dnf install --user -y code
 fi
 
+# CopyQ
+if ! command -v copyq >/dev/null 2>&1; then
+    echo "[*] Installing CopyQ..."
+    sudo dnf install -y copyq
+fi
+
 echo "[✓] Application installation completed!"
