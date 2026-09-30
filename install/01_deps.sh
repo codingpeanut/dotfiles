@@ -21,6 +21,7 @@ if [[ "$OS_ID" == "fedora" ]]; then
     echo "[*] 正在啟用 Fedora COPR 專用軟體庫..."
     sudo dnf copr enable -y solopasha/hyprland || true
     sudo dnf copr enable -y errornointernet/quickshell || true
+    sudo dnf copr enable -y heus-sueh/packages || true
 
     sudo dnf install -y --skip-unavailable \
         gcc \
@@ -66,6 +67,8 @@ if [[ "$OS_ID" == "fedora" ]]; then
         google-noto-sans-cjk-vf-fonts \
         google-noto-cjk-fonts \
         jetbrains-mono-fonts \
+        cava \
+        matugen \
         chezmoi
 else
     # 預設為 Debian / Ubuntu 體系
@@ -111,6 +114,7 @@ else
         hypridle \
         fonts-noto-cjk \
         fonts-jetbrains-mono \
+        cava \
         chezmoi
 fi
 
