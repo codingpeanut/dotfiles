@@ -18,6 +18,7 @@ chmod +x "$DOTFILES_DIR"/install/*.sh
 "$DOTFILES_DIR/install/02_zram.sh"
 "$DOTFILES_DIR/install/03_build_quickshell.sh"
 "$DOTFILES_DIR/install/04_install_niri.sh"
+"$DOTFILES_DIR/install/05_install_keyd.sh"
 
 # 透過 Chezmoi 同步配置到使用者目錄
 echo "[*] 正在透過 Chezmoi 套用設定檔至 ~/.config..."
