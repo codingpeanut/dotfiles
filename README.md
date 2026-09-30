@@ -1,4 +1,4 @@
-# Niri + Quickshell 現代微透桌面 (Debian Testing)
+# Niri + Quickshell 現代微透桌面 (Debian / Fedora)
 
 專為 **Dell Latitude 7420 (Intel Iris Xe / 8GB RAM)** 主力開發機打造的高顏值、物理彈簧動態 Wayland 桌面環境。
 結合 **Niri** 的無限橫向視窗流動與 **Quickshell** 流暢的微透毛玻璃 (Glassmorphism) 介面，並完整支援 **Windows 肌肉記憶快捷鍵**。
@@ -91,7 +91,7 @@ dotfiles/
 │       ├── hyprlock.conf      # 桌面模糊快照鎖定畫面
 │       └── hypridle.conf      # 筆電閒置調光與休眠管理
 └── install/
-    ├── 01_debian_deps.sh      # Debian Testing 依賴安裝
+    ├── 01_deps.sh             # 系統依賴安裝 (自動適配 Debian / Fedora)
     ├── 02_zram.sh             # 8GB RAM zram 即時壓縮設定
     ├── 03_build_quickshell.sh # Quickshell 原始碼編譯腳本
     └── 04_install_niri.sh     # Niri 安裝與 Wayland Session 註冊

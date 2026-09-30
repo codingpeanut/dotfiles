@@ -7,14 +7,14 @@ set -euo pipefail
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 echo "=========================================================="
-echo " 開始建置 Niri + Quickshell 現代毛玻璃桌面 (Debian Testing)"
+echo " 開始建置 Niri + Quickshell 現代毛玻璃桌面"
 echo " 主機目標：Dell Latitude 7420 (8GB RAM / Intel Iris Xe)"
 echo "=========================================================="
 
 chmod +x "$DOTFILES_DIR"/install/*.sh
 
 # 執行安裝步驟
-"$DOTFILES_DIR/install/01_debian_deps.sh"
+"$DOTFILES_DIR/install/01_deps.sh"
 "$DOTFILES_DIR/install/02_zram.sh"
 "$DOTFILES_DIR/install/03_build_quickshell.sh"
 "$DOTFILES_DIR/install/04_install_niri.sh"
