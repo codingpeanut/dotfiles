@@ -1,12 +1,19 @@
 #!/usr/bin/env bash
 # =============================================================================
-# 03_build_quickshell.sh: 由原始碼編譯並安裝最新 Quickshell
+# 03_build_quickshell.sh: 安裝或編譯最新 Quickshell
 # =============================================================================
 set -euo pipefail
 
 echo "=========================================================="
-echo " [3/4] 編譯並安裝 Quickshell (QtQuick / QML Desktop Shell)"
+echo " [3/4] 檢查 / 編譯 Quickshell (QtQuick / QML Desktop Shell)"
 echo "=========================================================="
+
+# 如果系統已經透過 COPR 或套件庫安裝了 quickshell，直接跳過編譯
+if command -v quickshell >/dev/null 2>&1; then
+    echo "[-] 系統已成功安裝 Quickshell，跳過原始碼編譯！"
+    quickshell --version || true
+    exit 0
+fi
 
 BUILD_DIR="/tmp/quickshell_build"
 rm -rf "$BUILD_DIR"

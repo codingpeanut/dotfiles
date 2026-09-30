@@ -17,7 +17,12 @@ echo " [1/4] 安裝開發工具與 Wayland 基礎依賴 (系統: ${OS_ID})"
 echo "=========================================================="
 
 if [[ "$OS_ID" == "fedora" ]]; then
-    sudo dnf install -y \
+    # 啟用 Hyprland 生態 (hyprlock, hypridle) 與 Quickshell COPR 軟體庫
+    echo "[*] 正在啟用 Fedora COPR 專用軟體庫..."
+    sudo dnf copr enable -y solopasha/hyprland || true
+    sudo dnf copr enable -y errornointernet/quickshell || true
+
+    sudo dnf install -y --skip-unavailable \
         gcc \
         gcc-c++ \
         cmake \
@@ -57,6 +62,8 @@ if [[ "$OS_ID" == "fedora" ]]; then
         wlsunset \
         hyprlock \
         hypridle \
+        quickshell \
+        google-noto-sans-cjk-vf-fonts \
         google-noto-cjk-fonts \
         jetbrains-mono-fonts \
         chezmoi
