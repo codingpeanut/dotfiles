@@ -60,6 +60,12 @@ if [[ "$OS_ID" == "fedora" ]]; then
         nautilus \
         btop \
         fuzzel \
+        network-manager-applet \
+        blueman \
+        udiskie \
+        pavucontrol \
+        xdg-desktop-portal-gnome \
+        xdg-desktop-portal-gtk \
         swaybg \
         wlsunset \
         hyprlock \
@@ -109,6 +115,12 @@ else
         nautilus \
         btop \
         fuzzel \
+        network-manager-gnome \
+        blueman \
+        udiskie \
+        pavucontrol \
+        xdg-desktop-portal-gnome \
+        xdg-desktop-portal-gtk \
         swaybg \
         wlsunset \
         hyprlock \
