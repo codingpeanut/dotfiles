@@ -37,6 +37,7 @@ if [[ "$OS_ID" == "fedora" ]]; then
         qt6-qtdeclarative-devel \
         qt6-qtwayland-devel \
         qt6-qtsvg-devel \
+        qt6-qtmultimedia-devel \
         wayland-devel \
         wayland-protocols-devel \
         libxkbcommon-devel \
