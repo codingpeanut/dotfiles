@@ -1,0 +1,207 @@
+// =============================================================================
+// Niri 視窗管理配置 (Debian Testing + Dell Latitude 7420)
+// 主題風格：Catppuccin Mocha / Latte 微透毛玻璃
+// 操作邏輯：Windows 肌肉記憶快捷鍵 + 物理彈簧捲動
+// =============================================================================
+
+input {
+    keyboard {
+        xkb {
+            // 如需將 CapsLock 映射為 Escape 可取消註解：
+            // options "caps:escape"
+        }
+    }
+
+    touchpad {
+        tap
+        natural-scroll
+        accel-speed 0.2
+        click-method "clickfinger"
+        scroll-method "two-finger"
+    }
+
+    // 滑鼠設定
+    mouse {
+        accel-speed 0.0
+    }
+}
+
+// 螢幕輸出配置 (Dell Latitude 7420: 14" 1080p 螢幕)
+output "eDP-1" {
+    mode "1920x1080@60.000"
+    scale 1.0
+    transform "normal"
+    position x=0 y=0
+}
+
+layout {
+    // 視窗間距 (單位：像素)
+    gaps 12
+
+    // 視窗聚焦樣式 (Catppuccin Lavender 微發光)
+    focus-ring {
+        width 2
+        active-color "#b4befe"
+        inactive-color "#313244"
+    }
+
+    border {
+        off
+    }
+
+    // 預設欄位寬度：並排雙欄 (各佔 50%)
+    default-column-width { proportion 0.5; }
+
+    // 預設高度與比例
+    preset-column-widths {
+        proportion 0.33333
+        proportion 0.5
+        proportion 0.66667
+        proportion 1.0
+    }
+
+    // 為頂部懸浮島狀態列保留空間 (避免視窗被覆蓋)
+    struts {
+        top 46
+        left 8
+        right 8
+        bottom 8
+    }
+}
+
+// 物理彈簧動效設定 (極致絲滑 60/120fps 阻尼曲線)
+animations {
+    workspace-switch {
+        spring damping-ratio=1.0 stiffness=1000 epsilon=0.0001
+    }
+    horizontal-view-movement {
+        spring damping-ratio=0.95 stiffness=900 epsilon=0.0001
+    }
+    window-open {
+        spring damping-ratio=0.85 stiffness=850 epsilon=0.0001
+    }
+    window-close {
+        spring damping-ratio=0.9 stiffness=900 epsilon=0.0001
+    }
+    window-movement {
+        spring damping-ratio=0.95 stiffness=900 epsilon=0.0001
+    }
+}
+
+// 開機常駐服務
+spawn-at-startup "quickshell"
+spawn-at-startup "fcitx5" "-d"
+spawn-at-startup "hypridle"
+spawn-at-startup "swaybg" "-c" "#1e1e2e"
+spawn-at-startup "wl-paste" "--type" "text" "--watch" "cliphist" "store"
+spawn-at-startup "wl-paste" "--type" "image" "--watch" "cliphist" "store"
+
+// 視窗規則 (特殊程式浮動或居中)
+window-rule {
+    match app-id=r#"pavucontrol|blueman-manager|nm-connection-editor"#
+    open-floating true
+}
+
+window-rule {
+    match app-id=r#"org.gnome.Nautilus"#
+    default-column-width { proportion 0.6; }
+}
+
+// =============================================================================
+// 快捷鍵映射 (Windows 肌肉記憶相容)
+// =============================================================================
+binds {
+    // ---------------------------------------------------------
+    // 1. Windows 核心習慣快捷鍵
+    // ---------------------------------------------------------
+    // Win 或 Win+Space：開啟 Spotlight 居中搜尋 / 啟動器
+    Mod+Space { spawn "quickshell" "ipc" "call" "launcher" "toggle"; }
+
+    // Win+Shift+S：Windows 剪取工具風格區域截圖 (複製至剪貼簿並發送通知)
+    Mod+Shift+S { spawn "sh" "-c" "grim -g \"$(slurp)\" - | wl-copy && notify-send -a '系統截圖' '截圖完成' '已將選取範圍儲存至剪貼簿'"; }
+
+    // Win+L：鎖定螢幕 (呼叫 Hyprlock)
+    Mod+L { spawn "hyprlock"; }
+
+    // Win+E：開啟檔案管理員
+    Mod+E { spawn "nautilus"; }
+
+    // Win+V：剪貼簿歷史選單
+    Mod+V { spawn "sh" "-c" "cliphist list | fuzzel --dmenu --prompt '📋 剪貼簿 > ' | cliphist decode | wl-copy"; }
+
+    // Ctrl+Shift+Esc：開啟工作管理員 (Kitty + btop)
+    Ctrl+Shift+Escape { spawn "kitty" "-e" "btop"; }
+
+    // Alt+Tab：視窗循環切換
+    Alt+Tab { focus-window-down-or-column-right; }
+
+    // Alt+F4 或 Win+Q：關閉當前視窗
+    Alt+F4 { close-window; }
+    Mod+Q { close-window; }
+
+    // Win+Enter 或 Win+T：快速開啟終端機
+    Mod+Return { spawn "kitty"; }
+    Mod+T { spawn "kitty"; }
+
+    // ---------------------------------------------------------
+    // 2. 視窗導航與分欄切換 (支援方向鍵與 Vim HJKL)
+    // ---------------------------------------------------------
+    Mod+Left  { focus-column-left; }
+    Mod+Right { focus-column-right; }
+    Mod+H     { focus-column-left; }
+    Mod+L     { focus-column-right; }
+    Mod+Up    { focus-window-up; }
+    Mod+Down  { focus-window-down; }
+    Mod+K     { focus-window-up; }
+    Mod+J     { focus-window-down; }
+
+    // Win+Up (最大化目前視窗欄位) 與 Win+Down (重設/還原視窗)
+    Mod+F     { maximize-column; }
+    Mod+M     { maximize-column; }
+    Mod+R     { reset-window-height; }
+
+    // 欄位移動 (Win+Shift + 方向鍵 / HJKL)
+    Mod+Shift+Left  { move-column-left; }
+    Mod+Shift+Right { move-column-right; }
+    Mod+Shift+H     { move-column-left; }
+    Mod+Shift+L     { move-column-right; }
+
+    // 欄位寬度調整
+    Mod+Minus { set-column-width "-10%"; }
+    Mod+Equal { set-column-width "+10%"; }
+
+    // ---------------------------------------------------------
+    // 3. 虛擬工作區切換
+    // ---------------------------------------------------------
+    Mod+Ctrl+Left  { focus-workspace-up; }
+    Mod+Ctrl+Right { focus-workspace-down; }
+    Mod+Page_Up    { focus-workspace-up; }
+    Mod+Page_Down  { focus-workspace-down; }
+    Mod+Shift+Page_Up   { move-column-to-workspace-up; }
+    Mod+Shift+Page_Down { move-column-to-workspace-down; }
+
+    // 數字鍵直達工作區
+    Mod+1 { focus-workspace 1; }
+    Mod+2 { focus-workspace 2; }
+    Mod+3 { focus-workspace 3; }
+    Mod+4 { focus-workspace 4; }
+    Mod+5 { focus-workspace 5; }
+    Mod+Shift+1 { move-column-to-workspace 1; }
+    Mod+Shift+2 { move-column-to-workspace 2; }
+    Mod+Shift+3 { move-column-to-workspace 3; }
+    Mod+Shift+4 { move-column-to-workspace 4; }
+    Mod+Shift+5 { move-column-to-workspace 5; }
+
+    // ---------------------------------------------------------
+    // 4. 筆電 Fn 多媒體按鍵 (Dell Latitude 7420)
+    // ---------------------------------------------------------
+    XF86AudioRaiseVolume allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"; }
+    XF86AudioMute        allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
+    XF86AudioMicMute     allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"; }
+    XF86MonBrightnessUp   allow-when-locked=true { spawn "brightnessctl" "set" "+5%"; }
+    XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "set" "5%-"; }
+
+    // 登出 Niri
+    Mod+Shift+E { quit; }
+}

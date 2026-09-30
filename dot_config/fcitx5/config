@@ -1,0 +1,25 @@
+[Hotkey]
+# 切換中英文快捷鍵 (符合 Windows 習慣)
+EnumerateWithTriggerKeys=True
+EnumerateSkipFirst=False
+
+[Hotkey/TriggerKeys]
+0=Control+space
+1=Shift_L
+
+[Hotkey/AltTriggerKeys]
+0=Shift_R
+
+[Hotkey/EnumerateForwardKeys]
+0=Control+Shift_L
+
+[Hotkey/EnumerateBackwardKeys]
+0=Control+Shift_R
+
+[Behavior]
+# 作用中的輸入法在不同視窗間保持獨立或全域
+ShareInputState=No
+ShowInputMethodInformation=True
+ShowInputMethodInformationWhenFocusIn=False
+CompactInputMethodInformation=True
+ShowFirstInputMethodInformation=True

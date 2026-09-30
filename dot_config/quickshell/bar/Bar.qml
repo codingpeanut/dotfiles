@@ -1,0 +1,295 @@
+import QtQuick
+import QtQuick.Layouts
+import Quickshell
+import Quickshell.Wayland
+import Quickshell.Io
+import "../theme"
+
+PanelWindow {
+    id: barWindow
+
+    // 訊號與控制
+    signal toggleControlCenter()
+    signal openLauncher()
+
+    anchors {
+        top: true
+        left: true
+        right: true
+    }
+
+    height: 44
+    color: "transparent"
+
+    WlrLayershell.layer: WlrLayer.Top
+    WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
+
+    // 週期定時器 (時鐘與系統狀態)
+    Timer {
+        interval: 1000
+        running: true
+        repeat: true
+        onTriggered: {
+            currentTime = Qt.formatDateTime(new Date(), "hh:mm");
+            currentDate = Qt.formatDateTime(new Date(), "M月d日 ddd");
+        }
+    }
+
+    property string currentTime: Qt.formatDateTime(new Date(), "hh:mm")
+    property string currentDate: Qt.formatDateTime(new Date(), "M月d日 ddd")
+
+    // 8GB 記憶體與電池監視
+    property int memPercent: 35
+    property int batteryPercent: 85
+    property bool isCharging: false
+    property string activeWindowTitle: "Ready"
+
+    // 讀取記憶體狀態
+    Process {
+        id: memProcess
+        command: ["sh", "-c", "free | awk '/Mem:/ {printf(\"%.0f\", $3/$2 * 100)}'"]
+        running: true
+        stdout: SplitParser {
+            onRead: data => {
+                let val = parseInt(data.trim());
+                if (!isNaN(val)) barWindow.memPercent = val;
+            }
+        }
+    }
+
+    Timer {
+        interval: 3000
+        running: true
+        repeat: true
+        onTriggered: memProcess.running = true
+    }
+
+    // 讀取筆電電池狀態 (Dell Latitude 7420)
+    Process {
+        id: batProcess
+        command: ["sh", "-c", "cat /sys/class/power_supply/BAT*/capacity 2>/dev/null | head -n1; cat /sys/class/power_supply/BAT*/status 2>/dev/null | head -n1"]
+        running: true
+        stdout: SplitParser {
+            property int lineCount: 0
+            onRead: data => {
+                let trimmed = data.trim();
+                if (lineCount === 0) {
+                    let val = parseInt(trimmed);
+                    if (!isNaN(val)) barWindow.batteryPercent = val;
+                    lineCount++;
+                } else {
+                    barWindow.isCharging = (trimmed === "Charging");
+                    lineCount = 0;
+                }
+            }
+        }
+    }
+
+    Timer {
+        interval: 5000
+        running: true
+        repeat: true
+        onTriggered: batProcess.running = true
+    }
+
+    // 頂部懸浮島容器
+    Item {
+        anchors.fill: parent
+        anchors.topMargin: 6
+        anchors.leftMargin: 12
+        anchors.rightMargin: 12
+
+        // =========================================================
+        // 左側島：開始功能表、工作區膠囊與視窗標題
+        // =========================================================
+        Rectangle {
+            id: leftIsland
+            anchors.left: parent.left
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            width: leftRow.implicitWidth + 24
+            radius: Colors.cornerRadius
+            color: Colors.glassBackground
+            border.color: Colors.glassBorder
+            border.width: 1
+
+            RowLayout {
+                id: leftRow
+                anchors.centerIn: parent
+                spacing: 10
+
+                // 啟動器按鈕 (Windows Start 標誌)
+                Rectangle {
+                    width: 26
+                    height: 26
+                    radius: Colors.cornerRadiusSmall
+                    color: startMouse.containsMouse ? Colors.glassCardHover : "transparent"
+
+                    Text {
+                        anchors.centerIn: parent
+                        text: "❖"
+                        font.pixelSize: 15
+                        color: Colors.lavender
+                    }
+
+                    MouseArea {
+                        id: startMouse
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: barWindow.openLauncher()
+                    }
+                }
+
+                // 工作區膠囊指示點
+                Row {
+                    spacing: 5
+                    Repeater {
+                        model: 4
+                        Rectangle {
+                            width: index === 0 ? 18 : 8
+                            height: 8
+                            radius: 4
+                            color: index === 0 ? Colors.lavender : Colors.surface1
+                            Behavior on width { NumberAnimation { duration: 200; easing.type: Easing.OutQuad } }
+                        }
+                    }
+                }
+            }
+        }
+
+        // =========================================================
+        // 中央島：時鐘與日曆
+        // =========================================================
+        Rectangle {
+            id: centerIsland
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            width: centerRow.implicitWidth + 28
+            radius: Colors.cornerRadius
+            color: Colors.glassBackground
+            border.color: Colors.glassBorder
+            border.width: 1
+
+            RowLayout {
+                id: centerRow
+                anchors.centerIn: parent
+                spacing: 8
+
+                Text {
+                    text: barWindow.currentTime
+                    font.pixelSize: 13
+                    font.weight: Font.DemiBold
+                    color: Colors.text
+                }
+
+                Rectangle {
+                    width: 4
+                    height: 4
+                    radius: 2
+                    color: Colors.lavender
+                }
+
+                Text {
+                    text: barWindow.currentDate
+                    font.pixelSize: 12
+                    color: Colors.subtext
+                }
+            }
+        }
+
+        // =========================================================
+        // 右側島：8GB RAM 監視、電池、Wi-Fi 與控制中心觸發
+        // =========================================================
+        Rectangle {
+            id: rightIsland
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            width: rightRow.implicitWidth + 20
+            radius: Colors.cornerRadius
+            color: Colors.glassBackground
+            border.color: Colors.glassBorder
+            border.width: 1
+
+            RowLayout {
+                id: rightRow
+                anchors.centerIn: parent
+                spacing: 12
+
+                // 8GB RAM 膠囊警告
+                Row {
+                    spacing: 4
+                    Text {
+                        text: "RAM"
+                        font.pixelSize: 10
+                        font.bold: true
+                        color: barWindow.memPercent > 85 ? Colors.red : Colors.subtext
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                    Text {
+                        text: barWindow.memPercent + "%"
+                        font.pixelSize: 11
+                        font.weight: Font.Medium
+                        color: barWindow.memPercent > 85 ? Colors.red : Colors.text
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                }
+
+                Rectangle {
+                    width: 1
+                    height: 14
+                    color: Colors.surface1
+                }
+
+                // 筆電電池電量 (含充電圖示)
+                Row {
+                    spacing: 4
+                    Text {
+                        text: barWindow.isCharging ? "⚡" : "🔋"
+                        font.pixelSize: 12
+                        color: barWindow.isCharging ? Colors.yellow : Colors.green
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                    Text {
+                        text: barWindow.batteryPercent + "%"
+                        font.pixelSize: 11
+                        font.weight: Font.Medium
+                        color: Colors.text
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                }
+
+                Rectangle {
+                    width: 1
+                    height: 14
+                    color: Colors.surface1
+                }
+
+                // 控制中心按鈕
+                Rectangle {
+                    width: 26
+                    height: 26
+                    radius: Colors.cornerRadiusSmall
+                    color: ccMouse.containsMouse ? Colors.glassCardHover : "transparent"
+
+                    Text {
+                        anchors.centerIn: parent
+                        text: "⚙"
+                        font.pixelSize: 14
+                        color: Colors.lavender
+                    }
+
+                    MouseArea {
+                        id: ccMouse
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: barWindow.toggleControlCenter()
+                    }
+                }
+            }
+        }
+    }
+}
