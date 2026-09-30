@@ -1,6 +1,5 @@
 import QtQuick
 import Quickshell
-import Quickshell.Io
 import "theme"
 import "bar"
 import "controlcenter"
@@ -45,11 +44,15 @@ ShellRoot {
     // 支援 IPC 呼叫切換啟動器或控制中心 (供 Niri 快捷鍵使用)
     IpcHandler {
         target: "launcher"
-        function toggle(): void { spotlightLauncher.toggle(); }
+        onMessage: {
+            spotlightLauncher.toggle();
+        }
     }
 
     IpcHandler {
         target: "controlcenter"
-        function toggle(): void { controlCenter.isOpen = !controlCenter.isOpen; }
+        onMessage: {
+            controlCenter.isOpen = !controlCenter.isOpen;
+        }
     }
 }

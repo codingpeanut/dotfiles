@@ -14,6 +14,7 @@ PanelWindow {
 
     anchors {
         top: true
+        horizontalCenter: true
     }
 
     margins.top: 60
