@@ -154,6 +154,7 @@ PanelWindow {
         property alias text: label.text
         property alias textColor: label.color
         color: "transparent"
+        height: parent.height
         width: label.implicitWidth + 20
         Text {
             id: label
