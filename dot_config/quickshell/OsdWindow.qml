@@ -11,24 +11,10 @@ PanelWindow {
     margins.bottom: 100
     width: 250
     height: 50
-    color: Qt.rgba(43/255, 48/255, 59/255, 0.9)
-    visible: opacity > 0
-    opacity: 0
+    color: "transparent"
     
-    Behavior on opacity {
-        NumberAnimation { duration: 200 }
-    }
-
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
-
-    Rectangle {
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        height: 3
-        color: Qt.rgba(100/255, 114/255, 125/255, 0.5)
-    }
 
     property int volume: 50
     property string volumeIcon: ""
@@ -36,7 +22,7 @@ PanelWindow {
     Timer {
         id: hideTimer
         interval: 2000
-        onTriggered: osd.opacity = 0
+        onTriggered: content.opacity = 0
     }
 
     Process {
@@ -59,7 +45,7 @@ PanelWindow {
                         else if (vol > 0) osd.volumeIcon = ""
                         else osd.volumeIcon = ""
                         
-                        osd.opacity = 1
+                        content.opacity = 1
                         hideTimer.restart()
                     }
                 }
@@ -67,32 +53,48 @@ PanelWindow {
         }
     }
 
-    Row {
+    Rectangle {
+        id: content
         anchors.fill: parent
-        anchors.leftMargin: 15
-        anchors.rightMargin: 15
-        spacing: 15
-
-        Text {
-            text: osd.volumeIcon
-            color: "#f1c40f"
-            font.family: "JetBrainsMono Nerd Font"
-            font.pixelSize: 18
-            anchors.verticalCenter: parent.verticalCenter
-        }
+        color: Qt.rgba(43/255, 48/255, 59/255, 0.9)
+        opacity: 0
+        Behavior on opacity { NumberAnimation { duration: 200 } }
 
         Rectangle {
-            width: 170
-            height: 10
-            color: "#1e2229"
-            radius: 5
-            anchors.verticalCenter: parent.verticalCenter
-            
-            Rectangle {
-                width: Math.min(parent.width, parent.width * (osd.volume / 100))
-                height: parent.height
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 3
+            color: Qt.rgba(100/255, 114/255, 125/255, 0.5)
+        }
+
+        Row {
+            anchors.fill: parent
+            anchors.leftMargin: 15
+            anchors.rightMargin: 15
+            spacing: 15
+
+            Text {
+                text: osd.volumeIcon
                 color: "#f1c40f"
+                font.family: "JetBrainsMono Nerd Font"
+                font.pixelSize: 18
+                anchors.verticalCenter: parent.verticalCenter
+            }
+
+            Rectangle {
+                width: 170
+                height: 10
+                color: "#1e2229"
                 radius: 5
+                anchors.verticalCenter: parent.verticalCenter
+                
+                Rectangle {
+                    width: Math.min(parent.width, parent.width * (osd.volume / 100))
+                    height: parent.height
+                    color: "#f1c40f"
+                    radius: 5
+                }
             }
         }
     }
