@@ -60,6 +60,7 @@ if [[ "$OS_ID" == "fedora" ]]; then
         nautilus \
         btop \
         fuzzel \
+        waybar \
         network-manager-applet \
         blueman \
         udiskie \
@@ -115,6 +116,7 @@ else
         nautilus \
         btop \
         fuzzel \
+        waybar \
         network-manager-gnome \
         blueman \
         udiskie \
