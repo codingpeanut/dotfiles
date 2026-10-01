@@ -152,14 +152,14 @@ PanelWindow {
         property alias text: label.text
         property alias textColor: label.color
         color: "transparent"
-        height: 30
-        width: label.width + 20
+        width: label.implicitWidth + 20
         Text {
             id: label
             anchors.centerIn: parent
             font.family: "JetBrainsMono Nerd Font"
             font.pixelSize: 13
             color: "#ffffff"
+            renderType: Text.NativeRendering
         }
     }
 
@@ -170,17 +170,19 @@ PanelWindow {
             anchors.left: parent.left
             anchors.top: parent.top
             anchors.bottom: parent.bottom
+            anchors.leftMargin: 4
+            anchors.bottomMargin: 3 // Don't cover bottom border
             spacing: 4
             
             Repeater {
                 model: bar.workspaces
                 Rectangle {
-                    height: 30
-                    width: wsText.width + 10
+                    height: parent.height
+                    width: wsText.implicitWidth + 10
                     color: modelData.is_focused ? "#64727D" : "transparent"
                     
                     Rectangle {
-                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom // Line at bottom!
                         anchors.left: parent.left
                         anchors.right: parent.right
                         height: 3
@@ -194,6 +196,7 @@ PanelWindow {
                         font.family: "JetBrainsMono Nerd Font"
                         font.pixelSize: 13
                         anchors.centerIn: parent
+                        renderType: Text.NativeRendering
                     }
 
                     MouseArea {
@@ -214,12 +217,16 @@ PanelWindow {
             font.pixelSize: 13
             elide: Text.ElideRight
             width: Math.min(implicitWidth, 400)
+            renderType: Text.NativeRendering
+            // Don't shift up by bottomMargin so it remains truly centered in the 30px bar
         }
 
         Row {
             anchors.right: parent.right
             anchors.top: parent.top
             anchors.bottom: parent.bottom
+            anchors.rightMargin: 4
+            anchors.bottomMargin: 3 // Don't cover bottom border
             spacing: 4
 
             Module {
