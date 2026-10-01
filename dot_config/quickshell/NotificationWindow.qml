@@ -80,7 +80,7 @@ PanelWindow {
                 id: titleText
                 text: nTitle
                 color: "#ffffff"
-                font.family: "Noto Sans Mono, JetBrainsMono Nerd Font"
+                font.family: "JetBrainsMono Nerd Font"
                 font.pixelSize: 13
                 font.bold: true
                 anchors.top: parent.top
@@ -94,7 +94,7 @@ PanelWindow {
                 id: bodyText
                 text: nBody
                 color: "#dddddd"
-                font.family: "Noto Sans Mono"
+                font.family: "JetBrainsMono Nerd Font"
                 font.pixelSize: 12
                 wrapMode: Text.Wrap
                 anchors.top: titleText.bottom

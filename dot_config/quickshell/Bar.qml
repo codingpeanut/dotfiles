@@ -157,7 +157,7 @@ PanelWindow {
         Text {
             id: label
             anchors.centerIn: parent
-            font.family: "Noto Sans Mono, JetBrainsMono Nerd Font"
+            font.family: "JetBrainsMono Nerd Font"
             font.pixelSize: 13
             color: "#ffffff"
         }
@@ -191,7 +191,7 @@ PanelWindow {
                         id: wsText
                         text: modelData.name ? modelData.name : modelData.id
                         color: "#ffffff"
-                        font.family: "Noto Sans Mono, JetBrainsMono Nerd Font"
+                        font.family: "JetBrainsMono Nerd Font"
                         font.pixelSize: 13
                         anchors.centerIn: parent
                     }
@@ -199,7 +199,7 @@ PanelWindow {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            var proc = Qt.createQmlObject('import Quickshell.Io; Process { command: ["niri", "msg", "action", "focus-workspace", "'+modelData.id+'"]; running: true }', bar)
+                            var proc = Qt.createQmlObject('import QtQuick; import Quickshell.Io; Process { command: ["niri", "msg", "action", "focus-workspace", "'+modelData.id+'"]; running: true }', bar)
                         }
                     }
                 }
@@ -210,7 +210,7 @@ PanelWindow {
             anchors.centerIn: parent
             text: bar.windowTitle
             color: "#ffffff"
-            font.family: "Noto Sans Mono, JetBrainsMono Nerd Font"
+            font.family: "JetBrainsMono Nerd Font"
             font.pixelSize: 13
             elide: Text.ElideRight
             width: Math.min(implicitWidth, 400)
