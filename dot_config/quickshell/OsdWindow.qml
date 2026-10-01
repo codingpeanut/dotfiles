@@ -48,11 +48,10 @@ PanelWindow {
             done
         "]
         running: true
-        onStdout: (data) => {
-            var lines = data.split('\\n')
-            for (var i=0; i<lines.length; i++) {
-                if (lines[i].trim().length > 0) {
-                    var vol = parseInt(lines[i].trim())
+        stdout: SplitParser {
+            onRead: data => {
+                if (data.trim().length > 0) {
+                    var vol = parseInt(data.trim())
                     if (!isNaN(vol)) {
                         osd.volume = vol
                         if (vol > 60) osd.volumeIcon = ""

@@ -52,10 +52,9 @@ PanelWindow {
             done
         "]
         running: true
-        onStdout: (data) => {
-            var lines = data.split('\n')
-            for (var i = 0; i < lines.length; i++) {
-                var line = lines[i]
+        stdout: SplitParser {
+            onRead: data => {
+                var line = data
                 if (line.startsWith("WS:")) {
                     try {
                         bar.workspaces = JSON.parse(line.substring(3))
@@ -119,10 +118,9 @@ PanelWindow {
             done
         "]
         running: true
-        onStdout: (data) => {
-            var lines = data.split('\n')
-            for (var i = 0; i < lines.length; i++) {
-                var line = lines[i]
+        stdout: SplitParser {
+            onRead: data => {
+                var line = data
                 if (line.startsWith("MEM:")) bar.memText = line.substring(4)
                 else if (line.startsWith("TMP:")) bar.tempText = line.substring(4)
                 else if (line.startsWith("BAT:")) {
