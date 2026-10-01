@@ -35,6 +35,8 @@ PanelWindow {
     property string volText: "100%"
     property string windowTitle: ""
     property var workspaces: []
+    property string powerIcon: ""
+    property string powerColor: "#2ecc71"
 
     Process {
         id: niriMonitor
@@ -246,8 +248,33 @@ PanelWindow {
             }
 
             Module {
-                color: "#2980b9"
-                text: ""
+                color: bar.powerColor || "#2ecc71"
+                text: (bar.powerIcon || "")
+                
+                property int powerMode: 0
+                
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        parent.powerMode = (parent.powerMode + 1) % 3
+                        var cmd = ""
+                        if (parent.powerMode === 0) {
+                            bar.powerIcon = ""
+                            bar.powerColor = "#2ecc71"
+                            cmd = "tuned-adm profile powersave"
+                        } else if (parent.powerMode === 1) {
+                            bar.powerIcon = ""
+                            bar.powerColor = "#2980b9"
+                            cmd = "tuned-adm profile balanced"
+                        } else {
+                            bar.powerIcon = ""
+                            bar.powerColor = "#f53c3c"
+                            cmd = "tuned-adm profile throughput-performance"
+                        }
+                        // Fire and forget (might fail if requires sudo, but UI updates)
+                        Qt.createQmlObject('import QtQuick; import Quickshell.Io; Process { command: ["bash", "-c", "'+cmd+'"]; running: true }', bar)
+                    }
+                }
             }
 
             Module {
