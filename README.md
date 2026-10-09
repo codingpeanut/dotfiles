@@ -32,9 +32,9 @@
 | <kbd>Win</kbd> 或 <kbd>Win</kbd> + <kbd>Space</kbd> | 開啟 / 關閉 居中搜尋啟動器 | Noctalia Spotlight 搜尋列 |
 | <kbd>Win</kbd> + <kbd>A</kbd> | 開啟快速設定 / 控制中心 | 整合電源模式、防睡眠、音量與亮度 |
 | <kbd>Win</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> | 區域截圖 (Windows 剪取工具風格) | Noctalia 內建標註編輯器與複製 |
-| <kbd>Win</kbd> + <kbd>L</kbd> | 鎖定電腦螢幕 | 呼叫 PAM 級 Hyprlock |
+| <kbd>Win</kbd> + <kbd>Alt</kbd> + <kbd>L</kbd> | 鎖定電腦螢幕 | 呼叫 Swaylock 安全鎖屏 |
 | <kbd>Win</kbd> + <kbd>E</kbd> | 開啟檔案管理員 (Nautilus) | GNOME Files |
-| <kbd>Win</kbd> + <kbd>V</kbd> | 剪貼簿歷史選單 | Noctalia 浮動歷史選單 |
+| <kbd>Win</kbd> + <kbd>Ctrl</kbd> + <kbd>V</kbd> | 剪貼簿歷史選單 | Noctalia 浮動歷史選單 / cliphist |
 | <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Esc</kbd> | 開啟工作管理員 (btop) | 系統負載即時監控 |
 | <kbd>Alt</kbd> + <kbd>Tab</kbd> | 視窗 3D 景深循環切換 | 焦點輪換 |
 | <kbd>Alt</kbd> + <kbd>F4</kbd> 或 <kbd>Win</kbd> + <kbd>Q</kbd> | 關閉當前視窗 | 關閉視窗 |
@@ -72,23 +72,21 @@ just push     # 提交並推送最新修改至 GitHub
 dotfiles/
 ├── Justfile                  # 常用任務界面 (just stow, just reload, just fix...)
 ├── README.md                 # 說明文件
-├── .gitignore                # Git 忽略設定
 │
 ├── ansible/                  # 宣告式系統套件與配置自動化
 ├── scripts/                  # 系統工具與引導安裝腳本
 │
 └── stow/                     # 按應用模組化的 GNU Stow 配置
     ├── niri/                 # Niri 視窗管理器 (~/.config/niri/config.kdl)
-    ├── noctalia/             # Noctalia 現代桌面外殼 (~/.config/noctalia/config.toml)
-    ├── waybar/               # Waybar 頂部狀態列 (備用/原生狀態列)
-    ├── mako/                 # Mako 桌面通知
+    ├── noctalia/             # Noctalia 現代桌面外殼 (~/.config/noctalia/config.toml - 模擬 Waybar 外觀)
+    ├── waybar/               # Waybar 狀態列 (備用/原生狀態列)
+    ├── mako/                 # Mako 桌面通知 (備用)
     ├── kitty/                # Kitty 終端機 (Tokyo Night 深色微透主題)
-    ├── fuzzel/               # Fuzzel 輕量 App 啟動器
+    ├── fuzzel/               # Fuzzel 輕量 App 啟動器 (備用)
     ├── wlogout/              # Wlogout 圓形按鈕開關機選單
     ├── fcitx5/               # Fcitx5 輸入法與新酷音注音配置
     ├── nvim/                 # Neovim (init.lua) 與 Vim (.vimrc)
     ├── starship/             # Starship 跨 Shell 終端 Prompt
     ├── bash/                 # Shell 環境、alias 與桌面輔助腳本 (~/.local/bin)
-    ├── hypr/                 # Hyprlock (毛玻璃鎖定) 與 Hypridle (閒置管理)
     └── xdg-desktop-portal/   # Wayland 桌面入口協議與螢幕分享設定
 ```

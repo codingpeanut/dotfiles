@@ -98,8 +98,8 @@ def get_target_directories():
     candidates = [
         home / ".config" / "fcitx5",
         home / ".config" / "fcitx5" / "conf",
-        home / "dev" / "dotfiles-fedora" / "stow" / "fcitx5" / ".config" / "fcitx5",
-        home / "dev" / "dotfiles-fedora" / "stow" / "fcitx5" / ".config" / "fcitx5" / "conf",
+        home / "dev" / "dotfiles" / "stow" / "fcitx5" / ".config" / "fcitx5",
+        home / "dev" / "dotfiles" / "stow" / "fcitx5" / ".config" / "fcitx5" / "conf",
     ]
     return [p for p in candidates if p.exists() and p.is_dir()]
 

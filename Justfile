@@ -79,17 +79,15 @@ pull:
     @just reload
     @echo "==> All dotfiles synced, stowed, and reloaded successfully!"
 
-# Reload running desktop components (Niri, Waybar, Mako, Fcitx5, Noctalia)
+# Reload running desktop components (Niri, Noctalia, Fcitx5)
 reload:
     @echo "==> Reloading Niri compositor configuration..."
     @(niri msg action reload-config 2>/dev/null || true)
-    @echo "==> Restarting Waybar, Mako, and Noctalia..."
+    @echo "==> Restarting Noctalia shell..."
     @(killall blueman-applet 2>/dev/null || true)
-    @(killall waybar 2>/dev/null || true)
     @(killall noctalia 2>/dev/null || true)
     @sleep 0.3
-    @(nohup waybar >/dev/null 2>&1 &)
-    @(nohup mako >/dev/null 2>&1 &)
+    @(nohup noctalia >/dev/null 2>&1 &)
     @echo "==> Reloading Fcitx5 configuration..."
     @(fcitx5-remote -r 2>/dev/null || true)
 
@@ -126,7 +124,7 @@ fix:
     @just stow
     @just reload
     @just check
-    @echo "==> All dotfiles, dependencies, and Waybar/Mako have been fixed and reloaded!"
+    @echo "==> All dotfiles, dependencies, and Noctalia/desktop have been fixed and reloaded!"
 
 # One-command commit & push local changes to GitHub
 push msg="chore: update dotfiles":
@@ -151,7 +149,7 @@ edit app="niri":
 # Check all desktop, CLI, and Wayland dependencies
 check:
     @echo "==> Checking system dependencies..."
-    @for cmd in niri waybar kitty fuzzel mako btop nmtui nm-connection-editor nm-applet gnome-control-center nmgui pavucontrol gnome-calendar swaylock swayidle brightnessctl ddcutil playerctl wl-paste cliphist fcitx5 notify-send fzf blueman-manager wlogout powerprofilesctl; do \
+    @for cmd in niri noctalia waybar kitty fuzzel mako btop nmtui nm-connection-editor nm-applet gnome-control-center nmgui pavucontrol gnome-calendar swaylock swayidle brightnessctl ddcutil playerctl wl-paste cliphist fcitx5 notify-send fzf blueman-manager wlogout powerprofilesctl; do \
         if command -v "$cmd" >/dev/null 2>&1; then \
             printf "  [✓] %-24s found (%s)\n" "$cmd" "$(command -v "$cmd")"; \
         else \

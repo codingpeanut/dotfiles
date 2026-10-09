@@ -14,12 +14,12 @@ environment {
 // -----------------------------------------------------------------------------
 // Auto-start Services & Daemons
 // -----------------------------------------------------------------------------
-// Status bar & notification daemon
-spawn-at-startup "waybar"
-spawn-at-startup "mako"
+// Desktop Shell: Noctalia (Modern Wayland Desktop Shell)
+spawn-at-startup "noctalia"
 
-// Caelestia Shell (Quickshell adaptation - disabled for now)
-// spawn-at-startup "quickshell" "-c" "niri-caelestia-shell" "-n"
+// Fallback status bar & notification daemon (Waybar + Mako)
+// spawn-at-startup "waybar"
+// spawn-at-startup "mako"
 
 spawn-at-startup "fcitx5" "-d" "-r"
 spawn-at-startup "fcitx5-watcher"
@@ -405,7 +405,7 @@ binds {
     // Floating window layout
     Mod+V       { toggle-window-floating; }
     Mod+Shift+V { switch-focus-between-floating-and-tiling; }
-    Mod+Ctrl+V hotkey-overlay-title="Clipboard History: cliphist" { spawn-sh "cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"; }
+    Mod+Ctrl+V hotkey-overlay-title="Clipboard History: Noctalia / cliphist" { spawn-sh "command -v noctalia >/dev/null 2>&1 && noctalia msg panel-toggle clipboard || (cliphist list | fuzzel --dmenu | cliphist decode | wl-copy)"; }
 
     // Tabbed column display
     Mod+W { toggle-column-tabbed-display; }

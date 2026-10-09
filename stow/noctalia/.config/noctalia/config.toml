@@ -58,6 +58,73 @@ session_placement        = "attached"
 launcher_position        = "center"
 clipboard_position       = "center"
 
+# ── 狀態列外觀 (Bar - 完全模仿 Waybar 佈局與 Tokyo Night 微透膠囊外觀) ────────
+[bar.default]
+position               = "top"
+thickness              = 34                  # 高度 34px (同 Waybar height: 34)
+margin_edge            = 6                   # 頂部外距 6px (同 Waybar margin-top: 6)
+margin_ends            = 10                  # 左右邊界外距 10px (同 Waybar margin-left/right: 10)
+margin_opposite_edge   = 0
+reserve_space          = true                # 保留專屬空間排擠視窗
+radius                 = 8                   # 外框圓角 8px
+border_width           = 1.0                 # 外框 1px
+border_color           = "rgba(255, 255, 255, 0.1)"
+background             = "rgba(26, 27, 38, 0.85)" # Tokyo Night 半透明微透毛玻璃
+
+# 佈局分組 (對齊 Waybar modules-left, modules-center, modules-right)
+start                  = ["workspaces", "active_window"]
+center                 = ["clock"]
+end                    = ["volume", "brightness", "network", "bluetooth", "cpu", "memory", "battery", "tray"]
+
+# 膠囊模組外觀 (模仿 Waybar 獨立膠囊 pill 與樣式)
+capsule                = true
+capsule_radius         = 6
+capsule_padding        = 10
+capsule_fill           = "rgba(36, 40, 59, 0.85)"
+capsule_border_width   = 0
+
+[widget.workspaces]
+style                  = "regular"
+hide_empty             = false
+active_color           = "#7aa2f7"
+inactive_color         = "#565f89"
+
+[widget.active_window]
+max_length             = 50
+color                  = "#7dcfff"
+
+[widget.clock]
+format                 = " %H:%M  󰃭 %Y-%m-%d"
+color                  = "#bb9af7"
+
+[widget.volume]
+color                  = "#7aa2f7"
+
+[widget.brightness]
+color                  = "#e0af68"
+
+[widget.network]
+color                  = "#7dcfff"
+
+[widget.bluetooth]
+color                  = "#7aa2f7"
+
+[widget.cpu]
+type                   = "sysmon"
+stat                   = "cpu_used"
+color                  = "#7aa2f7"
+
+[widget.memory]
+type                   = "sysmon"
+stat                   = "ram_used"
+color                  = "#b4f9f8"
+
+[widget.battery]
+color                  = "#9ece6a"
+
+[widget.tray]
+icon_size              = 16
+
 # Spotlight 居中搜尋啟動器 (Win 鍵喚出)
 [shell.launcher]
 categories                 = true
