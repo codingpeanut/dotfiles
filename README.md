@@ -1,30 +1,27 @@
 # Niri + Noctalia 現代微透桌面 (Debian / Fedora)
 
-專為 **Dell Latitude 7420 (Intel Iris Xe / 8GB RAM)** 主力開發機打造的高顏值、物理彈簧動態 Wayland 桌面環境。
-結合 **Niri** 的無限橫向視窗流動與 **Noctalia (v5+)** 流暢的微透毛玻璃 (Glassmorphism) 一體化桌面外殼，並完整支援 **Windows 肌肉記憶快捷鍵**。
+> **「採用 GNU Stow 模組化架構與 Justfile 自動化管理，統一 Tokyo Night (東京之夜) 視覺美學」**
+>
+> 結合 **Niri** 的無限橫向視窗捲軸流動與 **Noctalia (v5+)** 現代一體化微透毛玻璃 (Glassmorphism) 桌面外殼，並完整支援 **Windows 肌肉記憶快捷鍵**。
 
 ---
 
 ## 🎨 視覺與架構亮點
 
-- **微透毛玻璃 (Glassmorphism)**：全系統採用 12-16px 圓角、背景高斯模糊與 Catppuccin Lavender 柔和邊框微發光。
+- **Tokyo Night (東京之夜) 統一美學**：
+  - 全系統貫徹 Tokyo Night 深色調（底色 `#1a1b26`、表面卡片 `#24283b`、強調藍 `#7aa2f7`、紫羅蘭 `#bb9af7`、文字 `#c0caf5`）。
+  - Niri 聚焦環 (`#7aa2f7`)、Noctalia 面板邊框微發光、Kitty 終端機與 Hyprlock 鎖定畫面色彩全面統一。
 - **全功能一體化 Noctalia Desktop Shell (v5+)**：
   - **頂部懸浮島狀態列 (Floating Island Bar)**：整合工作區指示器、視窗標題、系統狀態與時鐘。
-  - **抽屜式控制中心 (Control Center)**：一鍵切換電源模式 (效能  / 平衡 󰾅 / 省電 )、防睡眠常亮模式 (Caffeine ☕)、Wi-Fi、藍牙、日夜主題、音量與螢幕亮度滑桿。
-  - **Spotlight 居中搜尋啟動器**：<kbd>Win</kbd> 或 <kbd>Win + Space</kbd> 呼叫，支援即時數學算式計算器、Emoji 表情、視窗切換與關機/重啟指令。
+  - **抽屜式控制中心 (Control Center)**：一指展開電源模式 ( 效能 / 󰾅 平衡 /  省電)、防睡眠常亮模式 (☕ Caffeine Toggle)、Wi-Fi、藍牙、深淺模式切換、音量與螢幕亮度滑桿。
+  - **Spotlight 居中搜尋啟動器**：<kbd>Win</kbd> 或 <kbd>Win + Space</kbd> 喚出，支援即時數學算式計算機 (`/calc`)、Emoji 表情選擇器 (`/emo`)、工作階段關機重開機 (`/session`) 與視窗切換。
   - **浮動剪貼簿管理器**：<kbd>Win + V</kbd> 呼叫，具備歷史紀錄搜尋與複製保護。
   - **系統級區域截圖編輯器**：<kbd>Win + Shift + S</kbd> 呼叫，支援自訂標註與複製至剪貼簿。
   - **3D 景深視窗切換器**：<kbd>Alt + Tab</kbd> 輪播預覽與最近使用視窗排序。
-  - **動態桌布守護程式**：支援多種過渡動畫 (Fade, Zoom, Honeycomb)。
-- **Catppuccin 日夜雙模無縫切換**：
-  - **深色**：Catppuccin Mocha (冷灰紫底色 + 薰衣草紫/冰河藍強調色)。
-  - **淺色**：Catppuccin Latte (柔白極簡風格)。
-- **8GB RAM 深度最佳化**：
-  - 自動啟用 `zram-tools` + `zstd` 即時記憶體壓縮演算法，提供相當於 14-16GB 的流暢多工體驗，杜絕硬碟 Swap 掉幀。
-- **觸控板 1:1 物理手勢**：
-  - Dell 筆電精密觸控板支援三指橫向滑動，視窗欄位 1:1 隨手指平滑流動。
-- **專業 Dotfiles 管理**：
-  - 採用 **Chezmoi** 進行範本化與版本控管，跨機器一鍵同步。
+- **GNU Stow 模組化軟連結管理**：
+  - 每個軟體獨立收納於 `stow/<app>/`，不污染家目錄，修改隨改隨生效，Git 版本追蹤一清二楚。
+- **Justfile 宣告式日常維護**：
+  - 透過 `just stow`、`just reload`、`just fix` 一鍵完成相依套件安裝、軟連結部署與桌面熱重載。
 
 ---
 
@@ -38,10 +35,10 @@
 | <kbd>Win</kbd> + <kbd>L</kbd> | 鎖定電腦螢幕 | 呼叫 PAM 級 Hyprlock |
 | <kbd>Win</kbd> + <kbd>E</kbd> | 開啟檔案管理員 (Nautilus) | GNOME Files |
 | <kbd>Win</kbd> + <kbd>V</kbd> | 剪貼簿歷史選單 | Noctalia 浮動歷史選單 |
-| <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Esc</kbd> | 開啟工作管理員 (btop) | 隨時監控 8GB RAM 負載 |
+| <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Esc</kbd> | 開啟工作管理員 (btop) | 系統負載即時監控 |
 | <kbd>Alt</kbd> + <kbd>Tab</kbd> | 視窗 3D 景深循環切換 | 焦點輪換 |
 | <kbd>Alt</kbd> + <kbd>F4</kbd> 或 <kbd>Win</kbd> + <kbd>Q</kbd> | 關閉當前視窗 | 關閉視窗 |
-| <kbd>Win</kbd> + <kbd>Enter</kbd> 或 <kbd>Win</kbd> + <kbd>T</kbd> | 開啟 Kitty 終端機 | GPU 硬體加速與毛玻璃底色 |
+| <kbd>Win</kbd> + <kbd>Enter</kbd> 或 <kbd>Win</kbd> + <kbd>T</kbd> | 開啟 Kitty 終端機 | GPU 硬體加速與 Tokyo Night 底色 |
 | <kbd>Win</kbd> + <kbd>←</kbd> / <kbd>→</kbd> (或 <kbd>H</kbd>/<kbd>L</kbd>) | 焦點左右移動分欄 | 橫向平滑捲動 |
 | <kbd>Win</kbd> + <kbd>↑</kbd> (或 <kbd>M</kbd>/<kbd>F</kbd>) | 最大化當前分欄 | 填滿全螢幕 |
 | <kbd>Win</kbd> + <kbd>↓</kbd> (或 <kbd>R</kbd>) | 還原視窗尺寸 | 重設高度 |
@@ -50,20 +47,22 @@
 
 ---
 
-## 🚀 快速安裝與啟用
+## 🚀 快速安裝與維護指令
 
-### 1. 執行一鍵自動化部署
+### 1. 初次安裝或一鍵修復
 ```bash
 git clone https://github.com/codingpeanut/dotfiles.git ~/dotfiles
 cd ~/dotfiles
-chmod +x setup.sh
-./setup.sh
+just fix
 ```
 
-### 2. 登入 Niri
-1. 儲存工作並登出目前桌面環境。
-2. 在登入管理器 (GDM / SDDM / greetd) 右下角設定圖示中，選擇 **Niri**。
-3. 輸入密碼登入，即可享受極致絲滑的毛玻璃桌面！
+### 2. 日常維護指令
+```bash
+just stow     # 重新連結所有配置到 ~/.config
+just reload   # 熱重載 Niri 與重啟 Noctalia
+just deps     # 檢查並安裝系統相依套件
+just push     # 提交並推送最新修改至 GitHub
+```
 
 ---
 
@@ -71,24 +70,14 @@ chmod +x setup.sh
 
 ```text
 dotfiles/
-├── .chezmoi.toml.tmpl         # Chezmoi 主題與硬體變數
-├── setup.sh                   # 一鍵編譯、依賴安裝與同步腳本
-├── dot_config/
-│   ├── niri/
-│   │   └── config.kdl         # Niri 視窗管理配置、彈簧物理係數、Windows 快捷鍵
-│   ├── noctalia/
-│   │   └── config.toml        # Noctalia 現代桌面外殼配置 (控制中心、Bar、Spotlight)
-│   ├── kitty/
-│   │   └── kitty.conf         # Kitty GPU 加速終端機 (Catppuccin + 微透)
-│   ├── fcitx5/
-│   │   ├── config             # Shift 鍵切換中英文
-│   │   └── profile            # 預設新酷音輸入法
-│   └── hypr/
-│       ├── hyprlock.conf      # 桌面模糊快照鎖定畫面
-│       └── hypridle.conf      # 筆電閒置調光與休眠管理
-└── install/
-    ├── 01_deps.sh             # 系統依賴安裝 (自動適配 Debian / Fedora)
-    ├── 02_zram.sh             # 8GB RAM zram 即時壓縮設定
-    ├── 03_install_noctalia.sh # Noctalia 安裝與編譯腳本 (DNF / COPR / Meson)
-    └── 04_install_niri.sh     # Niri 安裝與 Wayland Session 註冊
+├── Justfile                  # 常用任務界面 (just stow, just reload, just fix...)
+├── README.md                 # 說明文件
+│
+└── stow/                     # 按應用模組化的 GNU Stow 配置
+    ├── niri/                 # Niri 視窗管理器 (~/.config/niri/config.kdl)
+    ├── noctalia/             # Noctalia 現代桌面外殼 (~/.config/noctalia/config.toml)
+    ├── kitty/                # Kitty 終端機 (Tokyo Night 深色微透主題)
+    ├── fcitx5/               # Fcitx5 輸入法與新酷音注音配置
+    ├── hypr/                 # Hyprlock (毛玻璃鎖定) 與 Hypridle (閒置管理)
+    └── xdg-desktop-portal/   # Wayland 桌面入口協議與螢幕分享設定
 ```

@@ -1,23 +1,19 @@
 [Groups/0]
-# Group Name
+# 群組名稱
 Name=Default
-# Layout
+# 預設輸入法（英文鍵盤）
 Default Layout=us
-# Default Input Method
 DefaultIM=chewing
 
 [Groups/0/Items/0]
-# Name
+# 英文鍵盤（直接輸入）
 Name=keyboard-us
-# Layout
 Layout=
 
 [Groups/0/Items/1]
-# Name
+# 新酷音注音輸入法（繁體中文）
 Name=chewing
-# Layout
 Layout=
 
 [GroupOrder]
 0=Default
-
