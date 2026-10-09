@@ -1,52 +1,50 @@
 {
   "bar": {
-    "position": "top",
+    "position": "left",
     "floating": true,
-    "thickness": 36,
-    "marginEdge": 6,
+    "thickness": 44,
+    "marginEdge": 8,
     "marginEnds": 12,
-    "radius": 12,
+    "radius": 16,
     "backgroundOpacity": 0.85,
     "capsule": true,
     "capsuleRadius": 8,
-    "capsulePadding": 10,
-    "padding": 10,
-    "widgetSpacing": 6,
+    "capsulePadding": 6,
+    "padding": 8,
+    "widgetSpacing": 8,
     "widgets": {
       "left": [
         { "id": "Launcher", "type": "Launcher" },
         {
           "id": "Workspace",
           "type": "Workspace",
-          "activePillSize": 3.2,
-          "inactivePillSize": 1.6
-        },
-        { "id": "ActiveWindow", "type": "ActiveWindow" }
+          "activePillSize": 2.8,
+          "inactivePillSize": 1.2
+        }
       ],
       "center": [
-        { "id": "Clock", "type": "Clock" }
+        { "id": "ActiveWindow", "type": "ActiveWindow" }
       ],
       "right": [
         { "id": "Media", "type": "Media" },
-        { "id": "Volume", "type": "Volume" },
-        { "id": "Brightness", "type": "Brightness" },
+        { "id": "Tray", "type": "Tray" },
+        { "id": "Clock", "type": "Clock", "format": "%H\n%M" },
         { "id": "Network", "type": "Network" },
         { "id": "Bluetooth", "type": "Bluetooth" },
         { "id": "Battery", "type": "Battery" },
-        { "id": "Tray", "type": "Tray" },
-        { "id": "Clipboard", "type": "Clipboard" },
+        { "id": "Volume", "type": "Volume" },
         { "id": "Session", "type": "Session" }
       ]
     }
   },
   "controlCenter": {
     "sidebar": "full",
-    "width": 950,
+    "width": 880,
     "shortcuts": ["wifi", "bluetooth", "nightlight", "notification", "caffeine", "mic_mute", "wallpaper", "system"]
   },
   "notification": {
     "position": "top_right",
-    "width": 420
+    "width": 430
   },
   "shell": {
     "fontFamily": "JetBrainsMono Nerd Font, Noto Sans CJK TC, sans-serif",

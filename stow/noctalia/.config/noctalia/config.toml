@@ -58,10 +58,10 @@ session_placement        = "attached"
 launcher_position        = "center"
 clipboard_position       = "auto"
 
-# ── 控制中心與展開面板 (Caelestia Nexus 規格：寬度 950px 多分頁導覽) ────────
+# ── 控制中心與展開面板 (Caelestia Nexus 規格：多分頁導覽) ────────────────────
 [control_center]
 sidebar                  = "full"     # "full"：完整分類側邊欄導覽 (Dash, Media, Audio, System, Weather)
-width                    = 950        # 控制中心面板展開寬度 (預設 700 -> 950px，最大支援 1200)
+width                    = 880        # 控制中心面板展開寬度 (對齊 Caelestia Nexus minWidth 800 - 900)
 show_shortcut_labels     = true       # 快捷捷徑圖示下方顯示標籤文字
 show_session_button      = true       # 頂部顯示電源操作鈕
 
@@ -89,60 +89,63 @@ type = "wallpaper"
 [[control_center.shortcuts]]
 type = "system"
 
-# ── 通知系統 (移至右上角並橫向加寬至 420px，不遮擋正中央視窗) ────────────────
+# ── 通知系統 (Caelestia 右上角 430px 懸浮通知面板) ───────────────────────────
 [notification]
 enable_daemon            = true       # 接管通知守護進程
-position                 = "top_right"# 移至右上角，告別螢幕正中間突兀感
+position                 = "top_right"# 移至右上角 (對齊 Caelestia NotifsTokens)
 offset_x                 = 20         # 距離螢幕右側邊界 20px
-offset_y                 = 46         # 避開頂部 34px 狀態列
-width                    = 420        # 橫向加寬 (預設 360 -> 420px)，讓訊息內容橫向舒展
+offset_y                 = 20         # 距離螢幕頂部 20px
+width                    = 430        # 橫向寬度 430px (精確複製 Caelestia NotifsTokens.width = 430)
 max_visible              = 5          # 最多同時顯示 5 則通知
 collapse_on_dismiss      = true       # 關閉單則通知時自動平滑折疊
 keep_dismissed_in_history= true       # 關閉的通知仍保留在控制中心歷史紀錄
 
-# ── 音量與亮度 OSD (靠右下角顯示，避免在中央彈出) ─────────────────────────────
+# ── 音量與亮度 OSD (Caelestia 右側居中/右下角滑桿) ───────────────────────────
 [osd]
-position                 = "bottom_right" # 移至右下角，避免遮擋中央視覺重心
+position                 = "bottom_right" # 靠右下角顯示 (對齊 Caelestia OSD Wrapper)
 offset_x                 = 24
 offset_y                 = 24
 
-# ── 狀態列外觀 (Bar - Caelestia 懸浮藥丸島與 Material M3 微透膠囊) ─────────────
+# ── 狀態列外觀 (Bar - 1:1 複製 Caelestia 原生左側垂直懸浮膠囊島) ───────────────
 [bar.default]
-position               = "top"
+position               = "left"              # Caelestia 原生核心：左側垂直狀態列
 floating               = true                # 啟用 Caelestia 懸浮島模式
-thickness              = 36                  # 高度 36px (膠囊飽滿開闊)
-margin_edge            = 6.0                 # 頂部邊距 6px (離頂部微懸浮)
-margin_ends            = 12.0                # 左右邊界 12px (懸浮浮島感)
+thickness              = 44                  # 寬度 44px (對齊 Caelestia innerWidth 40 + padding 8)
+margin_edge            = 8.0                 # 螢幕左側邊距 8px (離邊界懸浮)
+margin_ends            = 12.0                # 頂部與底部邊距 12px (完全獨立懸浮島)
 margin_opposite_edge   = 0.0
 reserve_space          = true                # 保留專屬空間排擠視窗
-radius                 = 12                  # 懸浮島四周 12px 柔和圓角
+radius                 = 16                  # 懸浮島四周 16px 柔和圓角 (對齊 Caelestia rounding.large)
 concave_edge_corners   = false               # 停用內縮圓角
-padding                = 10                  # 兩側內容內縮 10px
-widget_spacing         = 6                   # 模組之間的間距
-border_width           = 1.0                 # 細緻高光下邊框 1px
+padding                = 8                   # 內容上下內縮 8px
+widget_spacing         = 8                   # 模組之間的間距 8px (對齊 Caelestia spacing.small)
+border_width           = 1.0                 # 細緻高光邊框 1px
 border_color           = "#d0bcff26"         # 15% 微透淡紫高光邊框
 background             = "#141218d9"         # Caelestia M3 深色莫蘭迪底色 (85% 不透明度)
 
-# 佈局分組 (對齊 Caelestia 膠囊藥丸分佈)
-start                  = ["launcher", "workspaces", "active_window"]
-center                 = ["clock"]
-end                    = ["media", "volume", "brightness", "network", "bluetooth", "battery", "tray", "clipboard", "session"]
+# 佈局分組 (1:1 對齊 Caelestia Bar.qml entries 順序)
+# 1. 頂部組：Logo/Launcher 啟動按鈕 + 縱向工作區藥丸
+start                  = ["launcher", "workspaces"]
+# 2. 中間組：當前視窗標題 (ActiveWindow)
+center                 = ["active_window"]
+# 3. 底部組：多媒體黑膠 + 系統托盤 + 垂直堆疊時鐘 + 狀態圖示 (網路/藍牙/電量/音量) + 電源按鈕
+end                    = ["media", "tray", "clock", "network", "bluetooth", "battery", "volume", "session"]
 
 # 膠囊模組外觀 (Caelestia M3 獨立膠囊 pill 樣式)
 capsule                = true
 capsule_radius         = 8
-capsule_padding        = 10
+capsule_padding        = 6
 capsule_fill           = "#211f26e6"         # Caelestia M3 容器膠囊底色 (90% 不透明度)
 capsule_border_width   = 0
 
 [widget.launcher]
 glyph                  = "apps"              # Caelestia 應用啟動膠囊圖示
-color                  = "#d0bcff"
+color                  = "#d0bcff"           # Caelestia m3primary
 
 [widget.media]
 artist_first           = true
-art_size               = 18
-max_length             = 200
+art_size               = 20
+max_length             = 160
 hide_when_no_media     = true
 hide_when_idle         = false
 rotate_album_art       = true
@@ -152,26 +155,26 @@ color                  = "#efb8c8"
 style                  = "regular"
 hide_empty             = false
 show_labels            = true
-pill_scale             = 1.1                 # 微微拉大厚度
-active_pill_size       = 3.2                 # 當前頁面指示器加寬 (3.2x 流體變形)
-inactive_pill_size     = 1.6                 # 其他頁面指示器加寬 (1.6x 藥丸)
-capsule_padding        = 12                  # 兩側 padding 加寬
-active_color           = "#d0bcff"
-inactive_color         = "#79747e"
+pill_scale             = 1.1                 # 垂直藥丸厚度
+active_pill_size       = 2.8                 # 當前頁面指示器拉長
+inactive_pill_size     = 1.2                 # 閒置頁面緊湊圓點/藥丸
+capsule_padding        = 8
+active_color           = "#d0bcff"           # Caelestia m3primary
+inactive_color         = "#49454f"           # Caelestia m3outline
 
 [widget.active_window]
-max_length             = 50
+max_length             = 35
 color                  = "#a8c7fa"
 
 [widget.clock]
-format                 = " %H:%M  󰃭 %Y-%m-%d"
-color                  = "#d0bcff"
+format                 = "%H\n%M"            # Caelestia 招牌垂直雙層時鐘 (小時在上一行、分鐘在下一行)
+color                  = "#efb8c8"           # Caelestia m3tertiary 柔粉色
 
 [widget.volume]
 color                  = "#a8c7fa"
 
 [widget.brightness]
-color                  = "#e8c48a"
+color                  = "#fedba8"
 
 [widget.network]
 color                  = "#a8c7fa"
@@ -180,7 +183,7 @@ color                  = "#a8c7fa"
 color                  = "#d0bcff"
 
 [widget.battery]
-color                  = "#a8d5a2"
+color                  = "#c4eed0"
 
 [widget.tray]
 icon_size              = 16
@@ -189,7 +192,7 @@ icon_size              = 16
 color                  = "#d0bcff"
 
 [widget.session]
-color                  = "#f2b8b5"
+color                  = "#f2b8b5"           # Caelestia m3error 珊瑚紅電源鈕
 
 # Spotlight 居中搜尋啟動器 (Win 鍵喚出)
 [shell.launcher]
