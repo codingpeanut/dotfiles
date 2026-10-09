@@ -13,7 +13,7 @@ high_contrast         = false
 # ── 外殼核心設定 (Shell Core) ────────────────────────────────────────────────
 [shell]
 corner_radius_scale   = 1.25         # 圓角半徑縮放 (12-16px 柔和圓角)
-font_family           = "Rubik, Noto Sans CJK TC, JetBrainsMono Nerd Font, sans-serif"
+font_family           = "JetBrainsMono Nerd Font, Noto Sans CJK TC, sans-serif"
 time_format           = "{:%H:%M}"   # 狀態列時間格式
 date_format           = "{:%a, %b %d}" # 狀態列日期格式 (例如: Fri, Oct 9)
 offline_mode          = false
