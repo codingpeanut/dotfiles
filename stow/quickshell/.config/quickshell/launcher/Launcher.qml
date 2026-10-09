@@ -21,7 +21,13 @@ PanelWindow {
     }
 
     color: "transparent"
-    visible: isOpen
+    visible: opacity > 0.001
+    opacity: isOpen ? 1.0 : 0.0
+
+    // 全視窗平滑淡入淡出動畫
+    Behavior on opacity {
+        NumberAnimation { duration: 180; easing.type: Easing.OutCubic }
+    }
 
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.keyboardFocus: isOpen ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
@@ -53,7 +59,7 @@ PanelWindow {
         id: execProc
     }
 
-    // 完整的預設常用與已安裝工具清單 (精確還原截圖與常用應用)
+    // 完整的常用應用程式清單
     ListModel {
         id: rawAppsModel
         ListElement { name: "Lutris"; subtitle: ""; icon: "󰊴"; exec: "lutris" }
@@ -87,10 +93,10 @@ PanelWindow {
         selectedIndex = 0
     }
 
-    // 背景半透明暗色遮罩
+    // 背景半透明暗色遮罩 (支援淡入)
     Rectangle {
         anchors.fill: parent
-        color: Qt.rgba(0, 0, 0, 0.50)
+        color: Qt.rgba(0, 0, 0, 0.52)
 
         MouseArea {
             anchors.fill: parent
@@ -98,17 +104,32 @@ PanelWindow {
         }
     }
 
-    // 截圖同款居中雙欄 Rofi 主視窗 (720px x 420px)
+    // 截圖同款居中雙欄 Rofi 主視窗 (720px x 420px，帶 Spring & Scale 彈動開合動效)
     Rectangle {
         id: mainDialog
         width: 720
         height: 420
-        anchors.centerIn: parent
+        anchors.horizontalCenter: parent.horizontalCenter
         radius: Theme.radiusModal
         color: Theme.bgTranslucent
         border.width: 1
         border.color: Theme.borderColor
         clip: true
+
+        // 高級 Spring 與 Scale 彈簧動效
+        scale: launcherWindow.isOpen ? 1.0 : 0.93
+        opacity: launcherWindow.isOpen ? 1.0 : 0.0
+        y: launcherWindow.isOpen ? (parent.height - height) / 2 : ((parent.height - height) / 2 + 18)
+
+        Behavior on scale {
+            NumberAnimation { duration: 240; easing.type: Easing.OutBack; overshoot: 1.15 }
+        }
+        Behavior on opacity {
+            NumberAnimation { duration: 200; easing.type: Easing.OutCubic }
+        }
+        Behavior on y {
+            NumberAnimation { duration: 240; easing.type: Easing.OutCubic }
+        }
 
         // 鍵盤導航監聽
         Keys.onEscapePressed: launcherWindow.close()
@@ -137,7 +158,7 @@ PanelWindow {
             Rectangle {
                 Layout.preferredWidth: 290
                 Layout.fillHeight: true
-                color: Qt.rgba(16/255, 14/255, 20/255, 0.65)
+                color: Qt.rgba(16/255, 14/255, 20/255, 0.70)
 
                 Rectangle {
                     anchors.right: parent.right
@@ -152,14 +173,17 @@ PanelWindow {
                     anchors.margins: 18
                     spacing: 12
 
-                    // 1. 頂部搜尋列 ( Search...)
+                    // 1. 頂部搜尋列 ( Search... 帶微發光焦點動效)
                     Rectangle {
                         Layout.fillWidth: true
                         Layout.preferredHeight: 38
                         radius: Theme.radiusItem + 2
-                        color: Qt.rgba(32/255, 28/255, 40/255, 0.8)
+                        color: searchField.activeFocus ? Qt.rgba(40/255, 36/255, 52/255, 0.95) : Qt.rgba(28/255, 24/255, 36/255, 0.8)
                         border.width: 1
                         border.color: searchField.activeFocus ? Theme.borderActiveColor : Theme.borderColor
+
+                        Behavior on color { ColorAnimation { duration: 150 } }
+                        Behavior on border.color { ColorAnimation { duration: 150 } }
 
                         RowLayout {
                             anchors.fill: parent
@@ -171,7 +195,8 @@ PanelWindow {
                                 text: ""
                                 font.family: Theme.fontFamily
                                 font.pixelSize: 12
-                                color: Theme.textMuted
+                                color: searchField.activeFocus ? Theme.accentPurple : Theme.textMuted
+                                Behavior on color { ColorAnimation { duration: 150 } }
                             }
 
                             TextInput {
@@ -203,30 +228,29 @@ PanelWindow {
                         Layout.fillWidth: true
                         Layout.fillHeight: true
 
-                        // 裝飾性低調微光卡片
                         Rectangle {
                             anchors.centerIn: parent
-                            width: 160
-                            height: 100
-                            radius: 12
+                            width: 170
+                            height: 104
+                            radius: 14
                             color: Qt.rgba(255, 255, 255, 0.02)
                             border.width: 1
                             border.color: Qt.rgba(255, 255, 255, 0.05)
 
                             ColumnLayout {
                                 anchors.centerIn: parent
-                                spacing: 4
+                                spacing: 6
 
                                 Text {
                                     Layout.alignment: Qt.AlignHCenter
                                     text: "󰌽"
                                     font.family: Theme.fontFamily
-                                    font.pixelSize: 28
-                                    color: Qt.rgba(208/255, 188/255, 255/255, 0.25)
+                                    font.pixelSize: 32
+                                    color: Qt.rgba(208/255, 188/255, 255/255, 0.35)
                                 }
                                 Text {
                                     Layout.alignment: Qt.AlignHCenter
-                                    text: "Niri • Desktop"
+                                    text: "Niri • Desktop Shell"
                                     font.family: Theme.fontFamily
                                     font.pixelSize: 10
                                     color: Theme.textMuted
@@ -235,108 +259,149 @@ PanelWindow {
                         }
                     }
 
-                    // 3. 底部模式標籤列 [ APPS ]  RUN  FILES  WINDOW
-                    RowLayout {
+                    // 3. 底部模式標籤列 [ APPS ]  RUN  FILES  WINDOW (帶流體滑動滑塊 Fluid Glider)
+                    Item {
                         Layout.fillWidth: true
-                        spacing: 8
+                        Layout.preferredHeight: 28
 
-                        // APPS (活躍項，截圖同款薄荷綠卡片)
+                        // 共享的薄荷綠流體滑動卡片 (Fluid Sliding Pill)
                         Rectangle {
-                            implicitWidth: 64
-                            implicitHeight: 26
+                            id: tabGlider
+                            height: 26
                             radius: Theme.radiusItem
-                            color: launcherWindow.activeMode === "APPS" ? Theme.accentMint : "transparent"
+                            color: Theme.accentMint
+                            anchors.verticalCenter: parent.verticalCenter
 
-                            Text {
-                                anchors.centerIn: parent
-                                text: "APPS"
-                                font.family: Theme.fontFamily
-                                font.pixelSize: 10
-                                font.bold: true
-                                color: launcherWindow.activeMode === "APPS" ? Theme.textDark : Theme.textMuted
+                            // 追蹤當前 activeMode 標籤的幾何位置
+                            x: currentActiveTab ? currentActiveTab.x : 0
+                            width: currentActiveTab ? currentActiveTab.width : 56
+
+                            Behavior on x {
+                                NumberAnimation { duration: 200; easing.type: Easing.OutCubic }
                             }
-
-                            MouseArea {
-                                anchors.fill: parent
-                                cursorShape: Qt.PointingHandCursor
-                                onClicked: launcherWindow.activeMode = "APPS"
+                            Behavior on width {
+                                NumberAnimation { duration: 200; easing.type: Easing.OutCubic }
                             }
                         }
 
-                        // RUN
-                        Rectangle {
-                            implicitWidth: 44
-                            implicitHeight: 26
-                            radius: Theme.radiusItem
-                            color: launcherWindow.activeMode === "RUN" ? Theme.accentMint : "transparent"
+                        RowLayout {
+                            id: tabsRow
+                            anchors.fill: parent
+                            spacing: 6
 
-                            Text {
-                                anchors.centerIn: parent
-                                text: "RUN"
-                                font.family: Theme.fontFamily
-                                font.pixelSize: 10
-                                font.bold: launcherWindow.activeMode === "RUN"
-                                color: launcherWindow.activeMode === "RUN" ? Theme.textDark : Theme.textMuted
+                            // APPS
+                            Item {
+                                id: tabApps
+                                implicitWidth: 58
+                                implicitHeight: 26
+
+                                Text {
+                                    anchors.centerIn: parent
+                                    text: "APPS"
+                                    font.family: Theme.fontFamily
+                                    font.pixelSize: 10
+                                    font.bold: true
+                                    color: launcherWindow.activeMode === "APPS" ? Theme.textDark : (appsMouse.containsMouse ? Theme.textPrimary : Theme.textMuted)
+                                    Behavior on color { ColorAnimation { duration: 150 } }
+                                }
+
+                                MouseArea {
+                                    id: appsMouse
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    cursorShape: Qt.PointingHandCursor
+                                    onClicked: launcherWindow.activeMode = "APPS"
+                                }
                             }
 
-                            MouseArea {
-                                anchors.fill: parent
-                                cursorShape: Qt.PointingHandCursor
-                                onClicked: launcherWindow.activeMode = "RUN"
+                            // RUN
+                            Item {
+                                id: tabRun
+                                implicitWidth: 46
+                                implicitHeight: 26
+
+                                Text {
+                                    anchors.centerIn: parent
+                                    text: "RUN"
+                                    font.family: Theme.fontFamily
+                                    font.pixelSize: 10
+                                    font.bold: true
+                                    color: launcherWindow.activeMode === "RUN" ? Theme.textDark : (runMouse.containsMouse ? Theme.textPrimary : Theme.textMuted)
+                                    Behavior on color { ColorAnimation { duration: 150 } }
+                                }
+
+                                MouseArea {
+                                    id: runMouse
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    cursorShape: Qt.PointingHandCursor
+                                    onClicked: launcherWindow.activeMode = "RUN"
+                                }
+                            }
+
+                            // FILES
+                            Item {
+                                id: tabFiles
+                                implicitWidth: 52
+                                implicitHeight: 26
+
+                                Text {
+                                    anchors.centerIn: parent
+                                    text: "FILES"
+                                    font.family: Theme.fontFamily
+                                    font.pixelSize: 10
+                                    font.bold: true
+                                    color: launcherWindow.activeMode === "FILES" ? Theme.textDark : (filesMouse.containsMouse ? Theme.textPrimary : Theme.textMuted)
+                                    Behavior on color { ColorAnimation { duration: 150 } }
+                                }
+
+                                MouseArea {
+                                    id: filesMouse
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    cursorShape: Qt.PointingHandCursor
+                                    onClicked: launcherWindow.activeMode = "FILES"
+                                }
+                            }
+
+                            // WINDOW
+                            Item {
+                                id: tabWindow
+                                implicitWidth: 62
+                                implicitHeight: 26
+
+                                Text {
+                                    anchors.centerIn: parent
+                                    text: "WINDOW"
+                                    font.family: Theme.fontFamily
+                                    font.pixelSize: 10
+                                    font.bold: true
+                                    color: launcherWindow.activeMode === "WINDOW" ? Theme.textDark : (winMouse.containsMouse ? Theme.textPrimary : Theme.textMuted)
+                                    Behavior on color { ColorAnimation { duration: 150 } }
+                                }
+
+                                MouseArea {
+                                    id: winMouse
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    cursorShape: Qt.PointingHandCursor
+                                    onClicked: launcherWindow.activeMode = "WINDOW"
+                                }
                             }
                         }
 
-                        // FILES
-                        Rectangle {
-                            implicitWidth: 50
-                            implicitHeight: 26
-                            radius: Theme.radiusItem
-                            color: launcherWindow.activeMode === "FILES" ? Theme.accentMint : "transparent"
-
-                            Text {
-                                anchors.centerIn: parent
-                                text: "FILES"
-                                font.family: Theme.fontFamily
-                                font.pixelSize: 10
-                                font.bold: launcherWindow.activeMode === "FILES"
-                                color: launcherWindow.activeMode === "FILES" ? Theme.textDark : Theme.textMuted
-                            }
-
-                            MouseArea {
-                                anchors.fill: parent
-                                cursorShape: Qt.PointingHandCursor
-                                onClicked: launcherWindow.activeMode = "FILES"
-                            }
-                        }
-
-                        // WINDOW
-                        Rectangle {
-                            implicitWidth: 60
-                            implicitHeight: 26
-                            radius: Theme.radiusItem
-                            color: launcherWindow.activeMode === "WINDOW" ? Theme.accentMint : "transparent"
-
-                            Text {
-                                anchors.centerIn: parent
-                                text: "WINDOW"
-                                font.family: Theme.fontFamily
-                                font.pixelSize: 10
-                                font.bold: launcherWindow.activeMode === "WINDOW"
-                                color: launcherWindow.activeMode === "WINDOW" ? Theme.textDark : Theme.textMuted
-                            }
-
-                            MouseArea {
-                                anchors.fill: parent
-                                cursorShape: Qt.PointingHandCursor
-                                onClicked: launcherWindow.activeMode = "WINDOW"
-                            }
+                        property var currentActiveTab: {
+                            if (launcherWindow.activeMode === "APPS") return tabApps
+                            if (launcherWindow.activeMode === "RUN") return tabRun
+                            if (launcherWindow.activeMode === "FILES") return tabFiles
+                            return tabWindow
                         }
                     }
                 }
             }
 
             // =================================================================
-            // 右欄 (純淨深色應用清單)
+            // 右欄 (純淨深色應用清單，帶流暢滑動光標 Smooth Highlight Follower)
             // =================================================================
             Item {
                 Layout.fillWidth: true
@@ -349,17 +414,24 @@ PanelWindow {
                     spacing: 4
                     clip: true
                     model: filteredModel
+                    currentIndex: launcherWindow.selectedIndex
 
-                    delegate: Rectangle {
+                    // 垂直滑動的高光光標卡片 (Raycast/macOS 級流暢追隨)
+                    highlight: Rectangle {
+                        radius: Theme.radiusItem + 2
+                        color: Theme.bgSelected
+                        border.width: 1
+                        border.color: Theme.borderActiveColor
+                        z: 1
+                    }
+                    highlightFollowsCurrentItem: true
+                    highlightMoveDuration: 140
+
+                    delegate: Item {
                         id: appItem
                         width: appsListView.width
                         height: 38
-                        radius: Theme.radiusItem + 2
-
-                        // 截圖同款選中高光深色小卡片
-                        color: index === launcherWindow.selectedIndex ? Theme.bgSelected : (itemMouse.containsMouse ? Theme.bgCardHover : "transparent")
-                        border.width: index === launcherWindow.selectedIndex ? 1 : 0
-                        border.color: Theme.borderActiveColor
+                        z: 2
 
                         RowLayout {
                             anchors.fill: parent
@@ -373,9 +445,10 @@ PanelWindow {
                                 font.family: Theme.fontFamily
                                 font.pixelSize: 16
                                 color: index === launcherWindow.selectedIndex ? Theme.accentPurple : Theme.textSecondary
+                                Behavior on color { ColorAnimation { duration: 140 } }
                             }
 
-                            // 應用名稱 + 括號副標題 (截圖同款: Firefox (web browser))
+                            // 應用名稱 + 括號副標題 (Firefox (web browser))
                             RowLayout {
                                 Layout.fillWidth: true
                                 spacing: 6
@@ -385,7 +458,7 @@ PanelWindow {
                                     font.family: Theme.fontFamily
                                     font.pixelSize: 12
                                     font.bold: index === launcherWindow.selectedIndex
-                                    color: index === launcherWindow.selectedIndex ? Theme.textPrimary : Theme.textPrimary
+                                    color: Theme.textPrimary
                                 }
 
                                 Text {
@@ -403,6 +476,9 @@ PanelWindow {
                             anchors.fill: parent
                             hoverEnabled: true
                             cursorShape: Qt.PointingHandCursor
+                            onPositionChanged: {
+                                launcherWindow.selectedIndex = index
+                            }
                             onClicked: {
                                 launcherWindow.selectedIndex = index
                                 launcherWindow.launchSelected()
