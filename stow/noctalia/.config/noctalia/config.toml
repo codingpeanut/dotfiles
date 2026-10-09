@@ -75,21 +75,26 @@ border_width           = 1.0                 # 下邊框 1px
 border_color           = "#ffffff1a"         # 10% 微透白色下邊框
 background             = "#1a1b26d9"         # Tokyo Night 半透明微透毛玻璃 (85% 不透明度)
 
-# 佈局分組 (對齊 Waybar modules-left, modules-center, modules-right)
+# 佈局分組 (移除效能指示器，加入剪貼簿與電源/工作階段選單按鈕)
 start                  = ["workspaces", "active_window"]
 center                 = ["clock"]
-end                    = ["volume", "brightness", "network", "bluetooth", "cpu", "memory", "battery", "tray"]
+end                    = ["volume", "brightness", "network", "bluetooth", "battery", "tray", "clipboard", "session"]
 
 # 膠囊模組外觀 (模仿 Waybar 獨立膠囊 pill 與樣式)
 capsule                = true
 capsule_radius         = 6
 capsule_padding        = 10
-capsule_fill           = "#24283bd9"         # Tokyo Night 模組獨立微透膠囊底色 (85% 不透明度)
+capsule_fill           = "#24283bd9"         # Tokyo Night 模組獨立微透膠囊底色 (深色 85% 不透明度)
 capsule_border_width   = 0
 
 [widget.workspaces]
 style                  = "regular"
 hide_empty             = false
+show_labels            = true
+pill_scale             = 1.1                 # 微微拉大厚度
+active_pill_size       = 3.2                 # 當前頁面指示器加寬 (預設 2.2 -> 3.2)
+inactive_pill_size     = 1.6                 # 其他頁面指示器加寬 (預設 1.0 -> 1.6)
+capsule_padding        = 12                  # 兩側 padding 加寬
 active_color           = "#7aa2f7"
 inactive_color         = "#565f89"
 
@@ -113,21 +118,17 @@ color                  = "#7dcfff"
 [widget.bluetooth]
 color                  = "#7aa2f7"
 
-[widget.cpu]
-type                   = "sysmon"
-stat                   = "cpu_used"
-color                  = "#7aa2f7"
-
-[widget.memory]
-type                   = "sysmon"
-stat                   = "ram_used"
-color                  = "#b4f9f8"
-
 [widget.battery]
 color                  = "#9ece6a"
 
 [widget.tray]
 icon_size              = 16
+
+[widget.clipboard]
+color                  = "#7aa2f7"
+
+[widget.session]
+color                  = "#f7768e"
 
 # Spotlight 居中搜尋啟動器 (Win 鍵喚出)
 [shell.launcher]
@@ -179,7 +180,8 @@ interval_seconds           = 1800
 order                      = "random"
 recursive                  = true
 
-# ── 主題配色 (Tokyo Night 東京之夜) ──────────────────────────────────────────
+# ── 主題配色 (Bar 為深色，其他組件/面板為淺色風格) ───────────────────────────
 [theme]
-mode   = "dark"                       # 深色模式 (支援控制中心一鍵切換)
-source = "builtin"
+mode       = "light"                      # 淺色模式：應用程式、Launcher 與彈出視窗呈現淺色風格
+shell_mode = "light"                      # 控制中心、剪貼簿選單等外殼浮動面板使用淺色模式
+source     = "builtin"

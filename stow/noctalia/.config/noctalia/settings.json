@@ -14,7 +14,12 @@
     "widgetSpacing": 6,
     "widgets": {
       "left": [
-        { "id": "Workspace", "type": "Workspace" },
+        {
+          "id": "Workspace",
+          "type": "Workspace",
+          "activePillSize": 3.2,
+          "inactivePillSize": 1.6
+        },
         { "id": "ActiveWindow", "type": "ActiveWindow" }
       ],
       "center": [
@@ -25,10 +30,10 @@
         { "id": "Brightness", "type": "Brightness" },
         { "id": "Network", "type": "Network" },
         { "id": "Bluetooth", "type": "Bluetooth" },
-        { "id": "Cpu", "type": "Sysmon", "stat": "cpu_used" },
-        { "id": "Memory", "type": "Sysmon", "stat": "ram_used" },
         { "id": "Battery", "type": "Battery" },
-        { "id": "Tray", "type": "Tray" }
+        { "id": "Tray", "type": "Tray" },
+        { "id": "Clipboard", "type": "Clipboard" },
+        { "id": "Session", "type": "Session" }
       ]
     }
   },
@@ -37,7 +42,8 @@
     "clipboardEnabled": true
   },
   "theme": {
-    "mode": "dark",
+    "mode": "light",
+    "shellMode": "light",
     "name": "Tokyo-Night"
   }
 }
