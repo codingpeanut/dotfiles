@@ -58,11 +58,36 @@ session_placement        = "attached"
 launcher_position        = "center"
 clipboard_position       = "auto"
 
-# ── 控制中心與展開面板 (寬度加大為 950px，排版開闊不臃腫) ─────────────────────
+# ── 控制中心與展開面板 (Caelestia Nexus 規格：寬度 950px 多分頁導覽) ────────
 [control_center]
-sidebar                  = "full"     # "full" | "compact" | "none"：展開時具備完整分類側邊欄
+sidebar                  = "full"     # "full"：完整分類側邊欄導覽 (Dash, Media, Audio, System, Weather)
 width                    = 950        # 控制中心面板展開寬度 (預設 700 -> 950px，最大支援 1200)
 show_shortcut_labels     = true       # 快捷捷徑圖示下方顯示標籤文字
+show_session_button      = true       # 頂部顯示電源操作鈕
+
+[[control_center.shortcuts]]
+type = "wifi"
+
+[[control_center.shortcuts]]
+type = "bluetooth"
+
+[[control_center.shortcuts]]
+type = "nightlight"
+
+[[control_center.shortcuts]]
+type = "notification"
+
+[[control_center.shortcuts]]
+type = "caffeine"
+
+[[control_center.shortcuts]]
+type = "mic_mute"
+
+[[control_center.shortcuts]]
+type = "wallpaper"
+
+[[control_center.shortcuts]]
+type = "system"
 
 # ── 通知系統 (移至右上角並橫向加寬至 420px，不遮擋正中央視窗) ────────────────
 [notification]
@@ -98,17 +123,26 @@ border_width           = 1.0                 # 下邊框 1px
 border_color           = "#ffffff1a"         # 10% 微透白色下邊框
 background             = "#1a1b26d9"         # Tokyo Night 半透明微透毛玻璃 (85% 不透明度)
 
-# 佈局分組 (移除效能指示器，加入剪貼簿與電源/工作階段選單按鈕)
+# 佈局分組 (對齊 Caelestia 膠囊藥丸分佈)
 start                  = ["workspaces", "active_window"]
 center                 = ["clock"]
-end                    = ["volume", "brightness", "network", "bluetooth", "battery", "tray", "clipboard", "session"]
+end                    = ["media", "volume", "brightness", "network", "bluetooth", "battery", "tray", "clipboard", "session"]
 
-# 膠囊模組外觀 (模仿 Waybar 獨立膠囊 pill 與樣式)
+# 膠囊模組外觀 (模仿 Caelestia 獨立膠囊 pill 與樣式)
 capsule                = true
 capsule_radius         = 6
 capsule_padding        = 10
 capsule_fill           = "#24283bd9"         # Tokyo Night 模組獨立微透膠囊底色 (深色 85% 不透明度)
 capsule_border_width   = 0
+
+[widget.media]
+artist_first           = true
+art_size               = 18
+max_length             = 200
+hide_when_no_media     = true
+hide_when_idle         = false
+rotate_album_art       = true
+color                  = "#bb9af7"
 
 [widget.workspaces]
 style                  = "regular"
@@ -179,6 +213,9 @@ global = true                         # 支援直接搜尋 lock / reboot / power
 
 [shell.launcher.providers.windows]
 prefix = "win"
+
+[shell.launcher.providers.wallpaper]
+prefix = "wall"
 
 # 視窗預覽與循環切換 (Alt+Tab)
 [shell.window_switcher]

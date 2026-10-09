@@ -406,8 +406,9 @@ binds {
     Mod+Shift+V { switch-focus-between-floating-and-tiling; }
     Mod+Ctrl+V hotkey-overlay-title="Clipboard History: Noctalia / cliphist" { spawn-sh "command -v noctalia >/dev/null 2>&1 && noctalia msg panel-toggle clipboard || (cliphist list | fuzzel --dmenu | cliphist decode | wl-copy)"; }
 
-    // Tabbed column display
+    // Tabbed column display & Wallpaper picker
     Mod+W { toggle-column-tabbed-display; }
+    Mod+Ctrl+W hotkey-overlay-title="Wallpaper Picker: Noctalia" { spawn-sh "command -v noctalia >/dev/null 2>&1 && noctalia msg panel-toggle wallpaper || true"; }
 
     // Screenshots
     Print { screenshot; }

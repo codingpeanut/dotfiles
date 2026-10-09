@@ -26,6 +26,7 @@
         { "id": "Clock", "type": "Clock" }
       ],
       "right": [
+        { "id": "Media", "type": "Media" },
         { "id": "Volume", "type": "Volume" },
         { "id": "Brightness", "type": "Brightness" },
         { "id": "Network", "type": "Network" },
@@ -39,7 +40,8 @@
   },
   "controlCenter": {
     "sidebar": "full",
-    "width": 950
+    "width": 950,
+    "shortcuts": ["wifi", "bluetooth", "nightlight", "notification", "caffeine", "mic_mute", "wallpaper", "system"]
   },
   "notification": {
     "position": "top_right",
