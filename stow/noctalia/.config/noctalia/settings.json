@@ -53,8 +53,8 @@
     "clipboardEnabled": true
   },
   "theme": {
-    "mode": "light",
-    "shellMode": "light",
+    "mode": "dark",
+    "shellMode": "dark",
     "name": "Caelestia-M3"
   }
 }

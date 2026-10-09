@@ -255,8 +255,8 @@ memory_poll_seconds = 2.0
 network_poll_seconds= 3.0
 disk_poll_seconds   = 10.0
 
-# ── 主題配色 (Bar 為深色，其他組件/面板為淺色風格) ───────────────────────────
+# ── 主題配色 (Caelestia Material You M3 莫蘭迪深色底襯與暗色系面板) ─────────
 [theme]
-mode       = "light"                      # 淺色模式：應用程式、Launcher 與彈出視窗呈現淺色風格
-shell_mode = "light"                      # 控制中心、剪貼簿選單等外殼浮動面板使用淺色模式
+mode       = "dark"                       # 深色模式：應用程式、Launcher 與彈出視窗呈現深邃莫蘭迪風格
+shell_mode = "dark"                       # 控制中心、剪貼簿選單等外殼浮動面板使用深色莫蘭迪模式
 source     = "builtin"
