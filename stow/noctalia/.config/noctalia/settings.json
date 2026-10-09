@@ -1,17 +1,17 @@
 {
   "bar": {
     "position": "top",
-    "floating": true,
-    "thickness": 38,
-    "marginEdge": 8,
-    "marginEnds": 12,
-    "radius": 16,
-    "backgroundOpacity": 0.85,
-    "capsule": true,
-    "capsuleRadius": 8,
-    "capsulePadding": 8,
-    "padding": 10,
-    "widgetSpacing": 8,
+    "floating": false,
+    "thickness": 32,
+    "marginEdge": 0,
+    "marginEnds": 0,
+    "radius": 0,
+    "backgroundOpacity": 0.95,
+    "capsule": false,
+    "capsuleRadius": 0,
+    "capsulePadding": 0,
+    "padding": 12,
+    "widgetSpacing": 10,
     "widgets": {
       "left": [
         { "id": "Launcher", "type": "Launcher" },
@@ -55,6 +55,6 @@
   "theme": {
     "mode": "dark",
     "shellMode": "dark",
-    "name": "Caelestia-M3"
+    "name": "Linear-Dark"
   }
 }

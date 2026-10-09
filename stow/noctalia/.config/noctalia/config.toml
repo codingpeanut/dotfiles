@@ -47,7 +47,7 @@ alpha     = 0.55
 [shell.panel]
 transparency_mode        = "glass"    # solid | soft | glass (微透毛玻璃)
 borders                  = true
-border_color             = "#d0bcff"  # Caelestia M3 柔和紫藍邊框微發光
+border_color             = "#ffffff14" # Linear 極細 1px 白高光 (8% 透明度)
 border_width             = 1.0
 shadow                   = true
 launcher_placement       = "floating" # Spotlight 居中浮動啟動器
@@ -106,98 +106,95 @@ position                 = "bottom_right" # 靠右下角顯示 (對齊 Caelestia
 offset_x                 = 24
 offset_y                 = 24
 
-# ── 狀態列外觀 (Bar - Caelestia 頂部水平懸浮藥丸島與 Material M3 微透膠囊) ─────
+# ── 狀態列外觀 (Bar - Linear / Raycast 現代深碳黑極簡滿版列) ───────────────
 [bar.default]
-position               = "top"               # 依使用者需求：維持在頂部水平懸浮列
-floating               = true                # 啟用 Caelestia 懸浮島模式
-thickness              = 38                  # 高度 38px (開闊通透的膠囊高度)
-margin_edge            = 8.0                 # 螢幕頂部邊距 8px (頂部微懸浮島嶼感)
-margin_ends            = 12.0                # 螢幕左右邊距 12px (完全獨立懸浮島)
+position               = "top"               # 頂部全寬
+floating               = false               # 貼齊螢幕邊緣 (不浮空、無贅肉)
+thickness              = 32                  # 高度 32px (精緻俐落、專業工作站質感)
+margin_edge            = 0.0                 # 頂部邊距 0px
+margin_ends            = 0.0                 # 左右邊距 0px
 margin_opposite_edge   = 0.0
 reserve_space          = true                # 保留專屬空間排擠視窗
-radius                 = 16                  # 懸浮島四周 16px 柔和圓角 (對齊 Caelestia rounding.large)
-concave_edge_corners   = false               # 停用內縮圓角
-padding                = 10                  # 兩側內容內縮 10px
-widget_spacing         = 8                   # 模組之間的間距 8px (對齊 Caelestia spacing.small)
-border_width           = 1.0                 # 細緻高光邊框 1px
-border_color           = "#d0bcff26"         # 15% 微透淡紫高光邊框
-background             = "#141218d9"         # Caelestia M3 深色莫蘭迪底色 (85% 不透明度)
+radius                 = 0                   # 滿版直角無圓角
+concave_edge_corners   = false
+padding                = 12                  # 內容兩側留白
+widget_spacing         = 10                  # 模組間距
+border_width           = 1.0                 # 底部 1px 高光
+border_color           = "#ffffff14"         # 8% 微弱高光白線
+background             = "#0b0c0fee"         # Linear 深炭灰底色 (93% 不透明度)
 
 # 佈局分組 (時間至中，指示器至左，托盤收合)
-# 1. 左側首端組：Logo/Launcher 啟動按鈕 + 工作區指示器 + 焦點視窗指示器
 start                  = ["launcher", "workspaces", "active_window"]
-# 2. 正中央獨立組：時鐘與日期置中 (Caelestia 招牌字體與點分隔排版)
 center                 = ["clock"]
-# 3. 右側末端組：多媒體黑膠 + 可收合托盤抽屜 + 狀態圖示組 (網路/藍牙/電量/音量) + 電源按鈕
 end                    = ["media", "tray", "network", "bluetooth", "battery", "volume", "session"]
 
-# 膠囊模組外觀 (Caelestia M3 獨立膠囊 pill 樣式：分層容器底色 + 超細微高光輪廓)
-capsule                = true
-capsule_radius         = 8
-capsule_padding        = 8
-capsule_fill           = "#211f26e6"         # Caelestia M3 容器膠囊底色 (90% 不透明度)
-capsule_border_width   = 1.0                 # 1px 精緻立體輪廓邊框
-capsule_border_color   = "#ffffff0d"         # 5% 極微透高光邊線，強化層次感
+# 模組容器樣式 (停用生硬包裹方塊，回歸純粹俐落)
+capsule                = false
+capsule_radius         = 0
+capsule_padding        = 0
+capsule_fill           = "transparent"
+capsule_border_width   = 0.0
+capsule_border_color   = "transparent"
 
 [widget.launcher]
-glyph                  = "apps"              # Caelestia 應用啟動膠囊圖示
-color                  = "#cac4d0"           # 低調次表面灰，優雅不喧賓奪主
+glyph                  = "apps"
+color                  = "#8b949e"           # Muted gray
 
 [widget.media]
 artist_first           = true
-art_size               = 20
+art_size               = 18
 max_length             = 180
 hide_when_no_media     = true
 hide_when_idle         = false
-rotate_album_art       = true
-color                  = "#efb8c8"           # 動態高亮：播放音樂時以柔粉色躍現
+rotate_album_art       = false
+color                  = "#e6edf3"           # Crisp silver white
 
 [widget.workspaces]
-style                  = "focus_hint"        # Caelestia 招牌指示器：閒置為精緻圓點，活躍為加長藥丸並帶焦點應用圖示
+style                  = "focus_hint"
 hide_empty             = false
 show_labels            = true
-show_icons             = true                # 活躍藥丸展示焦點視窗圖示
-pill_scale             = 1.1                 # 藥丸飽滿厚度
-active_pill_size       = 3.0                 # 當前頁面指示器橫向拉長 (Caelestia 流體動效)
-inactive_pill_size     = 1.4                 # 閒置頁面精緻小圓點
-capsule_padding        = 10
-active_color           = "#d0bcff"           # 動態高亮：當前焦點工作區莫蘭迪紫
-inactive_color         = "#49454f"           # 閒置工作區低調深灰圓點
+show_icons             = false
+pill_scale             = 1.0
+active_pill_size       = 2.2
+inactive_pill_size     = 1.0
+capsule_padding        = 6
+active_color           = "#ffffff"           # 當前焦點：純淨亮白
+inactive_color         = "#484f58"           # 閒置工作區：低調冷灰
 
 [widget.active_window]
-max_length             = 40                  # 左側焦點視窗標題指示器
-color                  = "#e6e1e5"           # 高對比清晰柔米白，閱讀舒適耐看
+max_length             = 40
+color                  = "#8b949e"           # 次級文字灰
 
 [widget.clock]
-format                 = "%H:%M  •  %a, %b %d" # Caelestia 招牌文字排版：點分隔時間與星期日期
-color                  = "#e6e1e5"           # 時間主體柔白，沉穩大氣
+format                 = "%H:%M  •  %a, %b %d"
+color                  = "#ffffff"           # 居中時鐘純淨亮白
 
 [widget.volume]
-color                  = "#cac4d0"           # 低調優雅灰
+color                  = "#8b949e"
 
 [widget.brightness]
-color                  = "#cac4d0"           # 低調優雅灰
+color                  = "#8b949e"
 
 [widget.network]
-color                  = "#cac4d0"           # 低調優雅灰
+color                  = "#8b949e"
 
 [widget.bluetooth]
-color                  = "#cac4d0"           # 低調優雅灰
+color                  = "#8b949e"
 
 [widget.battery]
-color                  = "#cac4d0"           # 低調優雅灰 (低電量由系統動態跳轉)
+color                  = "#8b949e"
 
 [widget.tray]
-drawer                 = true                # 可收合系統托盤抽屜
-drawer_columns         = 3                   # 抽屜展開欄數
-chevron_color          = "#cac4d0"           # 收合切換箭頭顏色
+drawer                 = true
+drawer_columns         = 3
+chevron_color          = "#8b949e"
 icon_size              = 16
 
 [widget.clipboard]
-color                  = "#cac4d0"
+color                  = "#8b949e"
 
 [widget.session]
-color                  = "#f2b8b5"           # 動態高亮：珊瑚紅電源按鈕 (功能明確識別)
+color                  = "#8b949e"
 
 # Spotlight 居中搜尋啟動器 (Win 鍵喚出)
 [shell.launcher]
