@@ -55,7 +55,7 @@ input {
 // Layout & Styling
 // -----------------------------------------------------------------------------
 layout {
-    gaps 12
+    gaps 14
     center-focused-column "never"
 
     default-column-width { proportion 0.5; }
@@ -69,8 +69,8 @@ layout {
 
     focus-ring {
         width 2
-        active-color "#7aa2f7"
-        inactive-color "#1a1b26"
+        active-color "#d0bcff"
+        inactive-color "#211f26"
     }
 
     border {
@@ -90,8 +90,13 @@ prefer-no-csd
 screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
 
 // -----------------------------------------------------------------------------
-// Window Rules (Floating dialogs & utility popups)
+// Window Rules (Global geometry & Floating dialogs)
 // -----------------------------------------------------------------------------
+// Caelestia fluid styling: smooth rounded window corners
+window-rule {
+    geometry-corner-radius 12
+    clip-to-geometry true
+}
 // Volume Control (pavucontrol / org.pulseaudio.pavucontrol)
 window-rule {
     match app-id=r#"(?i)pavucontrol"#

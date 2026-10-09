@@ -1,5 +1,5 @@
 # Starship configuration (~/.config/starship.toml)
-# Modern, fast prompt styling (Tokyo Night matching)
+# Modern, fast prompt styling (Caelestia Material You M3 matching)
 
 format = """
 $directory\
@@ -17,39 +17,39 @@ $character"""
 command_timeout = 1000
 
 [character]
-success_symbol = "[❯](bold #7aa2f7)"
-error_symbol = "[❯](bold #f7768e)"
+success_symbol = "[❯](bold #d0bcff)"
+error_symbol = "[❯](bold #f2b8b5)"
 
 [directory]
 truncation_length = 3
 truncation_symbol = "…/"
-style = "bold #7dcfff"
+style = "bold #a8c7fa"
 read_only = " 󰌾"
 
 [git_branch]
 symbol = " "
-style = "bold #bb9af7"
+style = "bold #efb8c8"
 
 [git_status]
-style = "bold #f7768e"
+style = "bold #f2b8b5"
 format = '([$all_status$ahead_behind]($style) )'
 
 [cmd_duration]
 min_time = 2000
-format = "took [$duration](#e0af68) "
+format = "took [$duration](#fedba8) "
 
 [nodejs]
 symbol = "󰎙 "
-style = "bold #9ece6a"
+style = "bold #c4eed0"
 
 [python]
 symbol = "󰌠 "
-style = "bold #e0af68"
+style = "bold #fedba8"
 
 [rust]
 symbol = "󱘗 "
-style = "bold #f7768e"
+style = "bold #f2b8b5"
 
 [golang]
 symbol = "󰟓 "
-style = "bold #7dcfff"
+style = "bold #a8c7fa"

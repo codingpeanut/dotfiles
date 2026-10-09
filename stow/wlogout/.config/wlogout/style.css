@@ -4,16 +4,16 @@
 }
 
 window {
-    background-color: rgba(10, 11, 16, 0.65);
+    background-color: rgba(20, 18, 24, 0.75);
 }
 
 button {
     border-radius: 20px;
     border-style: solid;
     border-width: 1px;
-    border-color: rgba(255, 255, 255, 0.08);
-    color: #c0caf5;
-    background-color: rgba(26, 27, 38, 0.92);
+    border-color: rgba(208, 188, 255, 0.12);
+    color: #e6e1e5;
+    background-color: rgba(33, 31, 38, 0.94);
     margin: 0;
     background-repeat: no-repeat;
     background-position: center 24%;
@@ -22,16 +22,16 @@ button {
     font-size: 13px;
     font-weight: 500;
     padding-top: 68px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
     transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
 button:focus {
     outline-style: none;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-    border-color: rgba(255, 255, 255, 0.08);
-    color: #c0caf5;
-    background-color: rgba(26, 27, 38, 0.92);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+    border-color: rgba(208, 188, 255, 0.25);
+    color: #e6e1e5;
+    background-color: rgba(33, 31, 38, 0.94);
 }
 
 button:hover,
@@ -45,10 +45,10 @@ button:active {
 
 #lock:hover,
 #lock:active {
-    background-color: rgba(122, 162, 247, 0.16);
-    border-color: #7aa2f7;
-    color: #7aa2f7;
-    box-shadow: 0 0 20px rgba(122, 162, 247, 0.45);
+    background-color: rgba(208, 188, 255, 0.2);
+    border-color: #d0bcff;
+    color: #d0bcff;
+    box-shadow: 0 0 20px rgba(208, 188, 255, 0.45);
 }
 
 #suspend {
@@ -57,10 +57,10 @@ button:active {
 
 #suspend:hover,
 #suspend:active {
-    background-color: rgba(42, 195, 222, 0.16);
-    border-color: #2ac3de;
-    color: #2ac3de;
-    box-shadow: 0 0 20px rgba(42, 195, 222, 0.45);
+    background-color: rgba(168, 199, 250, 0.2);
+    border-color: #a8c7fa;
+    color: #a8c7fa;
+    box-shadow: 0 0 20px rgba(168, 199, 250, 0.45);
 }
 
 #logout {
@@ -69,10 +69,10 @@ button:active {
 
 #logout:hover,
 #logout:active {
-    background-color: rgba(187, 154, 247, 0.16);
-    border-color: #bb9af7;
-    color: #bb9af7;
-    box-shadow: 0 0 20px rgba(187, 154, 247, 0.45);
+    background-color: rgba(239, 184, 200, 0.2);
+    border-color: #efb8c8;
+    color: #efb8c8;
+    box-shadow: 0 0 20px rgba(239, 184, 200, 0.45);
 }
 
 #reboot {
@@ -81,10 +81,10 @@ button:active {
 
 #reboot:hover,
 #reboot:active {
-    background-color: rgba(224, 175, 104, 0.16);
-    border-color: #e0af68;
-    color: #e0af68;
-    box-shadow: 0 0 20px rgba(224, 175, 104, 0.45);
+    background-color: rgba(254, 219, 168, 0.2);
+    border-color: #fedba8;
+    color: #fedba8;
+    box-shadow: 0 0 20px rgba(254, 219, 168, 0.45);
 }
 
 #shutdown {
@@ -93,8 +93,8 @@ button:active {
 
 #shutdown:hover,
 #shutdown:active {
-    background-color: rgba(247, 118, 142, 0.18);
-    border-color: #f7768e;
-    color: #f7768e;
-    box-shadow: 0 0 20px rgba(247, 118, 142, 0.5);
+    background-color: rgba(242, 184, 181, 0.22);
+    border-color: #f2b8b5;
+    color: #f2b8b5;
+    box-shadow: 0 0 20px rgba(242, 184, 181, 0.5);
 }

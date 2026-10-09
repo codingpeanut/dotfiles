@@ -1,14 +1,14 @@
 {
   "bar": {
     "position": "top",
-    "floating": false,
-    "thickness": 34,
-    "marginEdge": 0,
-    "marginEnds": 0,
-    "radius": 0,
+    "floating": true,
+    "thickness": 36,
+    "marginEdge": 6,
+    "marginEnds": 12,
+    "radius": 12,
     "backgroundOpacity": 0.85,
     "capsule": true,
-    "capsuleRadius": 6,
+    "capsuleRadius": 8,
     "capsulePadding": 10,
     "padding": 10,
     "widgetSpacing": 6,
@@ -55,6 +55,6 @@
   "theme": {
     "mode": "light",
     "shellMode": "light",
-    "name": "Tokyo-Night"
+    "name": "Caelestia-M3"
   }
 }

@@ -47,7 +47,7 @@ alpha     = 0.55
 [shell.panel]
 transparency_mode        = "glass"    # solid | soft | glass (微透毛玻璃)
 borders                  = true
-border_color             = "#7aa2f7"  # Tokyo Night 藍色邊框微發光
+border_color             = "#d0bcff"  # Caelestia M3 柔和紫藍邊框微發光
 border_width             = 1.0
 shadow                   = true
 launcher_placement       = "floating" # Spotlight 居中浮動啟動器
@@ -106,38 +106,38 @@ position                 = "bottom_right" # 移至右下角，避免遮擋中央
 offset_x                 = 24
 offset_y                 = 24
 
-# ── 狀態列外觀 (Bar - 全寬頂部狀態列，對齊 Waybar 佈局與 Tokyo Night 膠囊樣式) ───
+# ── 狀態列外觀 (Bar - Caelestia 懸浮藥丸島與 Material M3 微透膠囊) ─────────────
 [bar.default]
 position               = "top"
-floating               = false               # 關鍵開關：關閉浮動島模式，啟用 Dock 全寬貼邊
-thickness              = 34                  # 高度 34px (同 Waybar height: 34)
-margin_edge            = 0.0                 # 頂部外距 0 (全寬貼齊螢幕頂部邊緣)
-margin_ends            = 0.0                 # 左右邊界 0 (全寬 100% 橫跨整個螢幕)
+floating               = true                # 啟用 Caelestia 懸浮島模式
+thickness              = 36                  # 高度 36px (膠囊飽滿開闊)
+margin_edge            = 6.0                 # 頂部邊距 6px (離頂部微懸浮)
+margin_ends            = 12.0                # 左右邊界 12px (懸浮浮島感)
 margin_opposite_edge   = 0.0
 reserve_space          = true                # 保留專屬空間排擠視窗
-radius                 = 0                   # 全寬無外框圓角
+radius                 = 12                  # 懸浮島四周 12px 柔和圓角
 concave_edge_corners   = false               # 停用內縮圓角
-padding                = 10                  # 兩側內容內縮 10px，避免模組緊貼螢幕邊界
+padding                = 10                  # 兩側內容內縮 10px
 widget_spacing         = 6                   # 模組之間的間距
-border_width           = 1.0                 # 下邊框 1px
-border_color           = "#ffffff1a"         # 10% 微透白色下邊框
-background             = "#1a1b26d9"         # Tokyo Night 半透明微透毛玻璃 (85% 不透明度)
+border_width           = 1.0                 # 細緻高光下邊框 1px
+border_color           = "#d0bcff26"         # 15% 微透淡紫高光邊框
+background             = "#141218d9"         # Caelestia M3 深色莫蘭迪底色 (85% 不透明度)
 
 # 佈局分組 (對齊 Caelestia 膠囊藥丸分佈)
 start                  = ["launcher", "workspaces", "active_window"]
 center                 = ["clock"]
 end                    = ["media", "volume", "brightness", "network", "bluetooth", "battery", "tray", "clipboard", "session"]
 
-# 膠囊模組外觀 (模仿 Caelestia 獨立膠囊 pill 與樣式)
+# 膠囊模組外觀 (Caelestia M3 獨立膠囊 pill 樣式)
 capsule                = true
-capsule_radius         = 6
+capsule_radius         = 8
 capsule_padding        = 10
-capsule_fill           = "#24283bd9"         # Tokyo Night 模組獨立微透膠囊底色 (深色 85% 不透明度)
+capsule_fill           = "#211f26e6"         # Caelestia M3 容器膠囊底色 (90% 不透明度)
 capsule_border_width   = 0
 
 [widget.launcher]
 glyph                  = "apps"              # Caelestia 應用啟動膠囊圖示
-color                  = "#7aa2f7"
+color                  = "#d0bcff"
 
 [widget.media]
 artist_first           = true
@@ -146,50 +146,50 @@ max_length             = 200
 hide_when_no_media     = true
 hide_when_idle         = false
 rotate_album_art       = true
-color                  = "#bb9af7"
+color                  = "#efb8c8"
 
 [widget.workspaces]
 style                  = "regular"
 hide_empty             = false
 show_labels            = true
 pill_scale             = 1.1                 # 微微拉大厚度
-active_pill_size       = 3.2                 # 當前頁面指示器加寬 (預設 2.2 -> 3.2)
-inactive_pill_size     = 1.6                 # 其他頁面指示器加寬 (預設 1.0 -> 1.6)
+active_pill_size       = 3.2                 # 當前頁面指示器加寬 (3.2x 流體變形)
+inactive_pill_size     = 1.6                 # 其他頁面指示器加寬 (1.6x 藥丸)
 capsule_padding        = 12                  # 兩側 padding 加寬
-active_color           = "#7aa2f7"
-inactive_color         = "#565f89"
+active_color           = "#d0bcff"
+inactive_color         = "#79747e"
 
 [widget.active_window]
 max_length             = 50
-color                  = "#7dcfff"
+color                  = "#a8c7fa"
 
 [widget.clock]
 format                 = " %H:%M  󰃭 %Y-%m-%d"
-color                  = "#bb9af7"
+color                  = "#d0bcff"
 
 [widget.volume]
-color                  = "#7aa2f7"
+color                  = "#a8c7fa"
 
 [widget.brightness]
-color                  = "#e0af68"
+color                  = "#e8c48a"
 
 [widget.network]
-color                  = "#7dcfff"
+color                  = "#a8c7fa"
 
 [widget.bluetooth]
-color                  = "#7aa2f7"
+color                  = "#d0bcff"
 
 [widget.battery]
-color                  = "#9ece6a"
+color                  = "#a8d5a2"
 
 [widget.tray]
 icon_size              = 16
 
 [widget.clipboard]
-color                  = "#7aa2f7"
+color                  = "#d0bcff"
 
 [widget.session]
-color                  = "#f7768e"
+color                  = "#f2b8b5"
 
 # Spotlight 居中搜尋啟動器 (Win 鍵喚出)
 [shell.launcher]
