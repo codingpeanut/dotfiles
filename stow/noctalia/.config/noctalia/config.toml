@@ -131,16 +131,17 @@ center                 = ["clock"]
 # 3. 右側末端組：多媒體黑膠 + 可收合托盤抽屜 + 狀態圖示組 (網路/藍牙/電量/音量) + 電源按鈕
 end                    = ["media", "tray", "network", "bluetooth", "battery", "volume", "session"]
 
-# 膠囊模組外觀 (Caelestia M3 獨立膠囊 pill 樣式)
+# 膠囊模組外觀 (Caelestia M3 獨立膠囊 pill 樣式：分層容器底色 + 超細微高光輪廓)
 capsule                = true
 capsule_radius         = 8
 capsule_padding        = 8
 capsule_fill           = "#211f26e6"         # Caelestia M3 容器膠囊底色 (90% 不透明度)
-capsule_border_width   = 0
+capsule_border_width   = 1.0                 # 1px 精緻立體輪廓邊框
+capsule_border_color   = "#ffffff0d"         # 5% 極微透高光邊線，強化層次感
 
 [widget.launcher]
 glyph                  = "apps"              # Caelestia 應用啟動膠囊圖示
-color                  = "#d0bcff"           # Caelestia m3primary
+color                  = "#cac4d0"           # 低調次表面灰，優雅不喧賓奪主
 
 [widget.media]
 artist_first           = true
@@ -149,7 +150,7 @@ max_length             = 180
 hide_when_no_media     = true
 hide_when_idle         = false
 rotate_album_art       = true
-color                  = "#efb8c8"
+color                  = "#efb8c8"           # 動態高亮：播放音樂時以柔粉色躍現
 
 [widget.workspaces]
 style                  = "focus_hint"        # Caelestia 招牌指示器：閒置為精緻圓點，活躍為加長藥丸並帶焦點應用圖示
@@ -160,43 +161,43 @@ pill_scale             = 1.1                 # 藥丸飽滿厚度
 active_pill_size       = 3.0                 # 當前頁面指示器橫向拉長 (Caelestia 流體動效)
 inactive_pill_size     = 1.4                 # 閒置頁面精緻小圓點
 capsule_padding        = 10
-active_color           = "#d0bcff"           # Caelestia m3primary
-inactive_color         = "#49454f"           # Caelestia m3outline
+active_color           = "#d0bcff"           # 動態高亮：當前焦點工作區莫蘭迪紫
+inactive_color         = "#49454f"           # 閒置工作區低調深灰圓點
 
 [widget.active_window]
 max_length             = 40                  # 左側焦點視窗標題指示器
-color                  = "#a8c7fa"           # Caelestia m3secondary 冰藍
+color                  = "#e6e1e5"           # 高對比清晰柔米白，閱讀舒適耐看
 
 [widget.clock]
 format                 = "%H:%M  •  %a, %b %d" # Caelestia 招牌文字排版：點分隔時間與星期日期
-color                  = "#efb8c8"           # Caelestia m3tertiary 柔粉色
+color                  = "#e6e1e5"           # 時間主體柔白，沉穩大氣
 
 [widget.volume]
-color                  = "#a8c7fa"
+color                  = "#cac4d0"           # 低調優雅灰
 
 [widget.brightness]
-color                  = "#fedba8"
+color                  = "#cac4d0"           # 低調優雅灰
 
 [widget.network]
-color                  = "#a8c7fa"
+color                  = "#cac4d0"           # 低調優雅灰
 
 [widget.bluetooth]
-color                  = "#d0bcff"
+color                  = "#cac4d0"           # 低調優雅灰
 
 [widget.battery]
-color                  = "#c4eed0"
+color                  = "#cac4d0"           # 低調優雅灰 (低電量由系統動態跳轉)
 
 [widget.tray]
-drawer                 = true                # 依要求：可收合系統托盤抽屜 (Collapsible Tray Drawer)
+drawer                 = true                # 可收合系統托盤抽屜
 drawer_columns         = 3                   # 抽屜展開欄數
-chevron_color          = "#d0bcff"           # 收合切換箭頭顏色
+chevron_color          = "#cac4d0"           # 收合切換箭頭顏色
 icon_size              = 16
 
 [widget.clipboard]
-color                  = "#d0bcff"
+color                  = "#cac4d0"
 
 [widget.session]
-color                  = "#f2b8b5"           # Caelestia m3error 珊瑚紅電源鈕
+color                  = "#f2b8b5"           # 動態高亮：珊瑚紅電源按鈕 (功能明確識別)
 
 # Spotlight 居中搜尋啟動器 (Win 鍵喚出)
 [shell.launcher]

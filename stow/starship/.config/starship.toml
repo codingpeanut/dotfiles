@@ -23,7 +23,7 @@ error_symbol = "[❯](bold #f2b8b5)"
 [directory]
 truncation_length = 3
 truncation_symbol = "…/"
-style = "bold #a8c7fa"
+style = "bold #e6e1e5"
 read_only = " 󰌾"
 
 [git_branch]

@@ -11,14 +11,14 @@ button {
     border-radius: 20px;
     border-style: solid;
     border-width: 1px;
-    border-color: rgba(208, 188, 255, 0.12);
-    color: #e6e1e5;
+    border-color: rgba(255, 255, 255, 0.06);
+    color: #cac4d0;
     background-color: rgba(33, 31, 38, 0.94);
     margin: 0;
     background-repeat: no-repeat;
     background-position: center 24%;
     background-size: 38px;
-    font-family: "JetBrains Mono", "Noto Sans CJK TC", sans-serif;
+    font-family: "Rubik", "JetBrains Mono", "Noto Sans CJK TC", sans-serif;
     font-size: 13px;
     font-weight: 500;
     padding-top: 68px;
