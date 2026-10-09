@@ -58,16 +58,18 @@ session_placement        = "attached"
 launcher_position        = "center"
 clipboard_position       = "center"
 
-# ── 狀態列外觀 (Bar - 完全模仿 Waybar 佈局與 Tokyo Night 微透膠囊外觀) ────────
+# ── 狀態列外觀 (Bar - 全寬頂部狀態列，對齊 Waybar 佈局與 Tokyo Night 膠囊樣式) ───
 [bar.default]
 position               = "top"
 thickness              = 34                  # 高度 34px (同 Waybar height: 34)
-margin_edge            = 6                   # 頂部外距 6px (同 Waybar margin-top: 6)
-margin_ends            = 10                  # 左右邊界外距 10px (同 Waybar margin-left/right: 10)
+margin_edge            = 0                   # 頂部外距 0 (全寬貼齊螢幕頂部邊緣)
+margin_ends            = 0                   # 左右邊界 0 (全寬 100% 橫跨整個螢幕)
 margin_opposite_edge   = 0
 reserve_space          = true                # 保留專屬空間排擠視窗
-radius                 = 8                   # 外框圓角 8px
-border_width           = 1.0                 # 外框 1px
+radius                 = 0                   # 全寬無外框圓角
+padding                = 10                  # 兩側內容內縮 10px，避免模組緊貼螢幕邊界
+widget_spacing         = 6                   # 模組之間的間距
+border_width           = 1.0                 # 下邊框 1px
 border_color           = "rgba(255, 255, 255, 0.1)"
 background             = "rgba(26, 27, 38, 0.85)" # Tokyo Night 半透明微透毛玻璃
 
