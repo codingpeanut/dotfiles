@@ -4,6 +4,7 @@
 # COPR repositories to enable
 system_copr_repos:
   - yalter/niri
+  - zhangyi6324/noctalia-shell
   - errornointernet/quickshell
   - atim/starship
   - celestelove/libcava
@@ -12,6 +13,7 @@ system_copr_repos:
 system_packages:
   # Window Manager & Desktop Environment
   - niri
+  - noctalia
   - quickshell
   - waybar
   - kitty
@@ -139,6 +141,7 @@ flatpak_user_packages:
 # GNU Stow modules to symlink into $HOME
 stow_packages:
   - niri
+  - noctalia
   - waybar
   - kitty
   - fuzzel

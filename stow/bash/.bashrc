@@ -46,12 +46,12 @@ alias v="nvim"
 alias neofetch="fastfetch"
 
 # Quick dotfiles manager alias
-if [ -f "$HOME/dev/dotfiles-fedora/Justfile" ]; then
-    alias dotfiles="just -f $HOME/dev/dotfiles-fedora/Justfile"
-elif [ -f "$HOME/dotfiles-fedora/Justfile" ]; then
-    alias dotfiles="just -f $HOME/dotfiles-fedora/Justfile"
+if [ -f "$HOME/dev/dotfiles/Justfile" ]; then
+    alias dotfiles="just -f $HOME/dev/dotfiles/Justfile"
 elif [ -f "$HOME/dotfiles/Justfile" ]; then
     alias dotfiles="just -f $HOME/dotfiles/Justfile"
+elif [ -f "$HOME/dev/dotfiles-fedora/Justfile" ]; then
+    alias dotfiles="just -f $HOME/dev/dotfiles-fedora/Justfile"
 fi
 
 # FZF key bindings & fuzzy tab completion (**<TAB>, Ctrl+R, Ctrl+T, Alt+C)

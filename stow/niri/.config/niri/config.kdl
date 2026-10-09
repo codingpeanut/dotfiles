@@ -14,8 +14,11 @@ environment {
 // -----------------------------------------------------------------------------
 // Auto-start Services & Daemons
 // -----------------------------------------------------------------------------
-// Desktop Shell (Noctalia preferred; auto-suppresses Waybar conflicts, or falls back to Waybar)
-spawn-sh-at-startup "command -v desktop-shell >/dev/null 2>&1 && exec desktop-shell || (command -v noctalia >/dev/null 2>&1 && (killall waybar mako 2>/dev/null || true; exec noctalia) || (nohup mako >/dev/null 2>&1 & exec waybar))"
+// Desktop Shell: Noctalia (開機預設自啟)
+spawn-at-startup "noctalia"
+
+// Clean up any stray or autostarted Waybar / Mako instances from previous sessions or systemd
+spawn-sh-at-startup "killall waybar mako 2>/dev/null || true; systemctl --user stop waybar 2>/dev/null || true; systemctl --user disable waybar 2>/dev/null || true"
 
 spawn-at-startup "fcitx5" "-d" "-r"
 spawn-at-startup "fcitx5-watcher"

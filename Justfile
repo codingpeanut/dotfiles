@@ -127,11 +127,24 @@ deps:
         chmod +x "{{ home }}/.local/bin/nmgui"; \
     fi
 
+# Configure Noctalia as the default boot desktop shell and disable Waybar
+default-noctalia:
+    @echo "==> Configuring Noctalia as default boot shell..."
+    @systemctl --user stop waybar 2>/dev/null || true
+    @systemctl --user disable waybar 2>/dev/null || true
+    @rm -f "{{ home }}/.config/autostart/waybar.desktop" 2>/dev/null || true
+    @if [ -d "{{ home }}/.config/systemd/user" ]; then \
+        systemctl --user daemon-reload 2>/dev/null || true; \
+        systemctl --user enable noctalia 2>/dev/null || true; \
+    fi
+    @echo "==> Noctalia is configured as the default boot shell!"
+
 # One-stop command to fix everything: pull, install dependencies, stow, restart bars, and verify
 fix:
     @echo "==> Pulling latest changes from Git..."
     @git pull --rebase --autostash || git reset --hard origin/main
     @just deps
+    @just default-noctalia
     @just stow
     @just reload
     @just check

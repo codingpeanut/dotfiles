@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Noctalia
+GenericName=Wayland Desktop Shell
+Comment=Modern Wayland Desktop Shell for Niri
+Exec=noctalia
+Terminal=false
+Categories=Utility;System;
+X-GNOME-Autostart-enabled=true
+X-KDE-autostart-after=panel
