@@ -72,12 +72,23 @@ just push     # 提交並推送最新修改至 GitHub
 dotfiles/
 ├── Justfile                  # 常用任務界面 (just stow, just reload, just fix...)
 ├── README.md                 # 說明文件
+├── .gitignore                # Git 忽略設定
+│
+├── ansible/                  # 宣告式系統套件與配置自動化
+├── scripts/                  # 系統工具與引導安裝腳本
 │
 └── stow/                     # 按應用模組化的 GNU Stow 配置
     ├── niri/                 # Niri 視窗管理器 (~/.config/niri/config.kdl)
     ├── noctalia/             # Noctalia 現代桌面外殼 (~/.config/noctalia/config.toml)
+    ├── waybar/               # Waybar 頂部狀態列 (備用/原生狀態列)
+    ├── mako/                 # Mako 桌面通知
     ├── kitty/                # Kitty 終端機 (Tokyo Night 深色微透主題)
+    ├── fuzzel/               # Fuzzel 輕量 App 啟動器
+    ├── wlogout/              # Wlogout 圓形按鈕開關機選單
     ├── fcitx5/               # Fcitx5 輸入法與新酷音注音配置
+    ├── nvim/                 # Neovim (init.lua) 與 Vim (.vimrc)
+    ├── starship/             # Starship 跨 Shell 終端 Prompt
+    ├── bash/                 # Shell 環境、alias 與桌面輔助腳本 (~/.local/bin)
     ├── hypr/                 # Hyprlock (毛玻璃鎖定) 與 Hypridle (閒置管理)
     └── xdg-desktop-portal/   # Wayland 桌面入口協議與螢幕分享設定
 ```

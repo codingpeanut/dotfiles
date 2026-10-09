@@ -1,0 +1,6 @@
+---
+- name: Install declarative system RPM packages via DNF
+  ansible.builtin.dnf:
+    name: "{{ (system_packages | default([], true)) + (system_packages_extra | default([], true)) }}"
+    state: present
+    allowerasing: true

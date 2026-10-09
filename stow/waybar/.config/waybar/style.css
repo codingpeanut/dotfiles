@@ -1,0 +1,264 @@
+* {
+    border: none;
+    border-radius: 8px;
+    font-family: "JetBrainsMono Nerd Font", "Noto Sans", sans-serif;
+    font-size: 13px;
+    min-height: 0;
+}
+
+window#waybar {
+    background-color: rgba(26, 27, 38, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #c0caf5;
+    transition-property: background-color;
+    transition-duration: .5s;
+}
+
+#workspaces button {
+    padding: 0 8px;
+    background-color: transparent;
+    color: #565f89;
+    border-radius: 6px;
+    margin: 3px 2px;
+}
+
+#workspaces button:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #c0caf5;
+}
+
+#workspaces button.active {
+    background-color: #7aa2f7;
+    color: #15161e;
+    font-weight: bold;
+}
+
+#window {
+    padding: 0 10px;
+    color: #7dcfff;
+    font-weight: 500;
+}
+
+#clock,
+#battery,
+#cpu,
+#memory,
+#idle_inhibitor,
+#power-profiles-daemon,
+#network,
+#custom-bluetooth,
+#bluetooth,
+#pulseaudio,
+#backlight,
+#custom-tray-toggle,
+#custom-clipboard,
+#custom-notification,
+#custom-power,
+#tray {
+    padding: 0 10px;
+    margin: 4px 3px;
+    background-color: rgba(36, 40, 59, 0.85);
+    border-radius: 6px;
+    color: #c0caf5;
+    transition: all 0.2s ease-in-out;
+}
+
+#clock:hover,
+#battery:hover,
+#cpu:hover,
+#memory:hover,
+#idle_inhibitor:hover,
+#power-profiles-daemon:hover,
+#network:hover,
+#custom-bluetooth:hover,
+#bluetooth:hover,
+#pulseaudio:hover,
+#backlight:hover,
+#custom-tray-toggle:hover,
+#custom-clipboard:hover,
+#custom-notification:hover,
+#custom-power:hover {
+    background-color: rgba(65, 72, 104, 0.95);
+    color: #ffffff;
+}
+
+#clock {
+    color: #bb9af7;
+    font-weight: bold;
+}
+
+#cpu {
+    color: #7aa2f7;
+}
+
+#memory {
+    color: #b4f9f8;
+}
+
+#network {
+    color: #7dcfff;
+}
+
+#network.disconnected {
+    color: #f7768e;
+}
+
+#custom-bluetooth,
+#bluetooth {
+    color: #7aa2f7;
+    padding: 0 12px;
+    font-size: 14px;
+}
+
+#custom-bluetooth.connected,
+#bluetooth.connected {
+    color: #9ece6a;
+}
+
+#custom-bluetooth.disabled,
+#custom-bluetooth.off,
+#bluetooth.disabled,
+#bluetooth.off {
+    color: #565f89;
+}
+
+#battery {
+    color: #9ece6a;
+}
+
+#battery.warning:not(.charging) {
+    color: #e0af68;
+}
+
+#battery.charging, #battery.plugged {
+    color: #73daca;
+}
+
+#battery.critical:not(.charging) {
+    background-color: #f7768e;
+    color: #15161e;
+    animation-name: blink;
+    animation-duration: 0.5s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+#pulseaudio {
+    color: #2ac3de;
+}
+
+#pulseaudio.muted {
+    background-color: #414868;
+    color: #f7768e;
+}
+
+#backlight {
+    color: #e0af68;
+}
+
+#backlight-slider {
+    padding: 0 4px;
+    margin: 4px 2px;
+}
+
+#backlight-slider trough {
+    min-width: 80px;
+    min-height: 8px;
+    border-radius: 4px;
+    background-color: rgba(26, 27, 38, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#backlight-slider highlight {
+    min-height: 8px;
+    border-radius: 4px;
+    background-color: #e0af68;
+}
+
+#backlight-slider slider {
+    min-width: 14px;
+    min-height: 14px;
+    margin: -3px 0;
+    border-radius: 7px;
+    background-color: #ff9e64;
+    border: 2px solid #1a1b26;
+    box-shadow: none;
+    background-image: none;
+}
+
+#custom-tray-toggle {
+    color: #7aa2f7;
+    padding: 0 8px;
+    font-size: 14px;
+}
+
+#custom-notification {
+    color: #7aa2f7;
+    padding: 0 8px;
+    font-size: 14px;
+}
+
+#custom-notification.unread {
+    color: #bb9af7;
+    font-weight: bold;
+}
+
+#custom-notification.dnd {
+    color: #f7768e;
+}
+
+#custom-clipboard {
+    color: #e0af68;
+    padding: 0 8px;
+    font-size: 14px;
+}
+
+#custom-power {
+    color: #f7768e;
+    padding: 0 8px;
+    font-size: 14px;
+}
+
+#idle_inhibitor {
+    color: #565f89;
+    padding: 0 10px;
+    font-size: 14px;
+}
+
+#idle_inhibitor.activated {
+    color: #f7768e;
+}
+
+#power-profiles-daemon {
+    color: #7aa2f7;
+    padding: 0 10px;
+    font-size: 14px;
+}
+
+#power-profiles-daemon.performance {
+    color: #f7768e;
+}
+
+#power-profiles-daemon.balanced {
+    color: #7aa2f7;
+}
+
+#power-profiles-daemon.power-saver {
+    color: #9ece6a;
+}
+
+
+
+tooltip {
+    background: #1a1b26;
+    border: 1px solid #7aa2f7;
+    border-radius: 8px;
+    padding: 8px;
+}
+
+tooltip label {
+    color: #c0caf5;
+    font-family: "JetBrainsMono Nerd Font", monospace;
+    font-size: 13px;
+}

@@ -1,0 +1,150 @@
+---
+# Default declarative configuration for Fedora
+
+# COPR repositories to enable
+system_copr_repos:
+  - yalter/niri
+  - errornointernet/quickshell
+  - atim/starship
+  - celestelove/libcava
+
+# System RPM packages to install via DNF
+system_packages:
+  # Window Manager & Desktop Environment
+  - niri
+  - quickshell
+  - waybar
+  - kitty
+  - fuzzel
+  - mako
+  - distrobox
+  - xdg-desktop-portal-gnome
+  - xdg-desktop-portal-gtk
+  - mate-polkit
+
+  # Chinese Input Method (Fcitx5 Framework & Engines)
+  - fcitx5
+  - fcitx5-chinese-addons
+  - fcitx5-chewing
+  - fcitx5-configtool
+  - fcitx5-gtk3
+  - fcitx5-gtk4
+  - fcitx5-qt5
+  - fcitx5-qt6
+
+  # CJK, Emoji & Base Fonts
+  - google-noto-sans-cjk-fonts
+  - google-noto-serif-cjk-fonts
+  - google-noto-color-emoji-fonts
+  - jetbrains-mono-fonts
+
+  # Desktop Utilities & File Management
+  - nautilus
+  - file-roller
+  - blueman
+  - bluez
+  - bluez-tools
+  - nm-connection-editor
+  - network-manager-applet
+  - NetworkManager-tui
+  - gnome-calendar
+  - gnome-control-center
+
+  # Multimedia Codecs (RPM Fusion GStreamer plugins)
+  - gstreamer1-plugins-ugly
+  - gstreamer1-plugins-bad-freeworld
+  - gstreamer1-plugin-openh264
+
+  # Applications & Browsers
+  - google-chrome-stable
+  - code
+
+  # Editors & Text Tools
+  - neovim
+  - vim-enhanced
+
+  # Shell, Prompt & Terminal Aesthetics
+  - btop
+  - starship
+  - zoxide
+  - fzf
+  - eza
+  - bat
+  - fastfetch
+
+  # Developer Runtimes & Package Managers
+  - nodejs
+  - npm
+  - python3
+  - python3-pip
+
+  # Core Tools & Workflow
+  - stow
+  - just
+  - git
+  - curl
+  - jq
+  - ripgrep
+  - fd-find
+
+  # Wayland Utilities & Audio / Brightness / Screen Capture
+  - wl-clipboard
+  - cliphist
+  - brightnessctl
+  - ddcutil
+  - swaylock
+  - swayidle
+  - wlogout
+  - grim
+  - slurp
+  - swappy
+  - playerctl
+  - pavucontrol
+  - libnotify
+  - cava
+  - tesseract
+  - tesseract-langpack-eng
+
+  # Build Tools & Libraries (for Caelestia / Quickshell extensions)
+  - cmake
+  - ninja-build
+  - gcc-c++
+  - qt6-qtdeclarative-devel
+  - qt6-qtbase-devel
+  - qt6-qtmultimedia-devel
+  - qt6-qtwayland-devel
+  - qt6-qtsvg-devel
+  - qt6-qtshadertools-devel
+  - qt6-qtimageformats
+  - qt6-qt5compat
+  - qt6-qt5compat-devel
+  - libqalculate-devel
+  - aubio-devel
+  - pipewire-devel
+  - libddcutil-devel
+  - libcava-devel
+
+# System services to enable and start (systemd system-level)
+system_services:
+  - bluetooth
+
+# User services to enable and start (systemd user-level)
+user_services: []
+
+# Flatpak applications to install for current user
+flatpak_user_packages:
+  # - org.mozilla.firefox # Optional: Fedora already includes Firefox RPM out of the box
+  - com.discordapp.Discord
+
+# GNU Stow modules to symlink into $HOME
+stow_packages:
+  - niri
+  - waybar
+  - kitty
+  - fuzzel
+  - mako
+  - bash
+  - nvim
+  - starship
+  - wlogout
+  - fcitx5

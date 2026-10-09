@@ -1,0 +1,100 @@
+* {
+    background-image: none;
+    box-shadow: none;
+}
+
+window {
+    background-color: rgba(10, 11, 16, 0.65);
+}
+
+button {
+    border-radius: 20px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.08);
+    color: #c0caf5;
+    background-color: rgba(26, 27, 38, 0.92);
+    margin: 0;
+    background-repeat: no-repeat;
+    background-position: center 24%;
+    background-size: 38px;
+    font-family: "JetBrains Mono", "Noto Sans CJK TC", sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding-top: 68px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+button:focus {
+    outline-style: none;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.08);
+    color: #c0caf5;
+    background-color: rgba(26, 27, 38, 0.92);
+}
+
+button:hover,
+button:active {
+    outline-style: none;
+}
+
+#lock {
+    background-image: image(url("./icons/lock.svg"), url("/usr/share/wlogout/icons/lock.png"));
+}
+
+#lock:hover,
+#lock:active {
+    background-color: rgba(122, 162, 247, 0.16);
+    border-color: #7aa2f7;
+    color: #7aa2f7;
+    box-shadow: 0 0 20px rgba(122, 162, 247, 0.45);
+}
+
+#suspend {
+    background-image: image(url("./icons/suspend.svg"), url("/usr/share/wlogout/icons/suspend.png"));
+}
+
+#suspend:hover,
+#suspend:active {
+    background-color: rgba(42, 195, 222, 0.16);
+    border-color: #2ac3de;
+    color: #2ac3de;
+    box-shadow: 0 0 20px rgba(42, 195, 222, 0.45);
+}
+
+#logout {
+    background-image: image(url("./icons/logout.svg"), url("/usr/share/wlogout/icons/logout.png"));
+}
+
+#logout:hover,
+#logout:active {
+    background-color: rgba(187, 154, 247, 0.16);
+    border-color: #bb9af7;
+    color: #bb9af7;
+    box-shadow: 0 0 20px rgba(187, 154, 247, 0.45);
+}
+
+#reboot {
+    background-image: image(url("./icons/reboot.svg"), url("/usr/share/wlogout/icons/reboot.png"));
+}
+
+#reboot:hover,
+#reboot:active {
+    background-color: rgba(224, 175, 104, 0.16);
+    border-color: #e0af68;
+    color: #e0af68;
+    box-shadow: 0 0 20px rgba(224, 175, 104, 0.45);
+}
+
+#shutdown {
+    background-image: image(url("./icons/shutdown.svg"), url("/usr/share/wlogout/icons/shutdown.png"));
+}
+
+#shutdown:hover,
+#shutdown:active {
+    background-color: rgba(247, 118, 142, 0.18);
+    border-color: #f7768e;
+    color: #f7768e;
+    box-shadow: 0 0 20px rgba(247, 118, 142, 0.5);
+}

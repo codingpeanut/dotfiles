@@ -1,0 +1,203 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 34,
+    "margin-top": 6,
+    "margin-left": 10,
+    "margin-right": 10,
+    "modules-left": ["niri/workspaces", "niri/window"],
+    "modules-center": ["clock"],
+    "modules-right": ["pulseaudio", "backlight", "network", "bluetooth", "cpu", "memory", "idle_inhibitor", "battery", "power-profiles-daemon", "group/tray-drawer"],
+
+    "niri/workspaces": {
+        "format": "{index}",
+        "all-outputs": true
+    },
+
+    "niri/window": {
+        "format": "{title}",
+        "max-length": 50
+    },
+
+    "clock": {
+        "format": " {:%H:%M  󰃭 %Y-%m-%d}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "on-click": "gnome-calendar"
+    },
+
+    "cpu": {
+        "format": " {usage}%",
+        "tooltip": false,
+        "on-click": "kitty --class floating_window -e btop"
+    },
+
+    "memory": {
+        "format": " {}%",
+        "on-click": "kitty --class floating_window -e btop"
+    },
+
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "󰅶",
+            "deactivated": "󰾪"
+        },
+        "tooltip": true,
+        "tooltip-format-activated": "防睡眠模式：已啟用 (保持螢幕常亮，不鎖屏不睡眠)\n\n• 點擊：恢復日常閒置自動睡眠",
+        "tooltip-format-deactivated": "防睡眠模式：已關閉 (依閒置規則自動鎖屏與睡眠)\n\n• 點擊：一鍵開啟常亮防睡眠"
+    },
+
+    "battery": {
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon} {capacity}%",
+        "format-charging": "󱐋 {capacity}%",
+        "format-plugged": " {capacity}%",
+        "format-icons": ["", "", "", "", ""],
+        "tooltip-format": "{timeTo}\n\n• 點擊：開啟電池統計與健康度分析 (gnome-power-statistics)",
+        "on-click": "gnome-power-statistics"
+    },
+
+    "power-profiles-daemon": {
+        "format": "{icon}",
+        "tooltip-format": "能源模式：{profile}\n驅動程式：{driver}\n\n• 點擊：切換能源模式 (平衡 ⇄ 效能 ⇄ 省電)",
+        "tooltip": true,
+        "format-icons": {
+            "default": "󰾅",
+            "performance": "",
+            "balanced": "󰾅",
+            "power-saver": ""
+        }
+    },
+
+    "network": {
+        "interval": 5,
+        "format-wifi": "{icon} {essid} ({signalStrength}%)",
+        "format-ethernet": "󰈀 {ipaddr}",
+        "tooltip-format": "󰈀 {ifname} via {gwaddr}",
+        "tooltip-format-wifi": "{icon} {essid} ({signalStrength}%)\nIP: {ipaddr}\nInterface: {ifname}\n\n• 左鍵：開啟 Wi-Fi 掃描與連線 (nmgui)\n• 中鍵：快速開關 Wi-Fi\n• 右鍵：開啟網路進階設定 (nm-connection-editor)",
+        "tooltip-format-disconnected": "󰤮 Disconnected\n\n• 左鍵：開啟 Wi-Fi 掃描與連線 (nmgui)",
+        "format-linked": "󰈀 {ifname} (No IP)",
+        "format-disconnected": "󰤮 Disconnected",
+        "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
+        "on-click": "nmgui",
+        "on-click-middle": "bash -c \"nmcli radio wifi | grep -q 'enabled' && nmcli radio wifi off || nmcli radio wifi on\"",
+        "on-click-right": "nm-connection-editor"
+    },
+
+    "bluetooth": {
+        "format": "󰂯",
+        "format-disabled": "󰂲",
+        "format-off": "󰂲",
+        "format-on": "󰂯",
+        "format-connected": "󰂱 {device_alias}",
+        "format-connected-battery": "󰂱 {device_alias} ({device_battery_percentage}%)",
+        "format-no-controller": "󰂲",
+        "tooltip-format": "{controller_alias}\t{controller_address}\n\n{num_connections} 個已連線裝置\n\n• 左鍵：開啟 Blueman 藍芽管理器\n• 中鍵：切換藍芽開關\n• 右鍵：開啟 Blueman 藍芽管理器",
+        "tooltip-format-disabled": "藍芽已關閉\n\n• 左鍵：開啟 Blueman 管理器\n• 中鍵：開啟藍芽",
+        "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n已連線裝置:\n{device_enumerate}\n\n• 左鍵：開啟 Blueman 藍芽管理器\n• 中鍵：切換藍芽開關\n• 右鍵：開啟 Blueman 藍芽管理器",
+        "tooltip-format-enumerate-connected": "• {device_alias}\t{device_address}",
+        "tooltip-format-enumerate-connected-battery": "• {device_alias}\t{device_address} ({device_battery_percentage}%)",
+        "on-click": "blueman-manager",
+        "on-click-middle": "bash -c \"bluetoothctl show | grep -q 'Powered: yes' && bluetoothctl power off || (rfkill unblock bluetooth 2>/dev/null; bluetoothctl power on)\"",
+        "on-click-right": "blueman-manager"
+    },
+
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-muted": "󰝟 Muted",
+        "format-icons": {
+            "default": ["", "", ""]
+        },
+        "on-click": "volume-menu",
+        "on-click-right": "pavucontrol"
+    },
+
+    "group/backlight-drawer": {
+        "orientation": "inherit",
+        "drawer": {
+            "transition-duration": 300,
+            "children-class": "backlight-slider-child",
+            "transition-left-to-right": true,
+            "click-to-reveal": true
+        },
+        "modules": [
+            "backlight",
+            "backlight/slider"
+        ]
+    },
+
+    "backlight": {
+        "format": "{icon} {percent}%",
+        "format-icons": ["󰃞", "󰃝", "󰃟", "󰃠"],
+        "on-scroll-up": "brightness-control up 5",
+        "on-scroll-down": "brightness-control down 5",
+        "on-scroll-left": "brightness-control scroll-left 5",
+        "on-scroll-right": "brightness-control scroll-right 5",
+        "smooth-scrolling-threshold": 1.0,
+        "on-click": "brightness-menu",
+        "tooltip-format": "螢幕亮度: {percent}%\n\n• 游標懸停（Hover）：滑鼠滾輪（上/下）或觸控板雙指（右/左）即時調整\n• 點擊：開啟水平滑桿微調面板（支援方向鍵 ← / →）"
+    },
+
+    "backlight/slider": {
+        "min": 1,
+        "max": 100,
+        "orientation": "horizontal"
+    },
+
+    "group/tray-drawer": {
+        "orientation": "inherit",
+        "drawer": {
+            "transition-duration": 300,
+            "children-class": "tray-item",
+            "transition-left-to-right": false,
+            "click-to-reveal": true
+        },
+        "modules": [
+            "custom/tray-toggle",
+            "custom/clipboard",
+            "custom/notification",
+            "tray",
+            "custom/power"
+        ]
+    },
+
+    "custom/tray-toggle": {
+        "format": "",
+        "tooltip": false
+    },
+
+    "custom/clipboard": {
+        "format": "󰅇",
+        "tooltip-format": "剪貼簿歷史 (cliphist)\n\n• 左鍵：開啟歷史選取器\n• 右鍵：清除所有歷史",
+        "on-click": "cliphist list | fuzzel --dmenu | cliphist decode | wl-copy",
+        "on-click-right": "cliphist wipe",
+        "tooltip": true
+    },
+
+    "custom/notification": {
+        "format": "{}",
+        "return-type": "json",
+        "interval": 2,
+        "signal": 9,
+        "exec": "~/.config/waybar/scripts/notification-status.py",
+        "on-click": "notification-center",
+        "on-click-right": "bash -c 'makoctl mode | grep -q do-not-disturb && makoctl mode -r do-not-disturb || makoctl mode -a do-not-disturb; pkill -RTMIN+9 waybar'",
+        "on-click-middle": "bash -c 'makoctl dismiss -a; pkill mako; nohup mako >/dev/null 2>&1 &; pkill -RTMIN+9 waybar'"
+    },
+
+    "tray": {
+        "icon-size": 16,
+        "spacing": 8
+    },
+
+    "custom/power": {
+        "format": "⏻",
+        "tooltip-format": "電源選單 (wlogout)\n\n• 左鍵：開啟開關機選單 (wlogout)\n• 右鍵：開啟 GNOME 電源設定",
+        "on-click": "power-menu",
+        "on-click-right": "gnome-control-center power"
+    }
+}
+
