@@ -14,12 +14,8 @@ environment {
 // -----------------------------------------------------------------------------
 // Auto-start Services & Daemons
 // -----------------------------------------------------------------------------
-// Desktop Shell: Noctalia (Modern Wayland Desktop Shell)
-spawn-at-startup "noctalia"
-
-// Fallback status bar & notification daemon (Waybar + Mako)
-// spawn-at-startup "waybar"
-// spawn-at-startup "mako"
+// Desktop Shell (Noctalia preferred; auto-suppresses Waybar conflicts, or falls back to Waybar)
+spawn-sh-at-startup "command -v desktop-shell >/dev/null 2>&1 && exec desktop-shell || (command -v noctalia >/dev/null 2>&1 && (killall waybar mako 2>/dev/null || true; exec noctalia) || (nohup mako >/dev/null 2>&1 & exec waybar))"
 
 spawn-at-startup "fcitx5" "-d" "-r"
 spawn-at-startup "fcitx5-watcher"

@@ -79,15 +79,22 @@ pull:
     @just reload
     @echo "==> All dotfiles synced, stowed, and reloaded successfully!"
 
-# Reload running desktop components (Niri, Noctalia, Fcitx5)
+# Reload running desktop components (Niri, Noctalia / Waybar, Fcitx5)
 reload:
     @echo "==> Reloading Niri compositor configuration..."
     @(niri msg action reload-config 2>/dev/null || true)
-    @echo "==> Restarting Noctalia shell..."
+    @echo "==> Restarting desktop shell (Noctalia preferred)..."
     @(killall blueman-applet 2>/dev/null || true)
-    @(killall noctalia 2>/dev/null || true)
+    @(killall noctalia waybar mako 2>/dev/null || true)
+    @(systemctl --user stop waybar 2>/dev/null || true)
     @sleep 0.3
-    @(nohup noctalia >/dev/null 2>&1 &)
+    @if command -v noctalia >/dev/null 2>&1; then \
+        (systemctl --user disable waybar 2>/dev/null || true); \
+        (nohup noctalia >/dev/null 2>&1 &); \
+    else \
+        (nohup waybar >/dev/null 2>&1 &); \
+        (nohup mako >/dev/null 2>&1 &); \
+    fi
     @echo "==> Reloading Fcitx5 configuration..."
     @(fcitx5-remote -r 2>/dev/null || true)
 
@@ -104,6 +111,10 @@ deps:
         echo "==> Ensuring Noctalia repository and package are configured..."; \
         sudo dnf copr enable -y zhangyi6324/noctalia-shell 2>/dev/null || true; \
         sudo dnf install -y noctalia 2>/dev/null || true; \
+    fi
+    @if command -v noctalia >/dev/null 2>&1; then \
+        echo "==> Disabling legacy Waybar systemd service to prevent duplicate bars..."; \
+        systemctl --user disable --now waybar 2>/dev/null || true; \
     fi
     @if command -v imsettings-switch >/dev/null 2>&1; then \
         echo "==> Setting default input method framework to fcitx5..."; \

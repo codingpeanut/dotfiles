@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# desktop-shell - Smart desktop shell launcher (Noctalia with Waybar mutual exclusion)
+# ==============================================================================
+set -euo pipefail
+
+if command -v noctalia >/dev/null 2>&1; then
+    # 1. Stop and disable Waybar & Mako to prevent dual bars and notification daemon conflicts
+    killall waybar 2>/dev/null || true
+    killall mako 2>/dev/null || true
+    systemctl --user stop waybar 2>/dev/null || true
+    systemctl --user disable waybar 2>/dev/null || true
+
+    # 2. Disable XDG autostart entry if present
+    if [ -f "$HOME/.config/autostart/waybar.desktop" ]; then
+        rm -f "$HOME/.config/autostart/waybar.desktop" 2>/dev/null || true
+    fi
+
+    # 3. Launch Noctalia
+    exec noctalia "$@"
+else
+    # Fallback to Waybar & Mako if Noctalia is not yet installed on this system
+    killall mako 2>/dev/null || true
+    nohup mako >/dev/null 2>&1 &
+    killall waybar 2>/dev/null || true
+    exec waybar "$@"
+fi
