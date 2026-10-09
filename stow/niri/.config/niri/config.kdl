@@ -14,8 +14,8 @@ environment {
 // -----------------------------------------------------------------------------
 // Auto-start Services & Daemons
 // -----------------------------------------------------------------------------
-// Desktop Shell: Noctalia (開機預設自啟)
-spawn-at-startup "noctalia"
+// Desktop Shell: Quickshell (開機預設自啟，備用為 Noctalia / Waybar)
+spawn-sh-at-startup "command -v quickshell >/dev/null 2>&1 && quickshell || (command -v noctalia >/dev/null 2>&1 && noctalia || waybar)"
 
 // Clean up any stray or autostarted Waybar / Mako instances from previous sessions or systemd
 spawn-sh-at-startup "killall waybar mako 2>/dev/null || true; systemctl --user stop waybar 2>/dev/null || true; systemctl --user disable waybar 2>/dev/null || true"
@@ -232,8 +232,8 @@ binds {
     // Suggested binds for running programs: terminal, app launcher, screen locker.
     Mod+T hotkey-overlay-title="Open a Terminal: kitty" { spawn "kitty"; }
     Mod+Return hotkey-overlay-title=null { spawn "kitty"; }
-    Mod+D hotkey-overlay-title="Run an Application: fuzzel" { spawn "fuzzel"; }
-    Mod+Space hotkey-overlay-title="App Launcher: Noctalia / Fuzzel" { spawn-sh "command -v noctalia >/dev/null 2>&1 && noctalia msg panel-toggle launcher || fuzzel"; }
+    Mod+D hotkey-overlay-title="Run an Application: Quickshell / Fuzzel" { spawn-sh "command -v quickshell >/dev/null 2>&1 && quickshell ipc call launcher toggle || fuzzel"; }
+    Mod+Space hotkey-overlay-title="App Launcher: Quickshell / Fuzzel" { spawn-sh "command -v quickshell >/dev/null 2>&1 && quickshell ipc call launcher toggle || fuzzel"; }
     Mod+A hotkey-overlay-title="Control Center: Noctalia" { spawn "noctalia" "msg" "panel-toggle" "control-center"; }
     Mod+Shift+S hotkey-overlay-title="Screenshot: Noctalia / Grim" { spawn-sh "command -v noctalia >/dev/null 2>&1 && noctalia msg screenshot-region || (grim -g \"$(slurp)\" - | wl-copy && notify-send 'Screenshot' 'Copied to clipboard')"; }
     Mod+E hotkey-overlay-title="File Manager: nautilus" { spawn "nautilus"; }
