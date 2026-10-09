@@ -51,12 +51,35 @@ border_color             = "#7aa2f7"  # Tokyo Night 藍色邊框微發光
 border_width             = 1.0
 shadow                   = true
 launcher_placement       = "floating" # Spotlight 居中浮動啟動器
-clipboard_placement      = "floating" # 居中浮動剪貼簿
+clipboard_placement      = "attached" # 剪貼簿附著於頂部狀態列下拉，不再於正中央懸浮大方塊
 control_center_placement = "attached" # 頂部列吸附抽屜控制中心
 wallpaper_placement      = "attached"
 session_placement        = "attached"
 launcher_position        = "center"
-clipboard_position       = "center"
+clipboard_position       = "auto"
+
+# ── 控制中心與展開面板 (寬度加大為 950px，排版開闊不臃腫) ─────────────────────
+[control_center]
+sidebar                  = "full"     # "full" | "compact" | "none"：展開時具備完整分類側邊欄
+width                    = 950        # 控制中心面板展開寬度 (預設 700 -> 950px，最大支援 1200)
+show_shortcut_labels     = true       # 快捷捷徑圖示下方顯示標籤文字
+
+# ── 通知系統 (移至右上角並橫向加寬至 420px，不遮擋正中央視窗) ────────────────
+[notification]
+enable_daemon            = true       # 接管通知守護進程
+position                 = "top_right"# 移至右上角，告別螢幕正中間突兀感
+offset_x                 = 20         # 距離螢幕右側邊界 20px
+offset_y                 = 46         # 避開頂部 34px 狀態列
+width                    = 420        # 橫向加寬 (預設 360 -> 420px)，讓訊息內容橫向舒展
+max_visible              = 5          # 最多同時顯示 5 則通知
+collapse_on_dismiss      = true       # 關閉單則通知時自動平滑折疊
+keep_dismissed_in_history= true       # 關閉的通知仍保留在控制中心歷史紀錄
+
+# ── 音量與亮度 OSD (靠右下角顯示，避免在中央彈出) ─────────────────────────────
+[osd]
+position                 = "bottom_right" # 移至右下角，避免遮擋中央視覺重心
+offset_x                 = 24
+offset_y                 = 24
 
 # ── 狀態列外觀 (Bar - 全寬頂部狀態列，對齊 Waybar 佈局與 Tokyo Night 膠囊樣式) ───
 [bar.default]

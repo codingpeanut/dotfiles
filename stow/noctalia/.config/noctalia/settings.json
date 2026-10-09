@@ -37,6 +37,14 @@
       ]
     }
   },
+  "controlCenter": {
+    "sidebar": "full",
+    "width": 950
+  },
+  "notification": {
+    "position": "top_right",
+    "width": 420
+  },
   "shell": {
     "fontFamily": "JetBrainsMono Nerd Font, Noto Sans CJK TC, sans-serif",
     "clipboardEnabled": true

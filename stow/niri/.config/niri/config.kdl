@@ -133,8 +133,8 @@ window-rule {
     match app-id=r#"(?i)blueman"#
     match title=r#"(?i)(bluetooth|藍牙|藍芽|blueman)"#
     open-floating true
-    default-column-width { fixed 720; }
-    default-window-height { fixed 560; }
+    default-column-width { fixed 820; }
+    default-window-height { fixed 580; }
 }
 
 // Wi-Fi & Network GUI (nmgui / com.network.manager)
@@ -142,8 +142,8 @@ window-rule {
     match app-id=r#"(?i)(com\.network\.manager|network-manager|nmgui|main\.bin|main)"#
     match title=r#"(?i)(Network Manager|NM GUI|nmgui|wi-fi manager)"#
     open-floating true
-    default-column-width { fixed 560; }
-    default-window-height { fixed 620; }
+    default-column-width { fixed 720; }
+    default-window-height { fixed 640; }
 }
 
 // Network, Connection Editor & System utilities
@@ -176,30 +176,30 @@ window-rule {
 window-rule {
     match app-id=r#"(?i)brightness-slider"#
     open-floating true
-    default-column-width { fixed 460; }
-    default-window-height { fixed 190; }
+    default-column-width { fixed 680; }
+    default-window-height { fixed 220; }
 }
 
 window-rule {
     match title=r#"(?i)(Brightness Menu|螢幕亮度調整)"#
     open-floating true
-    default-column-width { fixed 460; }
-    default-window-height { fixed 190; }
+    default-column-width { fixed 680; }
+    default-window-height { fixed 220; }
 }
 
 // Volume Slider GUI & Menu Popups
 window-rule {
     match app-id=r#"(?i)volume-slider"#
     open-floating true
-    default-column-width { fixed 460; }
-    default-window-height { fixed 190; }
+    default-column-width { fixed 680; }
+    default-window-height { fixed 220; }
 }
 
 window-rule {
     match title=r#"(?i)(Volume Menu|系統音量調整)"#
     open-floating true
-    default-column-width { fixed 460; }
-    default-window-height { fixed 190; }
+    default-column-width { fixed 680; }
+    default-window-height { fixed 220; }
 }
 
 // Fcitx5 Input Method Candidate & Configuration Windows

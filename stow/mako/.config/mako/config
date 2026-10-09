@@ -10,7 +10,7 @@ border-radius=8
 padding=12
 margin=10
 default-timeout=5000
-width=360
+width=420
 height=150
 progress-color=over #7aa2f7
 
