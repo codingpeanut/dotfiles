@@ -94,7 +94,7 @@ type = "system"
 enable_daemon            = true       # 接管通知守護進程
 position                 = "top_right"# 移至右上角 (對齊 Caelestia NotifsTokens)
 offset_x                 = 20         # 距離螢幕右側邊界 20px
-offset_y                 = 20         # 距離螢幕頂部 20px
+offset_y                 = 52         # 避開頂部 38px 懸浮島與邊距
 width                    = 430        # 橫向寬度 430px (精確複製 Caelestia NotifsTokens.width = 430)
 max_visible              = 5          # 最多同時顯示 5 則通知
 collapse_on_dismiss      = true       # 關閉單則通知時自動平滑折疊
@@ -106,35 +106,35 @@ position                 = "bottom_right" # 靠右下角顯示 (對齊 Caelestia
 offset_x                 = 24
 offset_y                 = 24
 
-# ── 狀態列外觀 (Bar - 1:1 複製 Caelestia 原生左側垂直懸浮膠囊島) ───────────────
+# ── 狀態列外觀 (Bar - Caelestia 頂部水平懸浮藥丸島與 Material M3 微透膠囊) ─────
 [bar.default]
-position               = "left"              # Caelestia 原生核心：左側垂直狀態列
+position               = "top"               # 依使用者需求：維持在頂部水平懸浮列
 floating               = true                # 啟用 Caelestia 懸浮島模式
-thickness              = 44                  # 寬度 44px (對齊 Caelestia innerWidth 40 + padding 8)
-margin_edge            = 8.0                 # 螢幕左側邊距 8px (離邊界懸浮)
-margin_ends            = 12.0                # 頂部與底部邊距 12px (完全獨立懸浮島)
+thickness              = 38                  # 高度 38px (開闊通透的膠囊高度)
+margin_edge            = 8.0                 # 螢幕頂部邊距 8px (頂部微懸浮島嶼感)
+margin_ends            = 12.0                # 螢幕左右邊距 12px (完全獨立懸浮島)
 margin_opposite_edge   = 0.0
 reserve_space          = true                # 保留專屬空間排擠視窗
 radius                 = 16                  # 懸浮島四周 16px 柔和圓角 (對齊 Caelestia rounding.large)
 concave_edge_corners   = false               # 停用內縮圓角
-padding                = 8                   # 內容上下內縮 8px
+padding                = 10                  # 兩側內容內縮 10px
 widget_spacing         = 8                   # 模組之間的間距 8px (對齊 Caelestia spacing.small)
 border_width           = 1.0                 # 細緻高光邊框 1px
 border_color           = "#d0bcff26"         # 15% 微透淡紫高光邊框
 background             = "#141218d9"         # Caelestia M3 深色莫蘭迪底色 (85% 不透明度)
 
-# 佈局分組 (1:1 對齊 Caelestia Bar.qml entries 順序)
-# 1. 頂部組：Logo/Launcher 啟動按鈕 + 縱向工作區藥丸
+# 佈局分組 (嚴格對齊 Caelestia Bar.qml entries 順序，杜絕中央擁擠臃腫)
+# 1. 左側首端組：Logo/Launcher 啟動按鈕 + 工作區動態藥丸
 start                  = ["launcher", "workspaces"]
-# 2. 中間組：當前視窗標題 (ActiveWindow)
+# 2. 中間獨立組：僅放置當前視窗標題 (ActiveWindow)，保持正中央清爽大器不臃腫
 center                 = ["active_window"]
-# 3. 底部組：多媒體黑膠 + 系統托盤 + 垂直堆疊時鐘 + 狀態圖示 (網路/藍牙/電量/音量) + 電源按鈕
+# 3. 右側末端組：多媒體黑膠 + 系統托盤 + 莫蘭迪時鐘 + 狀態圖示組 (網路/藍牙/電量/音量) + 電源按鈕
 end                    = ["media", "tray", "clock", "network", "bluetooth", "battery", "volume", "session"]
 
 # 膠囊模組外觀 (Caelestia M3 獨立膠囊 pill 樣式)
 capsule                = true
 capsule_radius         = 8
-capsule_padding        = 6
+capsule_padding        = 8
 capsule_fill           = "#211f26e6"         # Caelestia M3 容器膠囊底色 (90% 不透明度)
 capsule_border_width   = 0
 
@@ -145,7 +145,7 @@ color                  = "#d0bcff"           # Caelestia m3primary
 [widget.media]
 artist_first           = true
 art_size               = 20
-max_length             = 160
+max_length             = 180
 hide_when_no_media     = true
 hide_when_idle         = false
 rotate_album_art       = true
@@ -155,19 +155,19 @@ color                  = "#efb8c8"
 style                  = "regular"
 hide_empty             = false
 show_labels            = true
-pill_scale             = 1.1                 # 垂直藥丸厚度
-active_pill_size       = 2.8                 # 當前頁面指示器拉長
-inactive_pill_size     = 1.2                 # 閒置頁面緊湊圓點/藥丸
-capsule_padding        = 8
+pill_scale             = 1.1                 # 藥丸飽滿厚度
+active_pill_size       = 3.0                 # 當前頁面指示器橫向拉長 (Caelestia 流體動效)
+inactive_pill_size     = 1.4                 # 閒置頁面精緻小藥丸
+capsule_padding        = 10
 active_color           = "#d0bcff"           # Caelestia m3primary
 inactive_color         = "#49454f"           # Caelestia m3outline
 
 [widget.active_window]
-max_length             = 35
-color                  = "#a8c7fa"
+max_length             = 45                  # 適度長度截斷，確保中央空間通透
+color                  = "#a8c7fa"           # Caelestia m3secondary 冰藍
 
 [widget.clock]
-format                 = "%H\n%M"            # Caelestia 招牌垂直雙層時鐘 (小時在上一行、分鐘在下一行)
+format                 = " %H:%M  󰃭 %m/%d"  # 水平時鐘優雅格式
 color                  = "#efb8c8"           # Caelestia m3tertiary 柔粉色
 
 [widget.volume]
