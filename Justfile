@@ -139,6 +139,28 @@ default-noctalia:
     fi
     @echo "==> Noctalia is configured as the default boot shell!"
 
+# Switch Noctalia bar to top (horizontal)
+bar-top:
+    @sed -i 's/position *= *"left"/position               = "top"/' stow/noctalia/.config/noctalia/config.toml
+    @sed -i 's/"position": *"left"/"position": "top"/' stow/noctalia/.config/noctalia/settings.json
+    @just reload
+    @echo "==> Noctalia Bar set to Horizontal Top!"
+
+# Switch Noctalia bar to left (authentic Caelestia vertical layout)
+bar-left:
+    @sed -i 's/position *= *"top"/position               = "left"/' stow/noctalia/.config/noctalia/config.toml
+    @sed -i 's/"position": *"top"/"position": "left"/' stow/noctalia/.config/noctalia/settings.json
+    @just reload
+    @echo "==> Noctalia Bar set to Vertical Left (Caelestia-style)!"
+
+# Toggle Noctalia bar between horizontal (top) and vertical (left)
+bar-toggle:
+    @if grep -q 'position *= *"top"' stow/noctalia/.config/noctalia/config.toml; then \
+        just bar-left; \
+    else \
+        just bar-top; \
+    fi
+
 # One-stop command to fix everything: pull, install dependencies, stow, restart bars, and verify
 fix:
     @echo "==> Pulling latest changes from Git..."

@@ -14,6 +14,7 @@
     "widgetSpacing": 6,
     "widgets": {
       "left": [
+        { "id": "Launcher", "type": "Launcher" },
         {
           "id": "Workspace",
           "type": "Workspace",

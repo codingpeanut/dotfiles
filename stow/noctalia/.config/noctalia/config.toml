@@ -124,7 +124,7 @@ border_color           = "#ffffff1a"         # 10% 微透白色下邊框
 background             = "#1a1b26d9"         # Tokyo Night 半透明微透毛玻璃 (85% 不透明度)
 
 # 佈局分組 (對齊 Caelestia 膠囊藥丸分佈)
-start                  = ["workspaces", "active_window"]
+start                  = ["launcher", "workspaces", "active_window"]
 center                 = ["clock"]
 end                    = ["media", "volume", "brightness", "network", "bluetooth", "battery", "tray", "clipboard", "session"]
 
@@ -134,6 +134,10 @@ capsule_radius         = 6
 capsule_padding        = 10
 capsule_fill           = "#24283bd9"         # Tokyo Night 模組獨立微透膠囊底色 (深色 85% 不透明度)
 capsule_border_width   = 0
+
+[widget.launcher]
+glyph                  = "apps"              # Caelestia 應用啟動膠囊圖示
+color                  = "#7aa2f7"
 
 [widget.media]
 artist_first           = true
@@ -239,6 +243,17 @@ enabled                    = false
 interval_seconds           = 1800
 order                      = "random"
 recursive                  = true
+
+# ── 即時天氣服務 (Caelestia Weather Tab) ──────────────────────────────────────
+[weather]
+enabled             = true
+
+# ── 系統效能監控 (Caelestia Performance Tab) ──────────────────────────────────
+[system.monitor]
+cpu_poll_seconds    = 2.0
+memory_poll_seconds = 2.0
+network_poll_seconds= 3.0
+disk_poll_seconds   = 10.0
 
 # ── 主題配色 (Bar 為深色，其他組件/面板為淺色風格) ───────────────────────────
 [theme]
