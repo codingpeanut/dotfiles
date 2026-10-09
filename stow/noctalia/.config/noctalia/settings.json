@@ -1,0 +1,43 @@
+{
+  "bar": {
+    "position": "top",
+    "floating": false,
+    "thickness": 34,
+    "marginEdge": 0,
+    "marginEnds": 0,
+    "radius": 0,
+    "backgroundOpacity": 0.85,
+    "capsule": true,
+    "capsuleRadius": 6,
+    "capsulePadding": 10,
+    "padding": 10,
+    "widgetSpacing": 6,
+    "widgets": {
+      "left": [
+        { "id": "Workspace", "type": "Workspace" },
+        { "id": "ActiveWindow", "type": "ActiveWindow" }
+      ],
+      "center": [
+        { "id": "Clock", "type": "Clock" }
+      ],
+      "right": [
+        { "id": "Volume", "type": "Volume" },
+        { "id": "Brightness", "type": "Brightness" },
+        { "id": "Network", "type": "Network" },
+        { "id": "Bluetooth", "type": "Bluetooth" },
+        { "id": "Cpu", "type": "Sysmon", "stat": "cpu_used" },
+        { "id": "Memory", "type": "Sysmon", "stat": "ram_used" },
+        { "id": "Battery", "type": "Battery" },
+        { "id": "Tray", "type": "Tray" }
+      ]
+    }
+  },
+  "shell": {
+    "fontFamily": "JetBrainsMono Nerd Font, Noto Sans CJK TC, sans-serif",
+    "clipboardEnabled": true
+  },
+  "theme": {
+    "mode": "dark",
+    "name": "Tokyo-Night"
+  }
+}

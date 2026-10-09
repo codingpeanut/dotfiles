@@ -61,12 +61,14 @@ clipboard_position       = "center"
 # ── 狀態列外觀 (Bar - 全寬頂部狀態列，對齊 Waybar 佈局與 Tokyo Night 膠囊樣式) ───
 [bar.default]
 position               = "top"
+floating               = false               # 關鍵開關：關閉浮動島模式，啟用 Dock 全寬貼邊
 thickness              = 34                  # 高度 34px (同 Waybar height: 34)
-margin_edge            = 0                   # 頂部外距 0 (全寬貼齊螢幕頂部邊緣)
-margin_ends            = 0                   # 左右邊界 0 (全寬 100% 橫跨整個螢幕)
-margin_opposite_edge   = 0
+margin_edge            = 0.0                 # 頂部外距 0 (全寬貼齊螢幕頂部邊緣)
+margin_ends            = 0.0                 # 左右邊界 0 (全寬 100% 橫跨整個螢幕)
+margin_opposite_edge   = 0.0
 reserve_space          = true                # 保留專屬空間排擠視窗
 radius                 = 0                   # 全寬無外框圓角
+concave_edge_corners   = false               # 停用內縮圓角
 padding                = 10                  # 兩側內容內縮 10px，避免模組緊貼螢幕邊界
 widget_spacing         = 6                   # 模組之間的間距
 border_width           = 1.0                 # 下邊框 1px
