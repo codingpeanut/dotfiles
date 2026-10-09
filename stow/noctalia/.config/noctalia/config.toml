@@ -13,9 +13,9 @@ high_contrast         = false
 # ── 外殼核心設定 (Shell Core) ────────────────────────────────────────────────
 [shell]
 corner_radius_scale   = 1.25         # 圓角半徑縮放 (12-16px 柔和圓角)
-font_family           = "JetBrainsMono Nerd Font, Noto Sans CJK TC, sans-serif"
+font_family           = "Rubik, Noto Sans CJK TC, JetBrainsMono Nerd Font, sans-serif"
 time_format           = "{:%H:%M}"   # 狀態列時間格式
-date_format           = "%A, %m/%d"  # 狀態列日期格式
+date_format           = "{:%a, %b %d}" # 狀態列日期格式 (例如: Fri, Oct 9)
 offline_mode          = false
 telemetry_enabled     = false        # 關閉任何遙測連線
 niri_overview_type_to_launch_enabled = true # Niri 工作區鳥瞰時直接打字搜尋啟動
@@ -123,13 +123,13 @@ border_width           = 1.0                 # 細緻高光邊框 1px
 border_color           = "#d0bcff26"         # 15% 微透淡紫高光邊框
 background             = "#141218d9"         # Caelestia M3 深色莫蘭迪底色 (85% 不透明度)
 
-# 佈局分組 (嚴格對齊 Caelestia Bar.qml entries 順序，杜絕中央擁擠臃腫)
-# 1. 左側首端組：Logo/Launcher 啟動按鈕 + 工作區動態藥丸
-start                  = ["launcher", "workspaces"]
-# 2. 中間獨立組：僅放置當前視窗標題 (ActiveWindow)，保持正中央清爽大器不臃腫
-center                 = ["active_window"]
-# 3. 右側末端組：多媒體黑膠 + 系統托盤 + 莫蘭迪時鐘 + 狀態圖示組 (網路/藍牙/電量/音量) + 電源按鈕
-end                    = ["media", "tray", "clock", "network", "bluetooth", "battery", "volume", "session"]
+# 佈局分組 (時間至中，指示器至左，托盤收合)
+# 1. 左側首端組：Logo/Launcher 啟動按鈕 + 工作區指示器 + 焦點視窗指示器
+start                  = ["launcher", "workspaces", "active_window"]
+# 2. 正中央獨立組：時鐘與日期置中 (Caelestia 招牌字體與點分隔排版)
+center                 = ["clock"]
+# 3. 右側末端組：多媒體黑膠 + 可收合托盤抽屜 + 狀態圖示組 (網路/藍牙/電量/音量) + 電源按鈕
+end                    = ["media", "tray", "network", "bluetooth", "battery", "volume", "session"]
 
 # 膠囊模組外觀 (Caelestia M3 獨立膠囊 pill 樣式)
 capsule                = true
@@ -152,22 +152,23 @@ rotate_album_art       = true
 color                  = "#efb8c8"
 
 [widget.workspaces]
-style                  = "regular"
+style                  = "focus_hint"        # Caelestia 招牌指示器：閒置為精緻圓點，活躍為加長藥丸並帶焦點應用圖示
 hide_empty             = false
 show_labels            = true
+show_icons             = true                # 活躍藥丸展示焦點視窗圖示
 pill_scale             = 1.1                 # 藥丸飽滿厚度
 active_pill_size       = 3.0                 # 當前頁面指示器橫向拉長 (Caelestia 流體動效)
-inactive_pill_size     = 1.4                 # 閒置頁面精緻小藥丸
+inactive_pill_size     = 1.4                 # 閒置頁面精緻小圓點
 capsule_padding        = 10
 active_color           = "#d0bcff"           # Caelestia m3primary
 inactive_color         = "#49454f"           # Caelestia m3outline
 
 [widget.active_window]
-max_length             = 45                  # 適度長度截斷，確保中央空間通透
+max_length             = 40                  # 左側焦點視窗標題指示器
 color                  = "#a8c7fa"           # Caelestia m3secondary 冰藍
 
 [widget.clock]
-format                 = " %H:%M  󰃭 %m/%d"  # 水平時鐘優雅格式
+format                 = "%H:%M  •  %a, %b %d" # Caelestia 招牌文字排版：點分隔時間與星期日期
 color                  = "#efb8c8"           # Caelestia m3tertiary 柔粉色
 
 [widget.volume]
@@ -186,6 +187,9 @@ color                  = "#d0bcff"
 color                  = "#c4eed0"
 
 [widget.tray]
+drawer                 = true                # 依要求：可收合系統托盤抽屜 (Collapsible Tray Drawer)
+drawer_columns         = 3                   # 抽屜展開欄數
+chevron_color          = "#d0bcff"           # 收合切換箭頭顏色
 icon_size              = 16
 
 [widget.clipboard]

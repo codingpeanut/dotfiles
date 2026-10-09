@@ -100,8 +100,8 @@ reload:
 
 # Install required desktop dependencies for Waybar buttons and utilities
 deps:
-    @echo "==> Installing desktop dependencies (Waybar, popups, audio, network, monitor, bluetooth, wlogout)..."
-    sudo dnf install -y btop NetworkManager-tui nm-connection-editor network-manager-applet gnome-calendar gnome-control-center gnome-power-manager pavucontrol waybar mako fuzzel kitty swaylock swayidle brightnessctl ddcutil playerctl wl-clipboard cliphist libnotify fzf blueman bluez bluez-tools python3-dbus python3-gobject gtk3 gtk4 wlogout fcitx5 fcitx5-chinese-addons fcitx5-chewing fcitx5-configtool fcitx5-gtk3 fcitx5-gtk4 fcitx5-qt5 fcitx5-qt6 imsettings
+    @echo "==> Installing desktop dependencies (Waybar, popups, audio, network, monitor, bluetooth, wlogout, Rubik fonts)..."
+    sudo dnf install -y btop NetworkManager-tui nm-connection-editor network-manager-applet gnome-calendar gnome-control-center gnome-power-manager pavucontrol waybar mako fuzzel kitty swaylock swayidle brightnessctl ddcutil playerctl wl-clipboard cliphist libnotify fzf blueman bluez bluez-tools python3-dbus python3-gobject gtk3 gtk4 wlogout fcitx5 fcitx5-chinese-addons fcitx5-chewing fcitx5-configtool fcitx5-gtk3 fcitx5-gtk4 fcitx5-qt5 fcitx5-qt6 imsettings google-rubik-fonts
     sudo systemctl enable --now bluetooth || true
     @if ! command -v powerprofilesctl >/dev/null 2>&1; then \
         echo "==> Ensuring power profiles provider is installed (tuned-ppd / power-profiles-daemon)..."; \

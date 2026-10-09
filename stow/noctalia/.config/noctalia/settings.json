@@ -18,17 +18,19 @@
         {
           "id": "Workspace",
           "type": "Workspace",
+          "style": "focus_hint",
+          "showIcons": true,
           "activePillSize": 3.0,
           "inactivePillSize": 1.4
-        }
+        },
+        { "id": "ActiveWindow", "type": "ActiveWindow" }
       ],
       "center": [
-        { "id": "ActiveWindow", "type": "ActiveWindow" }
+        { "id": "Clock", "type": "Clock", "format": "%H:%M  •  %a, %b %d" }
       ],
       "right": [
         { "id": "Media", "type": "Media" },
-        { "id": "Tray", "type": "Tray" },
-        { "id": "Clock", "type": "Clock", "format": " %H:%M  󰃭 %m/%d" },
+        { "id": "Tray", "type": "Tray", "drawer": true, "drawerColumns": 3 },
         { "id": "Network", "type": "Network" },
         { "id": "Bluetooth", "type": "Bluetooth" },
         { "id": "Battery", "type": "Battery" },
@@ -47,7 +49,7 @@
     "width": 430
   },
   "shell": {
-    "fontFamily": "JetBrainsMono Nerd Font, Noto Sans CJK TC, sans-serif",
+    "fontFamily": "Rubik, Noto Sans CJK TC, JetBrainsMono Nerd Font, sans-serif",
     "clipboardEnabled": true
   },
   "theme": {
