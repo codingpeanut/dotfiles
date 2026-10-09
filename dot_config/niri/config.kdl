@@ -189,8 +189,8 @@ layout {
 // which may be more convenient to use.
 // See the binds section below for more spawn examples.
 
-// This line starts waybar, a commonly used bar for Wayland compositors.
-spawn-at-startup "quickshell"
+// This line starts noctalia, modern desktop shell for Wayland compositors.
+spawn-at-startup "noctalia"
 spawn-at-startup "nm-applet"
 spawn-at-startup "blueman-applet"
 spawn-at-startup "udiskie" "-t"
@@ -347,6 +347,21 @@ binds {
     // Mod-Shift-/, which is usually the same as Mod-?,
     // shows a list of important hotkeys.
     Mod+Shift+Slash { show-hotkey-overlay; }
+
+    // ---------------------------------------------------------
+    // 1. Windows 核心習慣快捷鍵 (Noctalia 整合)
+    // ---------------------------------------------------------
+    // Win 或 Win+Space：開啟 Spotlight 居中搜尋 / 啟動器 (Noctalia Launcher)
+    Mod+Space { spawn "noctalia" "msg" "panel-toggle" "launcher"; }
+
+    // Win+A：Windows 快速設定風格控制中心 (Noctalia Control Center: 整合電源模式/防睡眠/音量/亮度)
+    Mod+A { spawn "noctalia" "msg" "panel-toggle" "control-center"; }
+
+    // Win+Shift+S：Windows 剪取工具風格區域截圖 (Noctalia 內建截圖編輯器)
+    Mod+Shift+S { spawn "noctalia" "msg" "screenshot-region"; }
+
+    // Win+V：剪貼簿歷史選單 (Noctalia 內建毛玻璃歷史選單)
+    Mod+V { spawn "noctalia" "msg" "panel-toggle" "clipboard"; }
 
     // Suggested binds for running programs: terminal, app launcher, screen locker.
     Mod+T hotkey-overlay-title="Open a Terminal: alacritty" { spawn "alacritty"; }

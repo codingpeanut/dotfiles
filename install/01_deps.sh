@@ -17,27 +17,21 @@ echo " [1/4] 安裝開發工具與 Wayland 基礎依賴 (系統: ${OS_ID})"
 echo "=========================================================="
 
 if [[ "$OS_ID" == "fedora" ]]; then
-    # 啟用 Hyprland 生態 (hyprlock, hypridle) 與 Quickshell COPR 軟體庫
+    # 啟用 Hyprland 生態 (hyprlock, hypridle) 與 Noctalia 軟體庫
     echo "[*] 正在啟用 Fedora COPR 專用軟體庫..."
     sudo dnf copr enable -y solopasha/hyprland || true
-    sudo dnf copr enable -y errornointernet/quickshell || true
-    sudo dnf copr enable -y heus-sueh/packages || true
+    sudo dnf copr enable -y zhangyi6324/noctalia-shell || true
 
     sudo dnf install -y --skip-unavailable \
         gcc \
         gcc-c++ \
-        cmake \
+        meson \
         ninja-build \
+        cmake \
         git \
         curl \
         wget \
         pkgconf-pkg-config \
-        clang-devel \
-        qt6-qtbase-devel \
-        qt6-qtdeclarative-devel \
-        qt6-qtwayland-devel \
-        qt6-qtsvg-devel \
-        qt6-qtmultimedia-devel \
         wayland-devel \
         wayland-protocols-devel \
         libxkbcommon-devel \
@@ -46,6 +40,11 @@ if [[ "$OS_ID" == "fedora" ]]; then
         libinput-devel \
         libseat-devel \
         pipewire-devel \
+        wireplumber-devel \
+        sdbus-cpp-devel \
+        tomlplusplus-devel \
+        libsecret-devel \
+        libsodium-devel \
         kitty \
         fcitx5 \
         fcitx5-chewing \
@@ -60,41 +59,30 @@ if [[ "$OS_ID" == "fedora" ]]; then
         nautilus \
         btop \
         fuzzel \
-        lm_sensors \
-        waybar \
-        network-manager-applet \
-        blueman \
-        udiskie \
-        pavucontrol \
-        xdg-desktop-portal-gnome \
-        xdg-desktop-portal-gtk \
         swaybg \
         wlsunset \
         hyprlock \
         hypridle \
-        quickshell \
+        keyd \
+        network-manager-applet \
+        blueman \
+        pavucontrol \
         google-noto-sans-cjk-vf-fonts \
         google-noto-cjk-fonts \
         jetbrains-mono-fonts \
-        cava \
-        matugen \
         chezmoi
 else
     # 預設為 Debian / Ubuntu 體系
     sudo apt update
     sudo apt install -y \
         build-essential \
-        cmake \
+        meson \
         ninja-build \
+        cmake \
         pkg-config \
         git \
         curl \
         wget \
-        libclang-dev \
-        qt6-base-dev \
-        qt6-declarative-dev \
-        qt6-wayland-dev \
-        libqt6svg6-dev \
         libwayland-dev \
         wayland-protocols \
         libxkbcommon-dev \
@@ -103,6 +91,11 @@ else
         libinput-dev \
         libseat-dev \
         libpipewire-0.3-dev \
+        libwireplumber-0.5-dev \
+        libsdbus-c++-dev \
+        libtomlplusplus-dev \
+        libsecret-1-dev \
+        libsodium-dev \
         kitty \
         fcitx5 \
         fcitx5-chewing \
@@ -117,21 +110,15 @@ else
         nautilus \
         btop \
         fuzzel \
-        lm_sensors \
-        waybar \
         network-manager-gnome \
         blueman \
-        udiskie \
         pavucontrol \
-        xdg-desktop-portal-gnome \
-        xdg-desktop-portal-gtk \
         swaybg \
         wlsunset \
         hyprlock \
         hypridle \
         fonts-noto-cjk \
         fonts-jetbrains-mono \
-        cava \
         chezmoi
 fi
 

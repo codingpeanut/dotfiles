@@ -1,23 +1,24 @@
-# Niri + Quickshell 現代微透桌面 (Debian / Fedora)
+# Niri + Noctalia 現代微透桌面 (Debian / Fedora)
 
 專為 **Dell Latitude 7420 (Intel Iris Xe / 8GB RAM)** 主力開發機打造的高顏值、物理彈簧動態 Wayland 桌面環境。
-結合 **Niri** 的無限橫向視窗流動與 **Quickshell** 流暢的微透毛玻璃 (Glassmorphism) 介面，並完整支援 **Windows 肌肉記憶快捷鍵**。
+結合 **Niri** 的無限橫向視窗流動與 **Noctalia (v5+)** 流暢的微透毛玻璃 (Glassmorphism) 一體化桌面外殼，並完整支援 **Windows 肌肉記憶快捷鍵**。
 
 ---
 
 ## 🎨 視覺與架構亮點
 
-- **微透毛玻璃 (Glassmorphism)**：全系統採用 12-16px 圓角、背景高斯模糊 (Blur 20px) 與柔和邊框微發光。
+- **微透毛玻璃 (Glassmorphism)**：全系統採用 12-16px 圓角、背景高斯模糊與 Catppuccin Lavender 柔和邊框微發光。
+- **全功能一體化 Noctalia Desktop Shell (v5+)**：
+  - **頂部懸浮島狀態列 (Floating Island Bar)**：整合工作區指示器、視窗標題、系統狀態與時鐘。
+  - **抽屜式控制中心 (Control Center)**：一鍵切換電源模式 (效能  / 平衡 󰾅 / 省電 )、防睡眠常亮模式 (Caffeine ☕)、Wi-Fi、藍牙、日夜主題、音量與螢幕亮度滑桿。
+  - **Spotlight 居中搜尋啟動器**：<kbd>Win</kbd> 或 <kbd>Win + Space</kbd> 呼叫，支援即時數學算式計算器、Emoji 表情、視窗切換與關機/重啟指令。
+  - **浮動剪貼簿管理器**：<kbd>Win + V</kbd> 呼叫，具備歷史紀錄搜尋與複製保護。
+  - **系統級區域截圖編輯器**：<kbd>Win + Shift + S</kbd> 呼叫，支援自訂標註與複製至剪貼簿。
+  - **3D 景深視窗切換器**：<kbd>Alt + Tab</kbd> 輪播預覽與最近使用視窗排序。
+  - **動態桌布守護程式**：支援多種過渡動畫 (Fade, Zoom, Honeycomb)。
 - **Catppuccin 日夜雙模無縫切換**：
   - **深色**：Catppuccin Mocha (冷灰紫底色 + 薰衣草紫/冰河藍強調色)。
   - **淺色**：Catppuccin Latte (柔白極簡風格)。
-  - 支援在控制中心一鍵無縫過渡。
-- **全功能一體化 Quickshell**：
-  - 頂部懸浮島狀態列 (Floating Island Bar)
-  - 抽屜式控制中心 (Control Center: Wi-Fi, 藍牙, 日夜切換, 護眼模式, 音量與螢幕亮度滑桿)
-  - Spotlight 居中應用程式搜尋啟動器 (<kbd>Win</kbd> 鍵喚出)
-  - 浮動音量與亮度 OSD
-  - 毛玻璃桌面通知彈窗
 - **8GB RAM 深度最佳化**：
   - 自動啟用 `zram-tools` + `zstd` 即時記憶體壓縮演算法，提供相當於 14-16GB 的流暢多工體驗，杜絕硬碟 Swap 掉幀。
 - **觸控板 1:1 物理手勢**：
@@ -31,13 +32,14 @@
 
 | 快捷鍵 | 功能說明 | 備註 |
 | :--- | :--- | :--- |
-| <kbd>Win</kbd> 或 <kbd>Win</kbd> + <kbd>Space</kbd> | 開啟 / 關閉 居中搜尋啟動器 | Spotlight 式毛玻璃搜尋列 |
-| <kbd>Win</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> | 區域截圖 (Windows 剪取工具) | 自動複製到剪貼簿並彈出通知 |
+| <kbd>Win</kbd> 或 <kbd>Win</kbd> + <kbd>Space</kbd> | 開啟 / 關閉 居中搜尋啟動器 | Noctalia Spotlight 搜尋列 |
+| <kbd>Win</kbd> + <kbd>A</kbd> | 開啟快速設定 / 控制中心 | 整合電源模式、防睡眠、音量與亮度 |
+| <kbd>Win</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> | 區域截圖 (Windows 剪取工具風格) | Noctalia 內建標註編輯器與複製 |
 | <kbd>Win</kbd> + <kbd>L</kbd> | 鎖定電腦螢幕 | 呼叫 PAM 級 Hyprlock |
 | <kbd>Win</kbd> + <kbd>E</kbd> | 開啟檔案管理員 (Nautilus) | GNOME Files |
-| <kbd>Win</kbd> + <kbd>V</kbd> | 剪貼簿歷史選單 | Cliphist + Fuzzel 快速選取 |
+| <kbd>Win</kbd> + <kbd>V</kbd> | 剪貼簿歷史選單 | Noctalia 浮動歷史選單 |
 | <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Esc</kbd> | 開啟工作管理員 (btop) | 隨時監控 8GB RAM 負載 |
-| <kbd>Alt</kbd> + <kbd>Tab</kbd> | 視窗循環切換 | 焦點輪換 |
+| <kbd>Alt</kbd> + <kbd>Tab</kbd> | 視窗 3D 景深循環切換 | 焦點輪換 |
 | <kbd>Alt</kbd> + <kbd>F4</kbd> 或 <kbd>Win</kbd> + <kbd>Q</kbd> | 關閉當前視窗 | 關閉視窗 |
 | <kbd>Win</kbd> + <kbd>Enter</kbd> 或 <kbd>Win</kbd> + <kbd>T</kbd> | 開啟 Kitty 終端機 | GPU 硬體加速與毛玻璃底色 |
 | <kbd>Win</kbd> + <kbd>←</kbd> / <kbd>→</kbd> (或 <kbd>H</kbd>/<kbd>L</kbd>) | 焦點左右移動分欄 | 橫向平滑捲動 |
@@ -74,14 +76,8 @@ dotfiles/
 ├── dot_config/
 │   ├── niri/
 │   │   └── config.kdl         # Niri 視窗管理配置、彈簧物理係數、Windows 快捷鍵
-│   ├── quickshell/
-│   │   ├── shell.qml          # Quickshell 進入點
-│   │   ├── theme/             # Catppuccin Mocha / Latte 雙模主題色彩宣告
-│   │   ├── bar/               # 頂部懸浮島式狀態列
-│   │   ├── controlcenter/     # 抽屜控制中心 (Wi-Fi, 藍牙, 音量/亮度, 護眼)
-│   │   ├── osd/               # 浮動音量與亮度 OSD
-│   │   ├── launcher/          # Spotlight 居中應用程式搜尋啟動器
-│   │   └── notifications/     # 桌面毛玻璃通知彈窗
+│   ├── noctalia/
+│   │   └── config.toml        # Noctalia 現代桌面外殼配置 (控制中心、Bar、Spotlight)
 │   ├── kitty/
 │   │   └── kitty.conf         # Kitty GPU 加速終端機 (Catppuccin + 微透)
 │   ├── fcitx5/
@@ -93,6 +89,6 @@ dotfiles/
 └── install/
     ├── 01_deps.sh             # 系統依賴安裝 (自動適配 Debian / Fedora)
     ├── 02_zram.sh             # 8GB RAM zram 即時壓縮設定
-    ├── 03_build_quickshell.sh # Quickshell 原始碼編譯腳本
+    ├── 03_install_noctalia.sh # Noctalia 安裝與編譯腳本 (DNF / COPR / Meson)
     └── 04_install_niri.sh     # Niri 安裝與 Wayland Session 註冊
 ```

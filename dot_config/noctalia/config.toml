@@ -1,0 +1,113 @@
+# =============================================================================
+# Noctalia Shell Configuration (v5+)
+# Niri + Wayland 現代微透桌面 (Debian / Fedora)
+# 風格：Catppuccin Mocha / 微透毛玻璃 (Glassmorphism)
+# =============================================================================
+
+# ── 無障礙與縮放 ─────────────────────────────────────────────────────────────
+[accessibility]
+ui_scale              = 1.0
+high_contrast         = false
+
+# ── 外殼核心設定 (Shell Core) ────────────────────────────────────────────────
+[shell]
+corner_radius_scale   = 1.25         # 圓角半徑縮放 (12-16px 柔和圓角)
+font_family           = "Noto Sans CJK TC, JetBrains Mono, sans-serif"
+time_format           = "{:%H:%M}"   # 狀態列時間格式
+date_format           = "%A, %m/%d"  # 狀態列日期格式
+offline_mode          = false
+telemetry_enabled     = false        # 關閉任何遙測連線
+niri_overview_type_to_launch_enabled = true # Niri 工作區鳥瞰時直接打字搜尋啟動
+
+# 剪貼簿整合 (替代外部 cliphist，內建毛玻璃歷史選單)
+clipboard_enabled     = true
+clipboard_history_max_entries = 150
+clipboard_keep_from_closed_apps = true
+clipboard_auto_paste  = "auto"
+
+shared_gl_context     = true
+
+# 截圖工具 (Windows 剪取工具快捷鍵 Win+Shift+S 呼叫)
+[shell.screenshot]
+skip_annotate_on_copy_save = false
+close_on_copy = true
+close_on_save = true
+
+# 動效與陰影 (物理彈簧柔和動效)
+[shell.animation]
+enabled = true
+speed   = 1.0
+
+[shell.shadow]
+direction = "down"
+alpha     = 0.5
+
+# 懸浮島與面板排版
+[shell.panel]
+transparency_mode        = "glass"    # solid | soft | glass (微透毛玻璃)
+borders                  = true
+border_color             = "#b4befe"  # Catppuccin Lavender 柔和邊框發光
+border_width             = 1.0
+shadow                   = true
+launcher_placement       = "floating" # Spotlight 居中浮動啟動器
+clipboard_placement      = "floating" # 居中浮動剪貼簿
+control_center_placement = "attached" # 頂部列吸附抽屜控制中心
+wallpaper_placement      = "attached"
+session_placement        = "attached"
+launcher_position        = "center"
+clipboard_position       = "center"
+
+# Spotlight 居中搜尋啟動器 (Win 鍵喚出)
+[shell.launcher]
+categories                 = true
+show_icons                 = true
+show_app_origin_indicator  = true
+compact                    = false
+app_grid                   = false
+sort_by_usage              = true
+pinned                     = ["kitty", "org.gnome.Nautilus", "google-chrome", "firefox"]
+fetch_exchange_rates       = false
+provider_prefix            = "/"
+auto_paste                 = "auto"
+
+[shell.launcher.providers.calculator]
+prefix = "calc"
+global = true                         # 直接在搜尋列計算算式 (如 128*4)
+
+[shell.launcher.providers.emoji]
+prefix = "emo"
+
+[shell.launcher.providers.session]
+prefix = "session"
+global = true                         # 支援直接搜尋 lock / reboot / poweroff
+
+[shell.launcher.providers.windows]
+prefix = "win"
+
+# 視窗預覽與循環切換 (Alt+Tab)
+[shell.window_switcher]
+style        = "carousel"             # 3D 景深輪播切換視窗
+mru          = true                   # 最近使用順序
+show_caption = true
+show_count   = true
+show_app_icon = true
+
+# ── 動態桌布守護 (Wallpaper Daemon) ──────────────────────────────────────────
+[wallpaper]
+enabled             = true
+fill_mode           = "crop"
+transition          = ["fade", "zoom", "honeycomb"]
+transition_duration = 1200
+edge_smoothness     = 0.3
+directory           = "~/Pictures/Wallpapers"
+
+[wallpaper.automation]
+enabled                    = false
+interval_seconds           = 1800
+order                      = "random"
+recursive                  = true
+
+# ── 主題配色 (Catppuccin Mocha / Latte) ─────────────────────────────────────
+[theme]
+mode   = "dark"                       # 預設深色模式 (支援控制中心一鍵切換)
+source = "builtin"
