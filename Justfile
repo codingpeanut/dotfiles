@@ -71,6 +71,26 @@ unstow:
         stow -v -D -t "{{ home }}" "$pkg_name"; \
     done
 
+# Completely uninstall dotfiles from local system (unstow, restore backups, stop services, remove rice binaries)
+uninstall *args:
+    @bash scripts/uninstall.sh {{ args }}
+
+# Preview actions that will be performed during uninstallation (dry-run)
+uninstall-dry:
+    @bash scripts/uninstall.sh --dry-run
+
+# Revert dotfiles symlinks, restore backups, and stop desktop services only
+uninstall-dotfiles:
+    @bash scripts/uninstall.sh --dotfiles
+
+# Revert system-level packages and COPR repositories installed for this desktop (Fedora)
+uninstall-system:
+    @bash scripts/uninstall.sh --system
+
+# Alias for uninstall
+revert *args:
+    @bash scripts/uninstall.sh {{ args }}
+
 # One-command sync: pull latest, auto-stow, and reload desktop bars
 pull:
     @echo "==> Pulling latest dotfiles from remote..."

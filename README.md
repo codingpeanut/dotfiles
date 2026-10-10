@@ -58,10 +58,24 @@ just fix
 
 ### 2. 日常維護指令
 ```bash
-just stow     # 重新連結所有配置到 ~/.config
-just reload   # 熱重載 Niri 與重啟 Noctalia
-just deps     # 檢查並安裝系統相依套件
-just push     # 提交並推送最新修改至 GitHub
+just stow          # 重新連結所有配置到 ~/.config
+just reload        # 熱重載 Niri 與重啟 Noctalia / Quickshell
+just deps          # 檢查並安裝系統相依套件
+just push          # 提交並推送最新修改至 GitHub
+```
+
+### 3. 完全捨棄 / 解除安裝指令 (Uninstall)
+若想在本地電腦完全捨棄此套件並還原原本的環境：
+```bash
+just uninstall          # 解除所有軟連結、還原 ~/.bashrc 等原始備份並停止桌面服務
+just uninstall-dry      # 預覽即將清理與還原的項目 (dry-run，不實際變更)
+just uninstall-system   # 僅移除專用系統套件 (noctalia, quickshell...) 與停用 COPR
+# 亦支援 just -f uninstall.just
+
+# 若系統尚未安裝 just，亦可直接執行腳本：
+./scripts/uninstall.sh --dry-run   # 預覽模式
+./scripts/uninstall.sh             # 執行還原 dotfiles
+./scripts/uninstall.sh --all       # 完整移除 (dotfiles + 系統套件)
 ```
 
 ---
