@@ -50,6 +50,8 @@ gnome-settings *args:
 gnome-apply:
     @echo "==> Loading gnome/dconf.ini into /org/gnome/ ..."
     @dconf load /org/gnome/ < gnome/dconf.ini
+    @echo "==> Loading gnome/dconf-desktop.ini into /desktop/ ..."
+    @dconf load /desktop/ < gnome/dconf-desktop.ini
     @echo "==> Enabling declarative extensions (gext)..."
     @cat gnome/extensions.txt gnome/extensions-local.txt | grep -vE '^[[:space:]]*(#|$)' | while read -r uuid; do gext enable "$uuid" 2>/dev/null || true; done
     @echo "==> Done. Log out and back in to fully apply shell and theme changes."

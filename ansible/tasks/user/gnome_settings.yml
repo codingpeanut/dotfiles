@@ -13,6 +13,14 @@
   changed_when: false
   failed_when: false
 
+- name: Load declarative dconf settings (scope /desktop/)
+  ansible.builtin.shell:
+    cmd: "dconf load /desktop/ < {{ playbook_dir }}/../gnome/dconf-desktop.ini"
+  args:
+    executable: /bin/bash
+  changed_when: false
+  failed_when: false
+
 - name: Apply core GNOME appearance settings
   ansible.builtin.command:
     cmd: "gsettings set {{ item.key }} {{ item.value }}"
