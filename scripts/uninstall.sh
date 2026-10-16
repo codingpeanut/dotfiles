@@ -271,6 +271,7 @@ cleanup_artifacts() {
         "$TARGET_HOME/.local/share/themes/Colloid-Dark"
         "$TARGET_HOME/.local/share/themes/Colloid-Dark-Compact"
         "$TARGET_HOME/.local/share/themes/Colloid-Dark-Grey"
+        "$TARGET_HOME/.local/share/icons/Bibata-Modern-Ice"
         "$TARGET_HOME/.cache/dotfiles-src"
     )
 
@@ -320,7 +321,7 @@ remove_system_packages() {
     fi
 
     # 本專案額外安裝的 GNOME 美化套件（保留 GNOME 核心與共用工具）
-    local rice_pkgs=("gnome-tweaks" "sassc" "gtk-murrine-engine" "papirus-icon-theme" "bibata-cursor-theme" "rsms-inter-fonts")
+    local rice_pkgs=("gnome-tweaks" "sassc" "gtk-murrine-engine" "papirus-icon-theme" "rsms-inter-fonts")
     local copr_repos=()
 
     if [ "$DRY_RUN" = true ]; then

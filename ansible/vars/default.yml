@@ -16,9 +16,10 @@ system_packages:
   - sassc
   - gtk-murrine-engine
 
-  # GNOME Theme Assets (GTK engine, icons, cursor, UI fonts)
+  # GNOME Theme Assets (GTK engine, icons, UI fonts)
+  # Note: the Bibata cursor theme is not packaged in Fedora 44; it is
+  # installed declaratively from GitHub in tasks/user/gnome_themes.yml
   - papirus-icon-theme
-  - bibata-cursor-theme
   - rsms-inter-fonts
 
   # Chinese Input Method (Fcitx5 Framework & Engines)

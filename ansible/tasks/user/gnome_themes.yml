@@ -37,6 +37,18 @@
   register: colloid_install
   changed_when: colloid_install.rc == 0
 
+- name: Check if the Bibata cursor theme is installed
+  ansible.builtin.stat:
+    path: "{{ gnome_home }}/.local/share/icons/Bibata-Modern-Ice"
+  register: bibata_stat
+
+- name: Download and install the Bibata Modern Ice cursor theme
+  ansible.builtin.unarchive:
+    src: "https://github.com/ful1e5/Bibata_Cursor/releases/latest/download/Bibata-Modern-Ice.tar.xz"
+    dest: "{{ gnome_home }}/.local/share/icons"
+    remote_src: true
+  when: not bibata_stat.stat.exists
+
 - name: Check if the JetBrainsMono Nerd Font is installed
   ansible.builtin.stat:
     path: "{{ gnome_home }}/.local/share/fonts/JetBrainsMono/JetBrainsMonoNerdFont-Regular.ttf"
