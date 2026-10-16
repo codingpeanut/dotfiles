@@ -76,30 +76,17 @@ gnome-reset:
 # Dotfiles (GNU Stow)
 # ---------------------------------------------------------------------------
 
-# Fast direct Stow re-link for all packages without running Ansible
-stow:
-    @echo "==> Stowing all packages into {{ home }}..."
-    @if [ -f "{{ home }}/.bashrc" ] && [ ! -L "{{ home }}/.bashrc" ]; then \
-        echo "Backing up existing regular ~/.bashrc to ~/.bashrc.bak..."; \
-        mv "{{ home }}/.bashrc" "{{ home }}/.bashrc.bak"; \
-    fi
-    @if [ -f "{{ home }}/.vimrc" ] && [ ! -L "{{ home }}/.vimrc" ]; then \
-        echo "Backing up existing regular ~/.vimrc to ~/.vimrc.bak..."; \
-        mv "{{ home }}/.vimrc" "{{ home }}/.vimrc.bak"; \
-    fi
-    @cd stow && for pkg in */; do \
-        pkg_name="${pkg%/}"; \
-        echo "Stowing $pkg_name..."; \
-        stow -v -R -t "{{ home }}" "$pkg_name"; \
-    done
+# Fast direct Stow re-link for all packages (safe wrapper with auto-backup)
+stow *args:
+    @HOME="{{ home }}" bash scripts/stow.sh stow {{ args }}
+
+# Dry-run of `just stow` (shows what would happen, changes nothing)
+stow-dry *args:
+    @HOME="{{ home }}" bash scripts/stow.sh stow --dry-run {{ args }}
 
 # Remove Stow symlinks
-unstow:
-    @echo "==> Unstowing all packages from {{ home }}..."
-    @cd stow && for pkg in */; do \
-        pkg_name="${pkg%/}"; \
-        stow -v -D -t "{{ home }}" "$pkg_name"; \
-    done
+unstow *args:
+    @HOME="{{ home }}" bash scripts/stow.sh unstow {{ args }}
 
 # ---------------------------------------------------------------------------
 # Applications

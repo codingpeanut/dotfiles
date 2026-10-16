@@ -70,10 +70,16 @@ just gnome            # 安裝擴充、主題、圖示、游標、字型並套�
 just gnome-apply      # 快速載入 gnome/dconf.ini + 啟用擴充（不經 Ansible）
 just gnome-backup     # 將目前 GNOME 設定 dump 回 gnome/dconf.ini
 just gnome-update     # 更新所有已安裝擴充
-just stow             # 重新連結所有 dotfiles 到 ~/.config
+just stow             # 重新連結所有 dotfiles（衝突自動備份為 *.bak，安全切換 repo）
+just stow-dry         # 預覽 stow 會做什麼，不實際變更
+just unstow           # 移除所有 dotfiles 軟連結
 just fix              # 拉取更新 + 安裝套件 + stow + gnome + 檢查
 just push             # 提交並推送修改至 GitHub
 ```
+
+> `just stow` 由 `scripts/stow.sh` 安全包裝：部署前會掃描衝突，既有實體檔案或
+> 指向其他位置（例如舊 clone）的殘留軟連結都會先備份成 `*.bak`，且絕不會透過
+> 軟連結去更動其他 repo 的檔案。
 
 ### 3. 完全解除安裝 (Uninstall)
 ```bash
