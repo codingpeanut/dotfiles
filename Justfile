@@ -67,7 +67,8 @@ gnome-fix-blur:
 gnome-backup:
     @echo "==> Backing up current /org/gnome/ settings to gnome/dconf.ini ..."
     @dconf dump /org/gnome/ > gnome/dconf.ini
-    @echo "==> Saved. Review changes with 'git diff gnome/dconf.ini'."
+    @sed -i '/^restore-keybinds=/d' gnome/dconf.ini
+    @echo "==> Saved (PaperWM conflict-restore JSON filtered out). Review with 'git diff gnome/dconf.ini'."
 
 # List installed GNOME extensions and their state
 gnome-exts:

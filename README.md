@@ -47,15 +47,61 @@
 
 ## ⌨️ 常用操作
 
-| 操作 | 功能說明 |
+快捷鍵以 **niri 預設鍵位**為藍本（`Mod` = <kbd>Super</kbd>），完整宣告於 `gnome/dconf.ini`。
+
+**視窗 / column**
+
+| 操作 | 功能 |
 | :--- | :--- |
-| <kbd>Super</kbd> | 開啟 Overview 總覽 / 搜尋 |
-| <kbd>Super</kbd> + <kbd>A</kbd> | 快速設定（Wi-Fi、藍牙、電源、音量、亮度） |
-| <kbd>Super</kbd> + <kbd>Shift</kbd> + <kbd>V</kbd> | 剪貼簿歷史（<kbd>Super</kbd>+<kbd>V</kbd> 是 GNOME 通知中心） |
-| <kbd>Print</kbd> | 截圖（開啟 UI 後框選區域） |
-| <kbd>Super</kbd> + <kbd>←</kbd> / <kbd>→</kbd> | 切換左右視窗（PaperWM） |
-| <kbd>Super</kbd> + <kbd>Ctrl</kbd> + <kbd>←</kbd> / <kbd>→</kbd> | 移動視窗（PaperWM） |
-| <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Esc</kbd> | 開啟系統監控 |
+| <kbd>Super</kbd>+<kbd>←</kbd>/<kbd>→</kbd> 或 <kbd>H</kbd>/<kbd>L</kbd> | focus 左/右 column |
+| <kbd>Super</kbd>+<kbd>↑</kbd>/<kbd>↓</kbd> 或 <kbd>K</kbd>/<kbd>J</kbd> | focus 上/下視窗（column 內） |
+| <kbd>Super</kbd>+<kbd>Ctrl</kbd>+方向/HJKL | 移動視窗（column/stack 內） |
+| <kbd>Super</kbd>+<kbd>Shift</kbd>+方向/HJKL | focus 其他螢幕 |
+| <kbd>Super</kbd>+<kbd>Shift</kbd>+<kbd>Ctrl</kbd>+方向/HJKL | 移動視窗到其他螢幕 |
+| <kbd>Super</kbd>+<kbd>Home</kbd>/<kbd>End</kbd> | 第一/最後 column |
+| <kbd>Super</kbd>+<kbd>[</kbd>/<kbd>]</kbd> | 視窗推入/拉出相鄰 space（drift） |
+| <kbd>Super</kbd>+<kbd>,</kbd>/<kbd>.</kbd> | 吸入/吐出 column（slurp / barf） |
+| <kbd>Super</kbd>+<kbd>C</kbd> | column 置中 |
+| <kbd>Super</kbd>+<kbd>V</kbd> | 浮動視窗切換（scratch layer） |
+| <kbd>Super</kbd>+<kbd>Q</kbd> | 關閉視窗（<kbd>Alt</kbd>+<kbd>F4</kbd> 亦可） |
+
+**寬高 / 最大化**
+
+| 操作 | 功能 |
+| :--- | :--- |
+| <kbd>Super</kbd>+<kbd>R</kbd> / <kbd>Shift</kbd>+<kbd>R</kbd> | 循環 column 寬度（1/3 ↔ 1/2 ↔ 2/3） |
+| <kbd>Super</kbd>+<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd> | 循環視窗高度 |
+| <kbd>Super</kbd>+<kbd>−</kbd>/<kbd>=</kbd>（加 <kbd>Shift</kbd> 調高度） | 寬/高 ±10% |
+| <kbd>Super</kbd>+<kbd>F</kbd> / <kbd>Shift</kbd>+<kbd>F</kbd> | 最大化 column / 全螢幕 |
+| <kbd>Super</kbd>+<kbd>M</kbd> | 最大化到螢幕邊緣 |
+
+**Workspace**
+
+| 操作 | 功能 |
+| :--- | :--- |
+| <kbd>Super</kbd>+<kbd>Page⇣</kbd>/<kbd>Page⇡</kbd> 或 <kbd>U</kbd>/<kbd>I</kbd> | 切換下/上 workspace |
+| <kbd>Super</kbd>+<kbd>Ctrl</kbd>+<kbd>Page⇣</kbd>/<kbd>Page⇡</kbd> 或 <kbd>Ctrl</kbd>+<kbd>U</kbd>/<kbd>I</kbd> | 移動 column 到下/上 workspace |
+| <kbd>Super</kbd>+<kbd>1</kbd>…<kbd>4</kbd> | 切換到 workspace 1-4 |
+| <kbd>Super</kbd>+<kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>4</kbd> | 移動 column 到 workspace 1-4 |
+
+**系統 / 其他**
+
+| 操作 | 功能 |
+| :--- | :--- |
+| <kbd>Super</kbd> | Overview 總覽 / 搜尋 |
+| <kbd>Super</kbd>+<kbd>O</kbd> | 開啟/關閉 Overview |
+| <kbd>Super</kbd>+<kbd>S</kbd> | 快速設定（Wi-Fi、藍牙、電源…） |
+| <kbd>Super</kbd>+<kbd>A</kbd> | 應用程式格（App Grid） |
+| <kbd>Super</kbd>+<kbd>T</kbd> | 開啟終端機（kitty） |
+| <kbd>Super</kbd>+<kbd>Alt</kbd>+<kbd>L</kbd> | 鎖定螢幕 |
+| <kbd>Print</kbd> / <kbd>Super</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> | 截圖 UI（框選區域） |
+| <kbd>Ctrl</kbd>+<kbd>Print</kbd> / <kbd>Alt</kbd>+<kbd>Print</kbd> | 直接全螢幕 / 視窗截圖 |
+| <kbd>Super</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd> | 剪貼簿歷史 |
+| <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Esc</kbd> | 系統監控 |
+
+> **刻意與 GNOME 預設不同**：<kbd>Super</kbd>+<kbd>L</kbd> 改為 focus 右欄（鎖定搬到 <kbd>Super</kbd>+<kbd>Alt</kbd>+<kbd>L</kbd>）；<kbd>Super</kbd>+<kbd>1</kbd>…<kbd>9</kbd> 改切 workspace（原「開釘選 app」已清空）；<kbd>Super</kbd>+<kbd>V</kbd>/<kbd>M</kbd> 改浮動/最大化（原通知清單快捷已清空）。PaperWM 啟用時會**自動暫停**衝突的 GNOME 原生鍵（<kbd>Super</kbd>+<kbd>↑</kbd>/<kbd>↓</kbd>、<kbd>Super</kbd>+<kbd>H</kbd>、<kbd>Super</kbd>+<kbd>Home</kbd>/<kbd>End</kbd>、<kbd>Super</kbd>+<kbd>Shift</kbd>+方向、<kbd>Super</kbd>+<kbd>PageUp</kbd>/<kbd>Down</kbd>），停用時自動還原。
+> **未實作（PaperWM/GNOME 無對應）**：niri 的 `Mod+W`（tab 欄）、`Mod+Ctrl+F`（expand）、`Mod+Ctrl+R`（重設高度）、`Mod+Ctrl+Home/End`、`Mod+Shift+U/I`（移動 workspace）、`Mod+D`（啟動器，系統未安裝）、`Mod+Escape`（shortcut inhibitor）、`Mod+Shift+E`（結束 session）、`Mod+Shift+P`（關閉螢幕）。
+> `just gnome-backup` 會自動過濾 PaperWM 的 `restore-keybinds` 欄位（衝突還原清單），避免污染 dconf.ini。
 
 ---
 
