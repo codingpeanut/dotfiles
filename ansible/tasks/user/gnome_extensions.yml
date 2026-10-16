@@ -1,0 +1,48 @@
+---
+# Declarative GNOME Shell extension management via gext (gnome-extensions-cli)
+
+- name: Resolve user home directory
+  ansible.builtin.set_fact:
+    gnome_home: "{{ ansible_facts['user_dir'] | default(lookup('env', 'HOME')) }}"
+
+- name: Check whether gext is already installed
+  ansible.builtin.stat:
+    path: "{{ gnome_home }}/.local/bin/gext"
+  register: gext_stat
+
+- name: Install gnome-extensions-cli via pipx
+  ansible.builtin.command:
+    cmd: pipx install --system-site-packages gnome-extensions-cli
+  when: not gext_stat.stat.exists
+  register: gext_install
+  changed_when: gext_install.rc == 0
+  failed_when: false
+
+- name: Read the declarative extension list
+  ansible.builtin.shell:
+    cmd: "grep -vE '^[[:space:]]*(#|$)' {{ playbook_dir }}/../gnome/extensions.txt"
+  register: gnome_ext_list
+  changed_when: false
+
+- name: List currently installed extensions
+  ansible.builtin.command:
+    cmd: "{{ gnome_home }}/.local/bin/gext list"
+  register: gnome_ext_installed
+  changed_when: false
+  failed_when: false
+
+- name: Install missing GNOME extensions
+  ansible.builtin.command:
+    cmd: "{{ gnome_home }}/.local/bin/gext install {{ item }}"
+  loop: "{{ gnome_ext_list.stdout_lines | default([]) }}"
+  when: item not in gnome_ext_installed.stdout
+  register: gnome_ext_install_result
+  changed_when: gnome_ext_install_result.rc == 0
+  failed_when: false
+
+- name: Enable all declaratively managed extensions
+  ansible.builtin.command:
+    cmd: "{{ gnome_home }}/.local/bin/gext enable {{ item }}"
+  loop: "{{ gnome_ext_list.stdout_lines | default([]) }}"
+  changed_when: false
+  failed_when: false

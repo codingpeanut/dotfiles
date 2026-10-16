@@ -1,81 +1,91 @@
-# Niri + Noctalia 現代微透桌面 (Debian / Fedora)
+# 現代簡約玻璃風 GNOME 桌面 (Fedora)
 
-> **「採用 GNU Stow 模組化架構與 Justfile 自動化管理，統一 Tokyo Night (東京之夜) 視覺美學」**
+> **「以 GNU Stow 模組化架構 + Ansible 宣告式自動化 + Justfile 一鍵維護，打造乾淨、低調、有質感的 GNOME 50 桌面。」**
 >
-> 結合 **Niri** 的無限橫向視窗捲軸流動與 **Noctalia (v5+)** 現代一體化微透毛玻璃 (Glassmorphism) 桌面外殼，並完整支援 **Windows 肌肉記憶快捷鍵**。
+> 以 **Fedora Workstation (GNOME 50)** 為基礎，透過 **gext** 宣告式管理 GNOME Shell 擴充、**dconf** 統一桌面設定、**Colloid** 主題與 **Inter / JetBrainsMono Nerd Font** 字型，呈現現代簡約的玻璃 (Glassmorphism) 風格。
 
 ---
 
 ## 🎨 視覺與架構亮點
 
-- **Tokyo Night (東京之夜) 統一美學**：
-  - 全系統貫徹 Tokyo Night 深色調（底色 `#1a1b26`、表面卡片 `#24283b`、強調藍 `#7aa2f7`、紫羅蘭 `#bb9af7`、文字 `#c0caf5`）。
-  - Niri 聚焦環 (`#7aa2f7`)、Noctalia 面板邊框微發光、Kitty 終端機與 Hyprlock 鎖定畫面色彩全面統一。
-- **全功能一體化 Noctalia Desktop Shell (v5+)**：
-  - **頂部懸浮島狀態列 (Floating Island Bar)**：整合工作區指示器、視窗標題、系統狀態與時鐘。
-  - **抽屜式控制中心 (Control Center)**：一指展開電源模式 ( 效能 / 󰾅 平衡 /  省電)、防睡眠常亮模式 (☕ Caffeine Toggle)、Wi-Fi、藍牙、深淺模式切換、音量與螢幕亮度滑桿。
-  - **Spotlight 居中搜尋啟動器**：<kbd>Win</kbd> 或 <kbd>Win + Space</kbd> 喚出，支援即時數學算式計算機 (`/calc`)、Emoji 表情選擇器 (`/emo`)、工作階段關機重開機 (`/session`) 與視窗切換。
-  - **浮動剪貼簿管理器**：<kbd>Win + V</kbd> 呼叫，具備歷史紀錄搜尋與複製保護。
-  - **系統級區域截圖編輯器**：<kbd>Win + Shift + S</kbd> 呼叫，支援自訂標註與複製至剪貼簿。
-  - **3D 景深視窗切換器**：<kbd>Alt + Tab</kbd> 輪播預覽與最近使用視窗排序。
+- **現代簡約玻璃風**：
+  - **Blur My Shell** 為面板、Dash 與 Overview 加上柔和模糊。
+  - **Just Perfection** 精簡 Shell 元素，**Rounded Window Corners Reborn** 帶來圓角視窗。
+  - **Colloid-Dark (grey / rimless)** GTK 主題 + **Papirus-Dark** 圖示 + **Bibata-Modern-Ice** 游標。
+- **宣告式 GNOME 擴充管理 (gext)**：
+  - 所有擴充 UUID 集中於 `gnome/extensions.txt`，由 `gext` 安裝與啟用，一鍵同步。
+- **dconf 設定即程式碼**：
+  - `gnome/dconf.ini` 保存 `/org/gnome/` 的完整外觀與快捷設定；`just gnome-backup` 固化、`just gnome-apply` 套用。
 - **GNU Stow 模組化軟連結管理**：
-  - 每個軟體獨立收納於 `stow/<app>/`，不污染家目錄，修改隨改隨生效，Git 版本追蹤一清二楚。
-- **Justfile 宣告式日常維護**：
-  - 透過 `just stow`、`just reload`、`just fix` 一鍵完成相依套件安裝、軟連結部署與桌面熱重載。
+  - 檔案型設定（GTK CSS、fontconfig、environment.d）收於 `stow/gnome/`，不污染家目錄。
+- **Ansible + Justfile 宣告式維護**：
+  - `just gnome`、`just stow`、`just fix` 一鍵完成套件安裝、軟連結部署與設定套用。
 
 ---
 
-## ⌨️ Windows 肌肉記憶快捷鍵矩陣
+## 🧩 核心 GNOME Shell 擴充
 
-| 快捷鍵 | 功能說明 | 備註 |
-| :--- | :--- | :--- |
-| <kbd>Win</kbd> 或 <kbd>Win</kbd> + <kbd>Space</kbd> | 開啟 / 關閉 居中搜尋啟動器 | Noctalia Spotlight 搜尋列 |
-| <kbd>Win</kbd> + <kbd>A</kbd> | 開啟快速設定 / 控制中心 | 整合電源模式、防睡眠、音量與亮度 |
-| <kbd>Win</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> | 區域截圖 (Windows 剪取工具風格) | Noctalia 內建標註編輯器與複製 |
-| <kbd>Win</kbd> + <kbd>Alt</kbd> + <kbd>L</kbd> | 鎖定電腦螢幕 | 呼叫 Swaylock 安全鎖屏 |
-| <kbd>Win</kbd> + <kbd>E</kbd> | 開啟檔案管理員 (Nautilus) | GNOME Files |
-| <kbd>Win</kbd> + <kbd>Ctrl</kbd> + <kbd>V</kbd> | 剪貼簿歷史選單 | Noctalia 浮動歷史選單 / cliphist |
-| <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Esc</kbd> | 開啟工作管理員 (btop) | 系統負載即時監控 |
-| <kbd>Alt</kbd> + <kbd>Tab</kbd> | 視窗 3D 景深循環切換 | 焦點輪換 |
-| <kbd>Alt</kbd> + <kbd>F4</kbd> 或 <kbd>Win</kbd> + <kbd>Q</kbd> | 關閉當前視窗 | 關閉視窗 |
-| <kbd>Win</kbd> + <kbd>Enter</kbd> 或 <kbd>Win</kbd> + <kbd>T</kbd> | 開啟 Kitty 終端機 | GPU 硬體加速與 Tokyo Night 底色 |
-| <kbd>Win</kbd> + <kbd>←</kbd> / <kbd>→</kbd> (或 <kbd>H</kbd>/<kbd>L</kbd>) | 焦點左右移動分欄 | 橫向平滑捲動 |
-| <kbd>Win</kbd> + <kbd>↑</kbd> (或 <kbd>M</kbd>/<kbd>F</kbd>) | 最大化當前分欄 | 填滿全螢幕 |
-| <kbd>Win</kbd> + <kbd>↓</kbd> (或 <kbd>R</kbd>) | 還原視窗尺寸 | 重設高度 |
-| <kbd>Win</kbd> + <kbd>Ctrl</kbd> + <kbd>←</kbd> / <kbd>→</kbd> | 切換上下虛擬桌面 | 工作區切換 |
-| <kbd>Shift</kbd> (單擊) | 切換中文 / 英文輸入模式 | Fcitx5 新酷音注音 |
+| 擴充 | 用途 |
+| :--- | :--- |
+| Blur My Shell | 面板 / Dash / Overview 玻璃模糊 |
+| Just Perfection | 精簡 Shell 元素（隱藏項目、調整位置） |
+| Space Bar | i3 風格工作區指示器 |
+| Rounded Window Corners Reborn | 視窗圓角 |
+| AppIndicator | 系統匣圖示支援 |
+| Vitals | CPU / 記憶體 / 溫度監控 |
+| Date Menu Formatter | 時鐘日期格式自訂 |
+| Caffeine | 防休眠 / 常亮切換 |
+| Clipboard History | 剪貼簿歷史 (Super+V 風格) |
+| Tiling Assistant | Windows 風格視窗貼齊 |
+
+> 擴充清單定義於 `gnome/extensions.txt`；UUID 與 GNOME 50 相容性可於 <https://extensions.gnome.org> 查核。
+
+---
+
+## ⌨️ 常用操作
+
+| 操作 | 功能說明 |
+| :--- | :--- |
+| <kbd>Super</kbd> | 開啟 Overview 總覽 / 搜尋 |
+| <kbd>Super</kbd> + <kbd>A</kbd> | 快速設定（Wi-Fi、藍牙、電源、音量、亮度） |
+| <kbd>Super</kbd> + <kbd>V</kbd> | 剪貼簿歷史（Clipboard History 擴充） |
+| <kbd>Print</kbd> / <kbd>Super</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> | 截圖 / 區域截圖 |
+| <kbd>Super</kbd> + <kbd>←</kbd> / <kbd>→</kbd> | 視窗左右貼齊（Tiling Assistant） |
+| <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Esc</kbd> | 開啟系統監控（可搭配 Vitals） |
 
 ---
 
 ## 🚀 快速安裝與維護指令
 
-### 1. 初次安裝或一鍵修復
+### 1. 初次安裝
 ```bash
 git clone https://github.com/codingpeanut/dotfiles.git ~/dotfiles
 cd ~/dotfiles
-just fix
+just bootstrap        # 或 scripts/bootstrap.sh，安裝 git/ansible/just/stow 並執行 just apply
 ```
 
 ### 2. 日常維護指令
 ```bash
-just stow          # 重新連結所有配置到 ~/.config
-just reload        # 熱重載 Niri 與重啟 Noctalia / Quickshell
-just deps          # 檢查並安裝系統相依套件
-just push          # 提交並推送最新修改至 GitHub
+just gnome            # 安裝擴充、主題、圖示、游標、字型並套用設定 (Ansible)
+just gnome-apply      # 快速載入 gnome/dconf.ini + 啟用擴充（不經 Ansible）
+just gnome-backup     # 將目前 GNOME 設定 dump 回 gnome/dconf.ini
+just gnome-update     # 更新所有已安裝擴充
+just stow             # 重新連結所有 dotfiles 到 ~/.config
+just fix              # 拉取更新 + 安裝套件 + stow + gnome + 檢查
+just push             # 提交並推送修改至 GitHub
 ```
 
-### 3. 完全捨棄 / 解除安裝指令 (Uninstall)
-若想在本地電腦完全捨棄此套件並還原原本的環境：
+### 3. 完全解除安裝 (Uninstall)
 ```bash
-just uninstall          # 解除所有軟連結、還原 ~/.bashrc 等原始備份並停止桌面服務
-just uninstall-dry      # 預覽即將清理與還原的項目 (dry-run，不實際變更)
-just uninstall-system   # 僅移除專用系統套件 (noctalia, quickshell...) 與停用 COPR
-# 亦支援 just -f uninstall.just
+just uninstall          # 解除軟連結、還原備份、重置 GNOME 設定並移除擴充
+just uninstall-dry      # 預覽即將清理的項目 (dry-run)
+just uninstall-system   # 僅移除本專案安裝的 GNOME 美化系統套件
+just -f uninstall.just  # 亦可透過獨立 Justfile 操作
 
-# 若系統尚未安裝 just，亦可直接執行腳本：
-./scripts/uninstall.sh --dry-run   # 預覽模式
-./scripts/uninstall.sh             # 執行還原 dotfiles
-./scripts/uninstall.sh --all       # 完整移除 (dotfiles + 系統套件)
+# 系統尚未安裝 just 時可直接執行腳本：
+./scripts/uninstall.sh --dry-run
+./scripts/uninstall.sh
+./scripts/uninstall.sh --all
 ```
 
 ---
@@ -84,23 +94,34 @@ just uninstall-system   # 僅移除專用系統套件 (noctalia, quickshell...) 
 
 ```text
 dotfiles/
-├── Justfile                  # 常用任務界面 (just stow, just reload, just fix...)
-├── README.md                 # 說明文件
+├── Justfile                  # 常用任務界面 (just gnome / stow / fix ...)
+├── uninstall.just            # 獨立解除安裝任務
+├── README.md
+│
+├── gnome/                    # GNOME 宣告式 payload (非軟連結)
+│   ├── extensions.txt        # gext 擴充清單 (UUID)
+│   └── dconf.ini             # /org/gnome/ 設定 dump (gnome-backup 生成)
 │
 ├── ansible/                  # 宣告式系統套件與配置自動化
-├── scripts/                  # 系統工具與引導安裝腳本
+│   ├── playbook.yml
+│   ├── vars/default.yml
+│   └── tasks/
+│       ├── system/           # DNF 套件、COPR、systemd
+│       └── user/
+│           ├── gnome_extensions.yml   # gext 安裝 / 啟用擴充
+│           ├── gnome_themes.yml       # Colloid / Nerd Font 安裝
+│           ├── gnome_settings.yml     # dconf load + gsettings
+│           ├── dotfiles.yml           # GNU Stow 軟連結
+│           └── ...
 │
+├── scripts/                  # bootstrap / uninstall 腳本
 └── stow/                     # 按應用模組化的 GNU Stow 配置
-    ├── niri/                 # Niri 視窗管理器 (~/.config/niri/config.kdl)
-    ├── noctalia/             # Noctalia 現代桌面外殼 (~/.config/noctalia/config.toml - 模擬 Waybar 外觀)
-    ├── waybar/               # Waybar 狀態列 (備用/原生狀態列)
-    ├── mako/                 # Mako 桌面通知 (備用)
-    ├── kitty/                # Kitty 終端機 (Tokyo Night 深色微透主題)
-    ├── fuzzel/               # Fuzzel 輕量 App 啟動器 (備用)
-    ├── wlogout/              # Wlogout 圓形按鈕開關機選單
-    ├── fcitx5/               # Fcitx5 輸入法與新酷音注音配置
-    ├── nvim/                 # Neovim (init.lua) 與 Vim (.vimrc)
-    ├── starship/             # Starship 跨 Shell 終端 Prompt
-    ├── bash/                 # Shell 環境、alias 與桌面輔助腳本 (~/.local/bin)
-    └── xdg-desktop-portal/   # Wayland 桌面入口協議與螢幕分享設定
+    ├── gnome/                # GTK CSS / fontconfig / environment.d
+    ├── bash/                 # Shell 環境與工具腳本
+    ├── kitty/                # Kitty 終端機
+    ├── nvim/                 # Neovim / Vim
+    ├── starship/             # Starship Prompt
+    └── fcitx5/               # Fcitx5 輸入法
 ```
+
+> **提示**：GNOME 50 為 Wayland 工作階段，Shell 與佈景主題變更需要**登出再登入**才會完全生效；擴充的啟用/停用則可即時套用。

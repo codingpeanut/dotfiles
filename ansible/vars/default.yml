@@ -1,28 +1,25 @@
 ---
-# Default declarative configuration for Fedora
+# Default declarative configuration for Fedora GNOME
 
 # COPR repositories to enable
 system_copr_repos:
-  - yalter/niri
-  - zhangyi6324/noctalia-shell
-  - errornointernet/quickshell
   - atim/starship
-  - celestelove/libcava
 
 # System RPM packages to install via DNF
 system_packages:
-  # Window Manager & Desktop Environment
-  - niri
-  - noctalia
-  - quickshell
-  - waybar
-  - kitty
-  - fuzzel
-  - mako
-  - distrobox
-  - xdg-desktop-portal-gnome
-  - xdg-desktop-portal-gtk
-  - mate-polkit
+  # GNOME Desktop & Shell Tweaking
+  - gnome-tweaks
+  - gnome-extensions-app
+  - dconf
+  - pipx
+  - python3-gobject
+  - sassc
+  - gtk-murrine-engine
+
+  # GNOME Theme Assets (GTK engine, icons, cursor, UI fonts)
+  - papirus-icon-theme
+  - bibata-cursor-theme
+  - rsms-inter-fonts
 
   # Chinese Input Method (Fcitx5 Framework & Engines)
   - fcitx5
@@ -79,6 +76,9 @@ system_packages:
   - npm
   - python3
   - python3-pip
+  - gcc
+  - cmake
+  - ninja-build
 
   # Core Tools & Workflow
   - stow
@@ -89,42 +89,15 @@ system_packages:
   - ripgrep
   - fd-find
 
-  # Wayland Utilities & Audio / Brightness / Screen Capture
+  # Wayland Utilities & Audio / Brightness / Clipboard
   - wl-clipboard
   - cliphist
   - brightnessctl
   - ddcutil
-  - swaylock
-  - swayidle
-  - wlogout
-  - grim
-  - slurp
-  - swappy
   - playerctl
   - pavucontrol
   - libnotify
   - cava
-  - tesseract
-  - tesseract-langpack-eng
-
-  # Build Tools & Libraries (for Caelestia / Quickshell extensions)
-  - cmake
-  - ninja-build
-  - gcc-c++
-  - qt6-qtdeclarative-devel
-  - qt6-qtbase-devel
-  - qt6-qtmultimedia-devel
-  - qt6-qtwayland-devel
-  - qt6-qtsvg-devel
-  - qt6-qtshadertools-devel
-  - qt6-qtimageformats
-  - qt6-qt5compat
-  - qt6-qt5compat-devel
-  - libqalculate-devel
-  - aubio-devel
-  - pipewire-devel
-  - libddcutil-devel
-  - libcava-devel
 
 # System services to enable and start (systemd system-level)
 system_services:
@@ -135,19 +108,15 @@ user_services: []
 
 # Flatpak applications to install for current user
 flatpak_user_packages:
-  # - org.mozilla.firefox # Optional: Fedora already includes Firefox RPM out of the box
   - com.discordapp.Discord
+  # GUI fallback / companion for gext-based extension management
+  - com.mattjakeman.ExtensionManager
 
 # GNU Stow modules to symlink into $HOME
 stow_packages:
-  - niri
-  - noctalia
-  - waybar
-  - kitty
-  - fuzzel
-  - mako
+  - gnome
   - bash
+  - kitty
   - nvim
   - starship
-  - wlogout
   - fcitx5

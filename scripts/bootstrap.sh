@@ -33,5 +33,5 @@ else
 fi
 
 echo "=================================================="
-echo " Bootstrap complete! Welcome to your Niri desktop."
+echo " Bootstrap complete! Welcome to your GNOME desktop."
 echo "=================================================="

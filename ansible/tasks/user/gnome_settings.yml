@@ -1,0 +1,31 @@
+---
+# GNOME desktop settings applied declaratively (dconf bulk load + explicit gsettings)
+
+- name: Resolve user home directory
+  ansible.builtin.set_fact:
+    gnome_home: "{{ ansible_facts['user_dir'] | default(lookup('env', 'HOME')) }}"
+
+- name: Load declarative dconf settings (scope /org/gnome/)
+  ansible.builtin.shell:
+    cmd: "dconf load /org/gnome/ < {{ playbook_dir }}/../gnome/dconf.ini"
+  args:
+    executable: /bin/bash
+  changed_when: false
+  failed_when: false
+
+- name: Apply core GNOME appearance settings
+  ansible.builtin.command:
+    cmd: "gsettings set {{ item.key }} {{ item.value }}"
+  loop:
+    - { key: "org.gnome.desktop.interface color-scheme", value: "'prefer-dark'" }
+    - { key: "org.gnome.desktop.interface gtk-theme", value: "'Colloid-Dark'" }
+    - { key: "org.gnome.desktop.interface icon-theme", value: "'Papirus-Dark'" }
+    - { key: "org.gnome.desktop.interface cursor-theme", value: "'Bibata-Modern-Ice'" }
+    - { key: "org.gnome.desktop.interface cursor-size", value: "24" }
+    - { key: "org.gnome.desktop.interface font-name", value: "'Inter 11'" }
+    - { key: "org.gnome.desktop.interface document-font-name", value: "'Inter 11'" }
+    - { key: "org.gnome.desktop.interface monospace-font-name", value: "'JetBrainsMono Nerd Font 11'" }
+    - { key: "org.gnome.desktop.interface accent-color", value: "'blue'" }
+    - { key: "org.gnome.desktop.wm.preferences button-layout", value: "':minimize,maximize,close'" }
+  changed_when: false
+  failed_when: false

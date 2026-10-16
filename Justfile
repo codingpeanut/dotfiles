@@ -1,4 +1,4 @@
-# Justfile - Declarative dotfiles & system manager
+# Justfile - Declarative GNOME dotfiles & system manager
 # Inspired by NixOS declarative workflow for Fedora
 
 home := env("HOME")
@@ -6,11 +6,11 @@ home := env("HOME")
 default:
     @just --list
 
-# Apply full configuration (system packages + dotfiles + user services)
+# Apply full configuration (system packages + GNOME + dotfiles + user services)
 apply *args:
     ansible-playbook -i ansible/inventory.ini ansible/playbook.yml --ask-become-pass {{ args }}
 
-# Sync and apply dotfiles symlinks via GNU Stow
+# Sync and apply dotfiles symlinks via GNU Stow (through Ansible)
 dotfiles *args:
     ansible-playbook -i ansible/inventory.ini ansible/playbook.yml --tags dotfiles {{ args }}
 
@@ -18,29 +18,63 @@ dotfiles *args:
 system *args:
     ansible-playbook -i ansible/inventory.ini ansible/playbook.yml --tags system --ask-become-pass {{ args }}
 
-# Run only user-level configuration (dotfiles, flatpaks, user services)
+# Run only user-level configuration (dotfiles, flatpaks, GNOME, user services)
 user *args:
     ansible-playbook -i ansible/inventory.ini ansible/playbook.yml --tags user {{ args }}
 
-# Install user Flatpak applications directly with live progress bar
-flatpaks:
-    @echo "==> Ensuring user Flathub remote is configured..."
-    @flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-    @flatpak remote-modify --user flathub --enable --no-filter
-    @echo "==> Installing declarative user Flatpaks (live interactive progress bar)..."
-    flatpak install --user -y flathub com.discordapp.Discord
+# ---------------------------------------------------------------------------
+# GNOME desktop
+# ---------------------------------------------------------------------------
 
-# Accelerate Flathub downloads by switching to Asian mirror (SJTU)
-mirror-flathub:
-    @echo "==> Switching user Flathub to SJTU mirror (https://mirror.sjtu.edu.cn/flathub)..."
-    flatpak remote-modify --user flathub --url=https://mirror.sjtu.edu.cn/flathub
-    @echo "==> Switched to mirror. Run 'just flatpaks' to test speed."
+# Full GNOME setup: extensions, themes, icons, cursor, fonts and dconf settings
+gnome *args:
+    ansible-playbook -i ansible/inventory.ini ansible/playbook.yml --tags gnome {{ args }}
 
-# Reset user Flathub to official global CDN
-reset-flathub:
-    @echo "==> Resetting user Flathub to official global CDN..."
-    flatpak remote-modify --user flathub --url=https://dl.flathub.org/repo
-    @echo "==> Flathub reset to default."
+# Install / refresh only the declarative GNOME Shell extensions (gext)
+gnome-ext *args:
+    ansible-playbook -i ansible/inventory.ini ansible/playbook.yml --tags gnome_ext {{ args }}
+
+# Install / refresh only GNOME themes, icons, cursor and fonts
+gnome-theme *args:
+    ansible-playbook -i ansible/inventory.ini ansible/playbook.yml --tags gnome_themes {{ args }}
+
+# Apply only the dconf / gsettings configuration
+gnome-settings *args:
+    ansible-playbook -i ansible/inventory.ini ansible/playbook.yml --tags gnome_settings {{ args }}
+
+# Fast dconf apply without Ansible (loads gnome/dconf.ini into /org/gnome/)
+gnome-apply:
+    @echo "==> Loading gnome/dconf.ini into /org/gnome/ ..."
+    @dconf load /org/gnome/ < gnome/dconf.ini
+    @echo "==> Enabling declarative extensions (gext)..."
+    @grep -vE '^[[:space:]]*(#|$)' gnome/extensions.txt | while read -r uuid; do gext enable "$uuid" 2>/dev/null || true; done
+    @echo "==> Done. Log out and back in to fully apply shell and theme changes."
+
+# Capture the current GNOME settings from dconf back into the repo
+gnome-backup:
+    @echo "==> Backing up current /org/gnome/ settings to gnome/dconf.ini ..."
+    @dconf dump /org/gnome/ > gnome/dconf.ini
+    @echo "==> Saved. Review changes with 'git diff gnome/dconf.ini'."
+
+# List installed GNOME extensions and their state
+gnome-exts:
+    @gext list
+
+# Update all installed GNOME extensions to their latest version
+gnome-update:
+    @gext update --all
+
+# Reset all GNOME settings to defaults and remove gext-managed extensions (destructive)
+gnome-reset:
+    @echo "WARNING: this resets ALL /org/gnome/ settings and removes gext-managed extensions."
+    @ans=""; printf "Continue? [y/N] "; read ans; [ "$ans" = "y" ] || { echo "Aborted."; exit 0; }
+    @dconf reset -f /org/gnome/
+    @grep -vE '^[[:space:]]*(#|$)' gnome/extensions.txt | while read -r uuid; do gext uninstall "$uuid" 2>/dev/null || true; done
+    @echo "==> GNOME reset complete. Log out and back in to apply."
+
+# ---------------------------------------------------------------------------
+# Dotfiles (GNU Stow)
+# ---------------------------------------------------------------------------
 
 # Fast direct Stow re-link for all packages without running Ansible
 stow:
@@ -52,10 +86,6 @@ stow:
     @if [ -f "{{ home }}/.vimrc" ] && [ ! -L "{{ home }}/.vimrc" ]; then \
         echo "Backing up existing regular ~/.vimrc to ~/.vimrc.bak..."; \
         mv "{{ home }}/.vimrc" "{{ home }}/.vimrc.bak"; \
-    fi
-    @if [ ! -L "{{ home }}/.config/niri" ] && [ -f "{{ home }}/.config/niri/config.kdl" ] && [ ! -L "{{ home }}/.config/niri/config.kdl" ]; then \
-        echo "Backing up existing regular ~/.config/niri/config.kdl to ~/.config/niri/config.kdl.bak..."; \
-        mv "{{ home }}/.config/niri/config.kdl" "{{ home }}/.config/niri/config.kdl.bak"; \
     fi
     @cd stow && for pkg in */; do \
         pkg_name="${pkg%/}"; \
@@ -71,7 +101,116 @@ unstow:
         stow -v -D -t "{{ home }}" "$pkg_name"; \
     done
 
-# Completely uninstall dotfiles from local system (unstow, restore backups, stop services, remove rice binaries)
+# ---------------------------------------------------------------------------
+# Applications
+# ---------------------------------------------------------------------------
+
+# Install user Flatpak applications directly with live progress bar
+flatpaks:
+    @echo "==> Ensuring user Flathub remote is configured..."
+    @flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+    @flatpak remote-modify --user flathub --enable --no-filter
+    @echo "==> Installing declarative user Flatpaks (live interactive progress bar)..."
+    flatpak install --user -y flathub com.discordapp.Discord com.mattjakeman.ExtensionManager
+
+# Accelerate Flathub downloads by switching to Asian mirror (SJTU)
+mirror-flathub:
+    @echo "==> Switching user Flathub to SJTU mirror (https://mirror.sjtu.edu.cn/flathub)..."
+    flatpak remote-modify --user flathub --url=https://mirror.sjtu.edu.cn/flathub
+    @echo "==> Switched to mirror. Run 'just flatpaks' to test speed."
+
+# Reset user Flathub to official global CDN
+reset-flathub:
+    @echo "==> Resetting user Flathub to official global CDN..."
+    flatpak remote-modify --user flathub --url=https://dl.flathub.org/repo
+    @echo "==> Flathub reset to default."
+
+# ---------------------------------------------------------------------------
+# Maintenance
+# ---------------------------------------------------------------------------
+
+# Bootstrap a fresh Fedora workstation (installs git/ansible/just/stow, then applies)
+bootstrap:
+    @bash scripts/bootstrap.sh
+
+# Install GNOME desktop dependencies directly (fallback when not using Ansible)
+deps:
+    @echo "==> Installing GNOME desktop dependencies..."
+    sudo dnf install -y gnome-tweaks gnome-extensions-app dconf pipx python3-gobject sassc gtk-murrine-engine papirus-icon-theme bibata-cursor-theme rsms-inter-fonts nautilus file-roller blueman bluez bluez-tools nm-connection-editor network-manager-applet NetworkManager-tui gnome-calendar gnome-control-center pavucontrol playerctl wl-clipboard cliphist brightnessctl ddcutil libnotify cava btop starship zoxide fzf eza bat fastfetch nautilus fcitx5 fcitx5-chinese-addons fcitx5-chewing fcitx5-configtool fcitx5-gtk3 fcitx5-gtk4 fcitx5-qt5 fcitx5-qt6 google-noto-sans-cjk-fonts google-noto-serif-cjk-fonts google-noto-color-emoji-fonts jetbrains-mono-fonts
+    sudo systemctl enable --now bluetooth || true
+    @echo "==> Dependencies installed. Run 'just gnome' and 'just stow'."
+
+# Check all GNOME, CLI and desktop dependencies
+check:
+    @echo "==> Checking GNOME desktop and CLI dependencies..."
+    @for cmd in gnome-shell gnome-extensions dconf gsettings gext gnome-tweaks fc-cache sassc pipx kitty nvim starship fcitx5 nautilus btop fzf playerctl blueman-manager pavucontrol; do \
+        if command -v "$cmd" >/dev/null 2>&1; then \
+            printf "  [✓] %-22s found (%s)\n" "$cmd" "$(command -v "$cmd")"; \
+        else \
+            printf "  [✗] %-22s NOT FOUND\n" "$cmd"; \
+        fi \
+    done
+    @echo "==> Enabled GNOME extensions:"
+    @(gnome-extensions list --enabled 2>/dev/null | sed 's/^/  [✓] /') || true
+    @if [ -d "{{ home }}/.local/share/themes/Colloid-Dark" ]; then echo "  [✓] Colloid-Dark theme installed"; else echo "  [✗] Colloid-Dark theme NOT installed"; fi
+
+# Upgrade system packages and Flatpaks
+update:
+    sudo dnf upgrade -y
+    @if command -v flatpak >/dev/null 2>&1; then \
+        flatpak update -y; \
+    fi
+
+# Check Git status
+status:
+    @echo "==> Git status:"
+    @git status -s
+
+# One-command sync: pull latest, auto-stow, and re-apply GNOME settings
+pull:
+    @echo "==> Pulling latest dotfiles from remote..."
+    @git pull --rebase --autostash || (echo "==> Auto-resolving conflict with origin/main..." && git reset --hard origin/main)
+    @just stow
+    @just gnome-apply
+    @echo "==> All dotfiles synced, stowed, and applied successfully!"
+
+# Re-apply GNOME settings (Wayland: log out/in for shell and theme changes)
+reload:
+    @just gnome-apply
+
+# One-stop command to fix everything: pull, install packages, stow and verify
+fix:
+    @echo "==> Pulling latest changes from Git..."
+    @git pull --rebase --autostash || git reset --hard origin/main
+    @just system
+    @just stow
+    @just gnome
+    @just check
+    @echo "==> All dotfiles, dependencies and GNOME settings have been fixed."
+
+# One-command commit & push local changes to GitHub
+push msg="chore: update dotfiles":
+    @git add -A
+    @git commit -m "{{ msg }}" || true
+    @git push origin main
+    @echo "==> Changes pushed to GitHub successfully."
+
+# Quick-edit specific configuration files
+edit target="gnome":
+    @case "{{ target }}" in \
+        gnome) ${EDITOR:-nvim} gnome/dconf.ini ;; \
+        ext|extensions) ${EDITOR:-nvim} gnome/extensions.txt ;; \
+        gtk) ${EDITOR:-nvim} stow/gnome/.config/gtk-4.0/gtk.css ;; \
+        kitty) ${EDITOR:-nvim} stow/kitty/.config/kitty/kitty.conf ;; \
+        fcitx5) ${EDITOR:-nvim} stow/fcitx5/.config/fcitx5/config && (fcitx5-remote -r 2>/dev/null || true) ;; \
+        *) echo "Unknown target: {{ target }}. Available: gnome, ext, gtk, kitty, fcitx5" ;; \
+    esac
+
+# ---------------------------------------------------------------------------
+# Uninstall
+# ---------------------------------------------------------------------------
+
+# Completely uninstall dotfiles from local system (unstow, restore backups, reset GNOME, remove binaries)
 uninstall *args:
     @bash scripts/uninstall.sh {{ args }}
 
@@ -79,7 +218,7 @@ uninstall *args:
 uninstall-dry:
     @bash scripts/uninstall.sh --dry-run
 
-# Revert dotfiles symlinks, restore backups, and stop desktop services only
+# Revert dotfiles symlinks, restore backups, reset GNOME settings and remove extensions
 uninstall-dotfiles:
     @bash scripts/uninstall.sh --dotfiles
 
@@ -90,166 +229,3 @@ uninstall-system:
 # Alias for uninstall
 revert *args:
     @bash scripts/uninstall.sh {{ args }}
-
-# One-command sync: pull latest, auto-stow, and reload desktop bars
-pull:
-    @echo "==> Pulling latest dotfiles from remote..."
-    @git pull --rebase --autostash || (echo "==> Auto-resolving conflict with origin/main..." && git reset --hard origin/main)
-    @just stow
-    @just reload
-    @echo "==> All dotfiles synced, stowed, and reloaded successfully!"
-
-# Reload running desktop components (Niri, Quickshell / Noctalia / Waybar, Fcitx5)
-reload:
-    @echo "==> Reloading Niri compositor configuration..."
-    @(niri msg action reload-config 2>/dev/null || true)
-    @echo "==> Restarting desktop shell (Quickshell preferred)..."
-    @(killall blueman-applet 2>/dev/null || true)
-    @(killall quickshell qs noctalia waybar mako 2>/dev/null || true)
-    @(systemctl --user stop waybar 2>/dev/null || true)
-    @sleep 0.3
-    @if command -v quickshell >/dev/null 2>&1; then \
-        (systemctl --user disable waybar 2>/dev/null || true); \
-        (nohup quickshell >/dev/null 2>&1 &); \
-    elif command -v qs >/dev/null 2>&1; then \
-        (systemctl --user disable waybar 2>/dev/null || true); \
-        (nohup qs >/dev/null 2>&1 &); \
-    elif command -v noctalia >/dev/null 2>&1; then \
-        (systemctl --user disable waybar 2>/dev/null || true); \
-        (nohup noctalia >/dev/null 2>&1 &); \
-    else \
-        (nohup waybar >/dev/null 2>&1 &); \
-        (nohup mako >/dev/null 2>&1 &); \
-    fi
-    @echo "==> Reloading Fcitx5 configuration..."
-    @(fcitx5-remote -r 2>/dev/null || true)
-
-# Install required desktop dependencies for Waybar buttons and utilities
-deps:
-    @echo "==> Installing desktop dependencies (Waybar, popups, audio, network, monitor, bluetooth, wlogout, Rubik fonts)..."
-    sudo dnf install -y btop NetworkManager-tui nm-connection-editor network-manager-applet gnome-calendar gnome-control-center gnome-power-manager pavucontrol waybar mako fuzzel kitty swaylock swayidle brightnessctl ddcutil playerctl wl-clipboard cliphist libnotify fzf blueman bluez bluez-tools python3-dbus python3-gobject gtk3 gtk4 wlogout fcitx5 fcitx5-chinese-addons fcitx5-chewing fcitx5-configtool fcitx5-gtk3 fcitx5-gtk4 fcitx5-qt5 fcitx5-qt6 imsettings google-rubik-fonts
-    sudo systemctl enable --now bluetooth || true
-    @if ! command -v powerprofilesctl >/dev/null 2>&1; then \
-        echo "==> Ensuring power profiles provider is installed (tuned-ppd / power-profiles-daemon)..."; \
-        sudo dnf install -y tuned-ppd 2>/dev/null || sudo dnf install -y power-profiles-daemon 2>/dev/null || true; \
-    fi
-    @if ! command -v quickshell >/dev/null 2>&1; then \
-        echo "==> Ensuring Quickshell repository and package are configured..."; \
-        sudo dnf copr enable -y errornointernet/quickshell 2>/dev/null || true; \
-        sudo dnf install -y quickshell 2>/dev/null || true; \
-    fi
-    @if ! command -v noctalia >/dev/null 2>&1; then \
-        echo "==> Ensuring Noctalia repository and package are configured..."; \
-        sudo dnf copr enable -y zhangyi6324/noctalia-shell 2>/dev/null || true; \
-        sudo dnf install -y noctalia 2>/dev/null || true; \
-    fi
-    @if command -v noctalia >/dev/null 2>&1; then \
-        echo "==> Disabling legacy Waybar systemd service to prevent duplicate bars..."; \
-        systemctl --user disable --now waybar 2>/dev/null || true; \
-    fi
-    @if command -v imsettings-switch >/dev/null 2>&1; then \
-        echo "==> Setting default input method framework to fcitx5..."; \
-        imsettings-switch fcitx5 2>/dev/null || true; \
-    fi
-    @if ! command -v nmgui >/dev/null 2>&1 && [ ! -f "{{ home }}/.local/bin/nmgui" ]; then \
-        echo "==> Installing nmgui (GTK4 NetworkManager GUI) to {{ home }}/.local/bin/nmgui..."; \
-        mkdir -p "{{ home }}/.local/bin"; \
-        curl -sL https://github.com/s-adi-dev/nmgui/releases/download/v1.0.0/main.bin -o "{{ home }}/.local/bin/nmgui"; \
-        chmod +x "{{ home }}/.local/bin/nmgui"; \
-    fi
-
-# Configure Quickshell as the default boot desktop shell
-default-quickshell:
-    @echo "==> Configuring Quickshell as default desktop shell in Niri..."
-    @systemctl --user stop waybar 2>/dev/null || true
-    @systemctl --user disable waybar 2>/dev/null || true
-    @rm -f "{{ home }}/.config/autostart/waybar.desktop" 2>/dev/null || true
-    @echo "==> Quickshell is configured as primary shell!"
-
-# Configure Noctalia as the default boot desktop shell and disable Waybar
-default-noctalia:
-    @echo "==> Configuring Noctalia as default boot shell..."
-    @systemctl --user stop waybar 2>/dev/null || true
-    @systemctl --user disable waybar 2>/dev/null || true
-    @rm -f "{{ home }}/.config/autostart/waybar.desktop" 2>/dev/null || true
-    @if [ -d "{{ home }}/.config/systemd/user" ]; then \
-        systemctl --user daemon-reload 2>/dev/null || true; \
-        systemctl --user enable noctalia 2>/dev/null || true; \
-    fi
-    @echo "==> Noctalia is configured as the default boot shell!"
-
-# Switch Noctalia bar to top (horizontal)
-bar-top:
-    @sed -i 's/position *= *"left"/position               = "top"/' stow/noctalia/.config/noctalia/config.toml
-    @sed -i 's/"position": *"left"/"position": "top"/' stow/noctalia/.config/noctalia/settings.json
-    @just reload
-    @echo "==> Noctalia Bar set to Horizontal Top!"
-
-# Switch Noctalia bar to left (authentic Caelestia vertical layout)
-bar-left:
-    @sed -i 's/position *= *"top"/position               = "left"/' stow/noctalia/.config/noctalia/config.toml
-    @sed -i 's/"position": *"top"/"position": "left"/' stow/noctalia/.config/noctalia/settings.json
-    @just reload
-    @echo "==> Noctalia Bar set to Vertical Left (Caelestia-style)!"
-
-# Toggle Noctalia bar between horizontal (top) and vertical (left)
-bar-toggle:
-    @if grep -q 'position *= *"top"' stow/noctalia/.config/noctalia/config.toml; then \
-        just bar-left; \
-    else \
-        just bar-top; \
-    fi
-
-# One-stop command to fix everything: pull, install dependencies, stow, restart bars, and verify
-fix:
-    @echo "==> Pulling latest changes from Git..."
-    @git pull --rebase --autostash || git reset --hard origin/main
-    @just deps
-    @just default-noctalia
-    @just stow
-    @just reload
-    @just check
-    @echo "==> All dotfiles, dependencies, and Noctalia/desktop have been fixed and reloaded!"
-
-# One-command commit & push local changes to GitHub
-push msg="chore: update dotfiles":
-    @git add -A
-    @git commit -m "{{ msg }}" || true
-    @git push origin main
-    @echo "==> Changes pushed to GitHub successfully."
-
-# Quick-edit specific configuration files
-edit app="niri":
-    @case "{{ app }}" in \
-        niri) ${EDITOR:-nvim} stow/niri/.config/niri/config.kdl ;; \
-        noctalia) ${EDITOR:-nvim} stow/noctalia/.config/noctalia/config.toml ;; \
-        waybar) ${EDITOR:-nvim} stow/waybar/.config/waybar/config.jsonc && pkill -SIGUSR2 waybar 2>/dev/null || true ;; \
-        kitty) ${EDITOR:-nvim} stow/kitty/.config/kitty/kitty.conf ;; \
-        fuzzel) ${EDITOR:-nvim} stow/fuzzel/.config/fuzzel/fuzzel.ini ;; \
-        wlogout) ${EDITOR:-nvim} stow/wlogout/.config/wlogout/layout ;; \
-        fcitx5) ${EDITOR:-nvim} stow/fcitx5/.config/fcitx5/config && (fcitx5-remote -r 2>/dev/null || true) ;; \
-        *) echo "Unknown app: {{ app }}. Available: niri, noctalia, waybar, kitty, fuzzel, wlogout, fcitx5" ;; \
-    esac
-
-# Check all desktop, CLI, and Wayland dependencies
-check:
-    @echo "==> Checking system dependencies..."
-    @for cmd in niri noctalia waybar kitty fuzzel mako btop nmtui nm-connection-editor nm-applet gnome-control-center nmgui pavucontrol gnome-calendar swaylock swayidle brightnessctl ddcutil playerctl wl-paste cliphist fcitx5 notify-send fzf blueman-manager wlogout powerprofilesctl; do \
-        if command -v "$cmd" >/dev/null 2>&1; then \
-            printf "  [✓] %-24s found (%s)\n" "$cmd" "$(command -v "$cmd")"; \
-        else \
-            printf "  [✗] %-24s NOT FOUND\n" "$cmd"; \
-        fi \
-    done
-
-# Upgrade system packages and Flatpaks
-update:
-    sudo dnf upgrade -y
-    @if command -v flatpak >/dev/null 2>&1; then \
-        flatpak update -y; \
-    fi
-
-# Check Git and Stow status
-status:
-    @echo "==> Git status:"
-    @git status -s

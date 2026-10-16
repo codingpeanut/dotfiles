@@ -1,0 +1,12 @@
+/* ~/.config/gtk-4.0/gtk.css - managed by dotfiles (stow/gnome) */
+/* Minimal libadwaita tweaks for a soft, glassy, modern look. */
+
+/* Rounded client-side-decorated windows */
+window.csd {
+  border-radius: 14px;
+}
+
+/* Rounded popovers and menus */
+popover > contents {
+  border-radius: 14px;
+}

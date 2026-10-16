@@ -18,14 +18,14 @@ uninstall *args:
 dry-run:
     @bash scripts/uninstall.sh --dry-run
 
-# Revert dotfiles symlinks, restore backups, and stop desktop services only
+# Revert dotfiles symlinks, restore backups, reset GNOME settings and remove extensions
 dotfiles:
     @bash scripts/uninstall.sh --dotfiles
 
-# Revert system-level packages and COPR repositories (Fedora)
+# Revert the GNOME beautify system packages installed by this project (Fedora)
 system:
     @bash scripts/uninstall.sh --system
 
-# Full wipe: revert dotfiles + remove system packages & COPRs
+# Full wipe: revert dotfiles + remove beautify system packages
 all:
     @bash scripts/uninstall.sh --all

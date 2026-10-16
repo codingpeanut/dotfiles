@@ -1,0 +1,12 @@
+/* ~/.config/gtk-3.0/gtk.css - managed by dotfiles (stow/gnome) */
+/* Minimal glass tweaks layered on top of the Colloid GTK theme. */
+
+/* Slightly tighter headerbars for a cleaner, more minimal look */
+headerbar {
+  min-height: 36px;
+}
+
+/* Softer, rounded menu popovers */
+popover > contents {
+  border-radius: 12px;
+}

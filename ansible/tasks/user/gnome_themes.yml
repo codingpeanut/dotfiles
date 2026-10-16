@@ -1,0 +1,57 @@
+---
+# GNOME themes, icons, cursor and fonts
+
+- name: Resolve user home directory
+  ansible.builtin.set_fact:
+    gnome_home: "{{ ansible_facts['user_dir'] | default(lookup('env', 'HOME')) }}"
+
+- name: Ensure theme and font directories exist
+  ansible.builtin.file:
+    path: "{{ gnome_home }}/{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - .local/share/themes
+    - .local/share/icons
+    - .local/share/fonts
+    - .cache/dotfiles-src
+
+- name: Check whether the Colloid GTK theme is installed
+  ansible.builtin.stat:
+    path: "{{ gnome_home }}/.local/share/themes/Colloid-Dark"
+  register: colloid_stat
+
+- name: Clone the Colloid GTK theme source
+  ansible.builtin.git:
+    repo: "https://github.com/vinceliuice/Colloid-gtk-theme.git"
+    dest: "{{ gnome_home }}/.cache/dotfiles-src/Colloid-gtk-theme"
+    version: main
+    depth: 1
+  when: not colloid_stat.stat.exists
+
+- name: Install the Colloid GTK theme (dark / grey / rimless)
+  ansible.builtin.command:
+    cmd: "./install.sh -c dark -t grey --tweaks rimless"
+    chdir: "{{ gnome_home }}/.cache/dotfiles-src/Colloid-gtk-theme"
+  when: not colloid_stat.stat.exists
+  register: colloid_install
+  changed_when: colloid_install.rc == 0
+
+- name: Check if the JetBrainsMono Nerd Font is installed
+  ansible.builtin.stat:
+    path: "{{ gnome_home }}/.local/share/fonts/JetBrainsMono/JetBrainsMonoNerdFont-Regular.ttf"
+  register: nerdfont_stat
+
+- name: Download and install the JetBrainsMono Nerd Font
+  ansible.builtin.unarchive:
+    src: "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.tar.xz"
+    dest: "{{ gnome_home }}/.local/share/fonts/JetBrainsMono"
+    remote_src: true
+  when: not nerdfont_stat.stat.exists
+  register: font_unpack
+
+- name: Refresh the font cache
+  ansible.builtin.command:
+    cmd: fc-cache -f
+  when: font_unpack.changed | default(false)
+  changed_when: true

@@ -91,13 +91,17 @@
       ansible.builtin.import_tasks: tasks/user/antigravity.yml
       tags: [antigravity]
 
-    - name: Setup Niri-Caelestia Shell
-      ansible.builtin.import_tasks: tasks/user/caelestia.yml
-      tags: [caelestia]
+    - name: Install GNOME Shell extensions via gext
+      ansible.builtin.import_tasks: tasks/user/gnome_extensions.yml
+      tags: [gnome, gnome_ext, extensions]
 
-    - name: Configure desktop theme, cursor and fonts
-      ansible.builtin.import_tasks: tasks/user/desktop_theme.yml
-      tags: [theme, fonts]
+    - name: Configure GNOME themes, icons, cursor and fonts
+      ansible.builtin.import_tasks: tasks/user/gnome_themes.yml
+      tags: [gnome, gnome_themes, theme, fonts]
+
+    - name: Configure GNOME desktop settings via dconf
+      ansible.builtin.import_tasks: tasks/user/gnome_settings.yml
+      tags: [gnome, gnome_settings, dconf]
 
     - name: Configure user services
       ansible.builtin.import_tasks: tasks/user/services.yml

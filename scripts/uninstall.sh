@@ -32,9 +32,9 @@ usage() {
     echo -e "使用方式: $0 [選項]"
     echo ""
     echo "選項:"
-    echo "  --dotfiles, -d   僅還原 dotfiles 軟連結、恢復原始備份與停止桌面服務 (預設)"
-    echo "  --system, -s     僅移除桌面專用套件與停用 COPR 軟體庫 (Fedora)"
-    echo "  --all, -a        完整移除：還原 dotfiles + 移除系統套件與 COPR 來源"
+    echo "  --dotfiles, -d   僅還原 dotfiles 軟連結、恢復原始備份、重置 GNOME 設定 (預設)"
+    echo "  --system, -s     僅移除本專案安裝的 GNOME 美化套件 (Fedora)"
+    echo "  --all, -a        完整移除：還原 dotfiles + 移除 GNOME 美化系統套件"
     echo "  --dry-run, -n    預覽模式：僅顯示將執行的動作，不實際修改任何檔案"
     echo "  --force, -f      強制執行：不要求互動確認"
     echo "  --help, -h       顯示此說明訊息"
@@ -104,35 +104,22 @@ confirm_action() {
 # 1. 停止桌面外殼與使用者層級服務
 # ------------------------------------------------------------------------------
 stop_services() {
-    echo -e "${BLUE}==> [1/5] 檢查並停止桌面服務與背景行程...${NC}"
+    echo -e "${BLUE}==> [1/5] 檢查並停止殘留桌面服務與背景行程...${NC}"
 
     if [ "$DRY_RUN" = true ]; then
-        echo "  [dry-run] 將停止 systemd user 服務: noctalia, waybar"
-        echo "  [dry-run] 將終止行程: quickshell, qs, noctalia, waybar, mako, fcitx5-watcher"
+        echo "  [dry-run] 將終止殘留行程: niri, quickshell, qs, noctalia, waybar, mako"
         return 0
     fi
 
-    # 停止與停用 systemd user services
-    if command -v systemctl >/dev/null 2>&1; then
-        for svc in noctalia waybar; do
-            if systemctl --user is-enabled "$svc" >/dev/null 2>&1 || systemctl --user is-active "$svc" >/dev/null 2>&1; then
-                echo "  [-] 停止並停用 systemd 服務: $svc"
-                systemctl --user stop "$svc" 2>/dev/null || true
-                systemctl --user disable "$svc" 2>/dev/null || true
-            fi
-        done
-        systemctl --user daemon-reload 2>/dev/null || true
-    fi
-
-    # 終止桌面元件行程
-    for proc in quickshell qs noctalia waybar mako fcitx5-watcher desktop-shell; do
+    # 舊架構殘留的桌面元件行程（GNOME Shell 由系統管理，無需在此停止）
+    for proc in niri quickshell qs noctalia waybar mako; do
         if pgrep -x "$proc" >/dev/null 2>&1; then
             echo "  [-] 終止背景行程: $proc"
             killall "$proc" 2>/dev/null || true
         fi
     done
 
-    echo -e "${GREEN}  [✓] 桌面服務與行程已清理完畢。${NC}"
+    echo -e "${GREEN}  [✓] 殘留桌面服務與行程已清理完畢。${NC}"
 }
 
 # ------------------------------------------------------------------------------
@@ -211,7 +198,6 @@ restore_backups() {
     local backups=(
         "$TARGET_HOME/.bashrc.bak:$TARGET_HOME/.bashrc"
         "$TARGET_HOME/.vimrc.bak:$TARGET_HOME/.vimrc"
-        "$TARGET_HOME/.config/niri/config.kdl.bak:$TARGET_HOME/.config/niri/config.kdl"
         "$TARGET_HOME/.config/fcitx5.bak:$TARGET_HOME/.config/fcitx5"
     )
 
@@ -248,13 +234,44 @@ restore_backups() {
 # 4. 清理本套件專用生成的二進位檔與快取目錄
 # ------------------------------------------------------------------------------
 cleanup_artifacts() {
-    echo -e "${BLUE}==> [4/5] 清理專用二進位檔與下載項目...${NC}"
+    echo -e "${BLUE}==> [4/5] 清理 GNOME 專用檔案、擴充與設定...${NC}"
 
+    # 1. 清除 gext 管理的 GNOME Shell 擴充與其附帶設定
+    local gext_dir="$TARGET_HOME/.local/share/gnome-shell/extensions"
+    if [ -d "$gext_dir" ]; then
+        if [ "$DRY_RUN" = true ]; then
+            echo "  [dry-run] 移除 gext 安裝的 GNOME 擴充: $gext_dir"
+        else
+            echo "  [-] 移除 GNOME 擴充目錄: $gext_dir"
+            rm -rf "$gext_dir"
+        fi
+    fi
+
+    if command -v pipx >/dev/null 2>&1 && pipx list 2>/dev/null | grep -q "gnome-extensions-cli"; then
+        if [ "$DRY_RUN" = true ]; then
+            echo "  [dry-run] pipx uninstall gnome-extensions-cli"
+        else
+            echo "  [-] 移除 gext (gnome-extensions-cli)"
+            pipx uninstall gnome-extensions-cli 2>/dev/null || true
+        fi
+    fi
+
+    # 2. 重置 GNOME 設定回預設值 (dconf)
+    if command -v dconf >/dev/null 2>&1; then
+        if [ "$DRY_RUN" = true ]; then
+            echo "  [dry-run] dconf reset -f /org/gnome/  (還原 GNOME 預設外觀) "
+        elif confirm_action "是否將 GNOME 設定 (dconf /org/gnome/) 重置為系統預設值？"; then
+            echo "  [-] 重置 GNOME dconf 設定..."
+            dconf reset -f /org/gnome/ 2>/dev/null || true
+        fi
+    fi
+
+    # 3. 移除本專案安裝的主題、快取與殘留檔案
     local items_to_clean=(
-        "$TARGET_HOME/.local/bin/nmgui"
-        "$TARGET_HOME/.config/autostart/noctalia.desktop"
-        "$TARGET_HOME/.config/autostart/waybar.desktop"
-        "$TARGET_HOME/.config/quickshell/niri-caelestia-shell"
+        "$TARGET_HOME/.local/share/themes/Colloid-Dark"
+        "$TARGET_HOME/.local/share/themes/Colloid-Dark-Compact"
+        "$TARGET_HOME/.local/share/themes/Colloid-Dark-Grey"
+        "$TARGET_HOME/.cache/dotfiles-src"
     )
 
     for path in "${items_to_clean[@]}"; do
@@ -268,10 +285,14 @@ cleanup_artifacts() {
         fi
     done
 
-    # 清理殘留的空目錄 (若為空才刪除)
+    # 4. 清理殘留的空目錄 (若為空才刪除)
     local empty_dirs=(
+        "$TARGET_HOME/.config/niri"
         "$TARGET_HOME/.config/noctalia"
         "$TARGET_HOME/.config/quickshell"
+        "$TARGET_HOME/.config/waybar"
+        "$TARGET_HOME/.config/mako"
+        "$TARGET_HOME/.config/fuzzel"
         "$TARGET_HOME/.config/wlogout"
     )
     for ed in "${empty_dirs[@]}"; do
@@ -284,7 +305,7 @@ cleanup_artifacts() {
         fi
     done
 
-    echo -e "${GREEN}  [✓] 專用檔案清理完畢。${NC}"
+    echo -e "${GREEN}  [✓] GNOME 專用檔案與設定清理完畢。${NC}"
 }
 
 # ------------------------------------------------------------------------------
@@ -298,37 +319,43 @@ remove_system_packages() {
         return 0
     fi
 
-    local rice_pkgs=("noctalia" "quickshell" "cava")
-    local copr_repos=("zhangyi6324/noctalia-shell" "errornointernet/quickshell" "celestelove/libcava")
+    # 本專案額外安裝的 GNOME 美化套件（保留 GNOME 核心與共用工具）
+    local rice_pkgs=("gnome-tweaks" "sassc" "gtk-murrine-engine" "papirus-icon-theme" "bibata-cursor-theme" "rsms-inter-fonts")
+    local copr_repos=()
 
     if [ "$DRY_RUN" = true ]; then
-        echo "  [dry-run] 將停用 COPR: ${copr_repos[*]}"
         echo "  [dry-run] 將移除專用 RPM 套件: ${rice_pkgs[*]}"
+        [ ${#copr_repos[@]} -gt 0 ] && echo "  [dry-run] 將停用 COPR: ${copr_repos[*]}"
         return 0
     fi
 
-    echo -e "${YELLOW}即將清理本專案安裝之桌面外殼套件 (noctalia, quickshell, cava) 與對應 COPR。${NC}"
-    echo -e "${YELLOW}注意：共用工具 (如 git, niri, kitty, fcitx5, neovim) 將會保留以確保系統正常運作。${NC}"
-    
-    if confirm_action "是否繼續移除桌面外殼 RPM 套件與停用 COPR？"; then
+    echo -e "${YELLOW}即將清理本專案安裝之 GNOME 美化套件 (主題引擎, 圖示, 游標, UI 字型)。${NC}"
+    echo -e "${YELLOW}注意：GNOME 核心、共用工具 (git, kitty, fcitx5, neovim...) 與 Flatpak 將保留。${NC}"
+
+    if confirm_action "是否繼續移除 GNOME 美化 RPM 套件？"; then
         echo "  [-] 移除 RPM 套件: ${rice_pkgs[*]}..."
         sudo dnf remove -y "${rice_pkgs[@]}" 2>/dev/null || true
 
-        echo "  [-] 停用專用 COPR 軟體庫..."
-        for repo in "${copr_repos[@]}"; do
-            sudo dnf copr disable -y "$repo" 2>/dev/null || true
-        done
-        echo -e "${GREEN}  [✓] 系統專用套件與 COPR 來源已移除。${NC}"
+        if [ ${#copr_repos[@]} -gt 0 ]; then
+            echo "  [-] 停用專用 COPR 軟體庫..."
+            for repo in "${copr_repos[@]}"; do
+                sudo dnf copr disable -y "$repo" 2>/dev/null || true
+            done
+        fi
+        echo -e "${GREEN}  [✓] 系統專用套件已移除。${NC}"
     fi
 
-    # 詢問是否移除 Flatpak Discord (若由 just flatpaks 安裝)
+    # 詢問是否移除使用者 Flatpak (若由 just flatpaks 安裝)
     if command -v flatpak >/dev/null 2>&1; then
-        if flatpak list --user 2>/dev/null | grep -q "com.discordapp.Discord"; then
-            if confirm_action "檢測到經由本專案安裝的使用者 Flatpak Discord，是否一併移除？"; then
-                echo "  [-] 移除 Flatpak: com.discordapp.Discord..."
-                flatpak uninstall --user -y com.discordapp.Discord 2>/dev/null || true
+        local flatpaks=("com.discordapp.Discord" "com.mattjakeman.ExtensionManager")
+        for app in "${flatpaks[@]}"; do
+            if flatpak list --user 2>/dev/null | grep -q "$app"; then
+                if confirm_action "檢測到經由本專案安裝的使用者 Flatpak ($app)，是否一併移除？"; then
+                    echo "  [-] 移除 Flatpak: $app..."
+                    flatpak uninstall --user -y "$app" 2>/dev/null || true
+                fi
             fi
-        fi
+        done
     fi
 }
 
@@ -337,7 +364,7 @@ remove_system_packages() {
 # ------------------------------------------------------------------------------
 case "$MODE" in
     dotfiles)
-        confirm_action "即將在本地電腦解除 dotfiles 軟連結、還原備份設定並停止桌面外殼服務。是否確認執行？"
+        confirm_action "即將在本地電腦解除 dotfiles 軟連結、還原備份設定並重置 GNOME 設定。是否確認執行？"
         stop_services
         remove_symlinks
         restore_backups
@@ -349,7 +376,7 @@ case "$MODE" in
         echo -e "${GREEN}${BOLD}==========================================================${NC}"
         ;;
     system)
-        confirm_action "即將移除桌面外殼相關之 RPM 套件與停用 COPR 來源。是否確認執行？"
+        confirm_action "即將移除本專案安裝之 GNOME 美化相關 RPM 套件。是否確認執行？"
         remove_system_packages
         echo ""
         echo -e "${GREEN}${BOLD}==========================================================${NC}"
