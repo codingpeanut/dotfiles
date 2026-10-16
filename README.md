@@ -101,6 +101,7 @@
 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Esc</kbd> | 系統監控 |
 
 > **刻意與 GNOME 預設不同**：<kbd>Super</kbd>+<kbd>L</kbd> 改為 focus 右欄（鎖定搬到 <kbd>Super</kbd>+<kbd>Alt</kbd>+<kbd>L</kbd>）；<kbd>Super</kbd>+<kbd>1</kbd>…<kbd>9</kbd> 改切 workspace（原「開釘選 app」已清空）；<kbd>Super</kbd>+<kbd>V</kbd>/<kbd>M</kbd> 改浮動/最大化（原通知清單快捷已清空）。PaperWM 啟用時會**自動暫停**衝突的 GNOME 原生鍵（<kbd>Super</kbd>+<kbd>↑</kbd>/<kbd>↓</kbd>、<kbd>Super</kbd>+<kbd>H</kbd>、<kbd>Super</kbd>+<kbd>Home</kbd>/<kbd>End</kbd>、<kbd>Super</kbd>+<kbd>Shift</kbd>+方向、<kbd>Super</kbd>+<kbd>PageUp</kbd>/<kbd>Down</kbd>），停用時自動還原。
+> **Dash to Dock 搶鍵已讓位**：D2D 預設 `hot-keys=true`（<kbd>Super</kbd>+數字開釘選 app）與 `shortcut=['<Super>q']`（顯示 dock），且比 PaperWM 先註冊而贏走按鍵；已宣告 `hot-keys=false` + `shortcut=@as []` 釋放給 PaperWM 關窗（<kbd>Super</kbd>+<kbd>Q</kbd>）與 workspace 數字鍵。
 > **未實作（PaperWM/GNOME 無對應）**：niri 的 `Mod+W`（tab 欄）、`Mod+Ctrl+F`（expand）、`Mod+Ctrl+R`（重設高度）、`Mod+Ctrl+Home/End`、`Mod+Shift+U/I`（移動 workspace）、`Mod+D`（啟動器，系統未安裝）、`Mod+Escape`（shortcut inhibitor）、`Mod+Shift+E`（結束 session）、`Mod+Shift+P`（關閉螢幕）。
 > `just gnome-backup` 會自動過濾 PaperWM 的 `restore-keybinds` 欄位（衝突還原清單），避免污染 dconf.ini。
 
