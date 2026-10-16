@@ -65,6 +65,19 @@ gnome-fix-blur:
     @gnome-extensions enable blur-my-shell@aunetx 2>/dev/null || true
     @echo "==> Done. If the glitch returns after every login, see README (blur workaround)."
 
+# Beautify the GDM login screen: desktop-matching wallpaper (rebuilds the shell theme
+# gresource) + matching font/cursor/accent via /etc/dconf/db/gdm.d (needs root).
+# gnome-shell updates overwrite the gresource — re-run (just update does this automatically).
+# Args are forwarded to the script (e.g.: just gdm-theme --image ~/Pictures/wall.png).
+gdm-theme *args:
+    @echo "==> Applying GDM login screen theme (root required)..."
+    @sudo bash scripts/gdm-theme.sh {{ args }}
+
+# Restore the stock GDM login screen (background / fonts / cursor)
+gdm-theme-reset:
+    @echo "==> Restoring stock GDM login screen (root required)..."
+    @sudo bash scripts/gdm-theme.sh --reset
+
 # Capture the current GNOME settings from dconf back into the repo
 gnome-backup:
     @echo "==> Backing up current /org/gnome/ settings to gnome/dconf.ini ..."
@@ -139,7 +152,7 @@ bootstrap:
 # Install GNOME desktop dependencies directly (fallback when not using Ansible)
 deps:
     @echo "==> Installing GNOME desktop dependencies..."
-    sudo dnf install -y gnome-tweaks gnome-extensions-app dconf pipx python3-gobject sassc gtk-murrine-engine papirus-icon-theme rsms-inter-fonts nautilus file-roller blueman bluez bluez-tools nm-connection-editor network-manager-applet NetworkManager-tui gnome-calendar gnome-control-center gnome-system-monitor pavucontrol playerctl wl-clipboard cliphist brightnessctl ddcutil libnotify cava btop starship zoxide fzf eza bat fastfetch nautilus fcitx5 fcitx5-chinese-addons fcitx5-chewing fcitx5-configtool fcitx5-gtk3 fcitx5-gtk4 fcitx5-qt5 fcitx5-qt6 google-noto-sans-cjk-fonts google-noto-serif-cjk-fonts google-noto-color-emoji-fonts jetbrains-mono-fonts
+    sudo dnf install -y gnome-tweaks gnome-extensions-app dconf pipx python3-gobject sassc gtk-murrine-engine glib2 glib2-devel papirus-icon-theme rsms-inter-fonts nautilus file-roller blueman bluez bluez-tools nm-connection-editor network-manager-applet NetworkManager-tui gnome-calendar gnome-control-center gnome-system-monitor pavucontrol playerctl wl-clipboard cliphist brightnessctl ddcutil libnotify cava btop starship zoxide fzf eza bat fastfetch nautilus fcitx5 fcitx5-chinese-addons fcitx5-chewing fcitx5-configtool fcitx5-gtk3 fcitx5-gtk4 fcitx5-qt5 fcitx5-qt6 google-noto-sans-cjk-fonts google-noto-serif-cjk-fonts google-noto-color-emoji-fonts jetbrains-mono-fonts
     sudo systemctl enable --now bluetooth || true
     @echo "==> Dependencies installed. Run 'just gnome' and 'just stow'."
 
@@ -175,6 +188,7 @@ check:
     @if fc-list 2>/dev/null | grep -qi Inter; then echo "  [✓] Inter font installed"; else echo "  [✗] Inter font NOT installed"; fi
     @if [ -d /usr/share/icons/Papirus-Dark ]; then echo "  [✓] Papirus-Dark icons installed"; else echo "  [✗] Papirus-Dark icons NOT installed"; fi
     @if rpm -q gnome-rounded-blur >/dev/null 2>&1; then echo "  [✓] gnome-rounded-blur helper installed (dynamic blur corners)"; else echo "  [✗] gnome-rounded-blur NOT installed (run: just system, then re-login)"; fi
+    @if grep -aq 'dotfiles-gdm-theme' /usr/share/gnome-shell/gnome-shell-theme.gresource 2>/dev/null && [ -f /etc/dconf/db/gdm.d/90-dotfiles ]; then echo "  [✓] GDM login theme applied (wallpaper + greeter settings)"; else echo "  [!] GDM login theme NOT applied (run: just gdm-theme; re-run after gnome-shell updates)"; fi
     @if [ -f "{{ home }}/.config/paperwm/user.css" ]; then echo "  [✓] PaperWM user.css deployed (selection border)"; else echo "  [✗] PaperWM user.css NOT deployed (run: just stow)"; fi
     @echo "==> Declared user Flatpaks:"
     @for app in com.discordapp.Discord com.mattjakeman.ExtensionManager; do \
@@ -205,6 +219,10 @@ update:
     sudo dnf upgrade -y
     @if command -v flatpak >/dev/null 2>&1; then \
         flatpak update -y; \
+    fi
+    @if [ -f /var/lib/dotfiles-gdm/applied.sha256 ]; then \
+        echo "==> Refreshing GDM login theme (no-op unless gnome-shell was updated)..."; \
+        sudo bash scripts/gdm-theme.sh --no-restart; \
     fi
 
 # Check Git status

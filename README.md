@@ -13,6 +13,8 @@
   - **Just Perfection** 精簡 Shell 元素。
   - **PaperWM** 提供可捲動的平鋪式視窗管理（scrollable tiling）。
   - **Colloid-Dark (grey / rimless)** GTK 主題 + **Papirus-Dark** 圖示 + **Bibata-Modern-Ice** 游標。
+- **GDM 登入畫面同步（`just gdm-theme`）**：
+  - 登入背景 = 桌面暗色桌布（重建 `gnome-shell-theme.gresource` 嵌入圖片）；greeter 的深色模式、字型、游標、accent 經 `/etc/dconf/db/gdm.d/`（Fedora 官方 `system-db:gdm`）與桌面一致。
 - **宣告式 GNOME 擴充管理 (gext)**：
   - EGO 擴充集中於 `gnome/extensions.txt`，本 repo 自帶的本地擴充列於 `gnome/extensions-local.txt`；清單即真相，未宣告的擴充會自動移除。
 - **dconf 設定即程式碼**：
@@ -124,6 +126,8 @@ just gnome-apply      # 快速載入 gnome/dconf.ini + 啟用擴充（不經 Ans
 just gnome-backup     # 將目前 GNOME 設定 dump 回 gnome/dconf.ini
 just gnome-update     # 更新所有已安裝擴充
 just gnome-fix-blur   # 修復 Blur My Shell 面板異常（半透明面板，見下方說明）
+just gdm-theme        # GDM 登入畫面美化（桌布同款背景 + 介面同步；需 sudo）
+just gdm-theme-reset  # 還原原廠 GDM 登入畫面
 just mem              # 診斷記憶體：前 16 大行程、GNOME Shell 佔用、已啟用擴充與 free -h
 just stow             # 重新連結所有 dotfiles（衝突自動備份為 *.bak，安全切換 repo）
 just stow-dry         # 預覽 stow 會做什麼，不實際變更
@@ -155,6 +159,16 @@ just push             # 提交並推送修改至 GitHub
 > 重編版本。此依賴會帶入 Fedora 的 `gnome-shell-extension-blur-my-shell`
 > 系統套件，user 層 EGO 版本仍優先，不影響啟用的擴充。
 
+> **GDM 登入畫面（`just gdm-theme`）**：GNOME 46+ 的登入畫面背景不跟桌布、而是
+> 主題 gresource 內的純色，故 `scripts/gdm-theme.sh` 會把「與桌面相同的暗色桌布」
+> （`adwaita-d.jxl`，可用 `--image` 更換）嵌入並重建
+> `gnome-shell-theme.gresource`；greeter 的深色模式／字型（Inter）／游標（Bibata）／
+> accent 則寫入 `/etc/dconf/db/gdm.d/90-dotfiles`（Fedora 官方 `system-db:gdm`，
+> 不受套件更新影響）；游標另會從 `~/.local` 複製一份到 `/usr/share/icons`
+> （greeter 讀不到家目錄）。`gnome-shell` 更新會覆蓋 gresource——`just update` 會
+> 自動重套、`just check` 也會提示；`sudo just gdm-theme-reset` 可完全還原。
+> 重啟 GDM 會登出所有工作階段（腳本結尾詢問是否立即執行）。
+
 ### 3. 完全解除安裝 (Uninstall)
 ```bash
 just uninstall          # 解除軟連結、還原備份、重置 GNOME 設定並移除擴充
@@ -181,7 +195,9 @@ dotfiles/
 ├── gnome/                    # GNOME 宣告式 payload (非軟連結)
 │   ├── extensions.txt        # gext EGO 擴充清單 (安裝 + 啟用)
 │   ├── extensions-local.txt  # 本 repo 自帶擴充清單 (僅啟用)
-│   └── dconf.ini             # /org/gnome/ 設定 dump (gnome-backup 生成)
+│   ├── dconf.ini             # /org/gnome/ 設定 dump (gnome-backup 生成)
+│   ├── dconf-desktop.ini     # /desktop/ 設定 (ibus-chewing 切換鍵等)
+│   └── gdm-dconf.ini         # GDM greeter 設定 (gdm-theme 安裝至 gdm.d)
 │
 ├── ansible/                  # 宣告式系統套件與配置自動化
 │   ├── playbook.yml
@@ -195,7 +211,7 @@ dotfiles/
 │           ├── dotfiles.yml           # GNU Stow 軟連結
 │           └── ...
 │
-├── scripts/                  # bootstrap / uninstall 腳本
+├── scripts/                  # bootstrap / uninstall / stow / gdm-theme 腳本
 └── stow/                     # 按應用模組化的 GNU Stow 配置
     ├── gnome/                # GTK CSS / fontconfig / environment.d
     ├── bash/                 # Shell 環境與工具腳本

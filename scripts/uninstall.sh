@@ -351,6 +351,14 @@ remove_system_packages() {
         echo -e "${GREEN}  [✓] 系統專用套件已移除。${NC}"
     fi
 
+    # 還原 GDM 登入畫面美化（若曾以 just gdm-theme 套用）
+    if [ -f /var/lib/dotfiles-gdm/applied.sha256 ] && [ -x "$DOTFILES_DIR/scripts/gdm-theme.sh" ]; then
+        if confirm_action "偵測到 GDM 登入畫面美化，是否還原原廠？（需重啟 GDM 才生效）"; then
+            echo "  [-] 還原 GDM 登入畫面..."
+            sudo bash "$DOTFILES_DIR/scripts/gdm-theme.sh" --reset --no-restart || true
+        fi
+    fi
+
     # 詢問是否移除使用者 Flatpak (若由 just flatpaks 安裝)
     if command -v flatpak >/dev/null 2>&1; then
         local flatpaks=("com.discordapp.Discord" "com.mattjakeman.ExtensionManager")
