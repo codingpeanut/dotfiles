@@ -154,6 +154,21 @@ check:
     @(gnome-extensions list --enabled 2>/dev/null | sed 's/^/  [✓] /') || true
     @if [ -d "{{ home }}/.local/share/themes/Colloid-Dark" ]; then echo "  [✓] Colloid-Dark theme installed"; else echo "  [✗] Colloid-Dark theme NOT installed"; fi
 
+# Diagnose memory usage: top consumers, GNOME Shell footprint and enabled extensions
+mem:
+    @echo "==> Top memory consumers (RSS):"
+    @ps -eo rss,comm --sort=-rss | awk 'NR>1 && NR<=16 {printf "  %7.0f MB  %s\n", $1/1024, $2}'
+    @echo ""
+    @echo "==> GNOME Shell (compositor + all extensions):"
+    @ps -C gnome-shell -o rss=,%mem= | awk '{printf "  %7.0f MB  (%.1f%% of RAM)\n", $1/1024, $2}'
+    @echo "    Hundreds of MB here, growing across logins? Test:"
+    @echo "    gnome-extensions disable blur-my-shell@aunetx   (then log out and back in)"
+    @echo ""
+    @echo "==> Enabled GNOME extensions:"
+    @(gnome-extensions list --enabled 2>/dev/null | sed 's/^/  [✓] /') || true
+    @echo ""
+    free -h
+
 # Upgrade system packages and Flatpaks
 update:
     sudo dnf upgrade -y

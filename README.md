@@ -75,6 +75,7 @@ just gnome-apply      # 快速載入 gnome/dconf.ini + 啟用擴充（不經 Ans
 just gnome-backup     # 將目前 GNOME 設定 dump 回 gnome/dconf.ini
 just gnome-update     # 更新所有已安裝擴充
 just gnome-fix-blur   # 修復 Blur My Shell 面板異常（半透明面板，見下方說明）
+just mem              # 診斷記憶體：前 16 大行程、GNOME Shell 佔用、已啟用擴充與 free -h
 just stow             # 重新連結所有 dotfiles（衝突自動備份為 *.bak，安全切換 repo）
 just stow-dry         # 預覽 stow 會做什麼，不實際變更
 just unstow           # 移除所有 dotfiles 軟連結
@@ -93,6 +94,12 @@ just push             # 提交並推送修改至 GitHub
 > [aunetx/blur-my-shell#882](https://github.com/aunetx/blur-my-shell/issues/882)
 > 仍開啟中。暫時解法：執行 `just gnome-fix-blur`（等同停用再啟用擴充）。
 > 此問題與 Just Perfection 無關。
+
+> **Popup 背景多一層**：Blur My Shell 的 Popup blur「模糊類型」若為
+> 「動態（Dynamic）」，快選單／日曆等 popup 卡片會疊出第二層背景。
+> 本 repo 已在 `gnome/dconf.ini` 將 popup 固定為「靜態（Static）」
+> （`static-blur=true`），`just gnome-apply` 後生效；若曾在 UI 手動調整過，
+> 重新套用即覆蓋。Static 同時比 Dynamic 更省 GPU。
 
 ### 3. 完全解除安裝 (Uninstall)
 ```bash
