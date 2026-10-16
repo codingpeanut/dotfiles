@@ -136,23 +136,49 @@ bootstrap:
 # Install GNOME desktop dependencies directly (fallback when not using Ansible)
 deps:
     @echo "==> Installing GNOME desktop dependencies..."
-    sudo dnf install -y gnome-tweaks gnome-extensions-app dconf pipx python3-gobject sassc gtk-murrine-engine papirus-icon-theme rsms-inter-fonts nautilus file-roller blueman bluez bluez-tools nm-connection-editor network-manager-applet NetworkManager-tui gnome-calendar gnome-control-center pavucontrol playerctl wl-clipboard cliphist brightnessctl ddcutil libnotify cava btop starship zoxide fzf eza bat fastfetch nautilus fcitx5 fcitx5-chinese-addons fcitx5-chewing fcitx5-configtool fcitx5-gtk3 fcitx5-gtk4 fcitx5-qt5 fcitx5-qt6 google-noto-sans-cjk-fonts google-noto-serif-cjk-fonts google-noto-color-emoji-fonts jetbrains-mono-fonts
+    sudo dnf install -y gnome-tweaks gnome-extensions-app dconf pipx python3-gobject sassc gtk-murrine-engine papirus-icon-theme rsms-inter-fonts nautilus file-roller blueman bluez bluez-tools nm-connection-editor network-manager-applet NetworkManager-tui gnome-calendar gnome-control-center gnome-system-monitor pavucontrol playerctl wl-clipboard cliphist brightnessctl ddcutil libnotify cava btop starship zoxide fzf eza bat fastfetch nautilus fcitx5 fcitx5-chinese-addons fcitx5-chewing fcitx5-configtool fcitx5-gtk3 fcitx5-gtk4 fcitx5-qt5 fcitx5-qt6 google-noto-sans-cjk-fonts google-noto-serif-cjk-fonts google-noto-color-emoji-fonts jetbrains-mono-fonts
     sudo systemctl enable --now bluetooth || true
     @echo "==> Dependencies installed. Run 'just gnome' and 'just stow'."
 
-# Check all GNOME, CLI and desktop dependencies
+# Check every declared item against the system: CLI deps, extensions, assets, Flatpaks
 check:
     @echo "==> Checking GNOME desktop and CLI dependencies..."
-    @for cmd in gnome-shell gnome-extensions dconf gsettings gext gnome-tweaks fc-cache sassc pipx kitty nvim starship fcitx5 nautilus btop fzf playerctl blueman-manager pavucontrol; do \
+    @for cmd in gnome-shell gnome-extensions dconf gsettings gext gnome-tweaks fc-cache sassc pipx kitty nvim starship fcitx5 nautilus btop fzf playerctl blueman-manager pavucontrol gnome-system-monitor; do \
         if command -v "$cmd" >/dev/null 2>&1; then \
             printf "  [✓] %-22s found (%s)\n" "$cmd" "$(command -v "$cmd")"; \
         else \
             printf "  [✗] %-22s NOT FOUND\n" "$cmd"; \
         fi \
     done
-    @echo "==> Enabled GNOME extensions:"
-    @(gnome-extensions list --enabled 2>/dev/null | sed 's/^/  [✓] /') || true
+    @echo "==> GNOME extensions (declared vs enabled):"
+    @declared=$(cat gnome/extensions.txt gnome/extensions-local.txt | grep -vE '^[[:space:]]*(#|$)' | sort -u); \
+    enabled=$(gnome-extensions list --enabled 2>/dev/null | sort -u); \
+    ok=1; \
+    for uuid in $declared; do \
+        if echo "$enabled" | grep -qx "$uuid"; then \
+            printf "  [✓] %s\n" "$uuid"; \
+        else \
+            printf "  [✗] %s (declared but NOT enabled)\n" "$uuid"; ok=0; \
+        fi; \
+    done; \
+    for uuid in $enabled; do \
+        echo "$declared" | grep -qx "$uuid" || printf "  [!] %s (enabled but not declared)\n" "$uuid"; \
+    done; \
+    if [ "$ok" = 1 ]; then echo "  ==> All declared extensions enabled."; else echo "  ==> Missing ones: run 'just gnome-ext'."; fi
+    @echo "==> Desktop assets:"
     @if [ -d "{{ home }}/.local/share/themes/Colloid-Dark" ]; then echo "  [✓] Colloid-Dark theme installed"; else echo "  [✗] Colloid-Dark theme NOT installed"; fi
+    @if [ -d "{{ home }}/.local/share/icons/Bibata-Modern-Ice" ]; then echo "  [✓] Bibata-Modern-Ice cursor installed"; else echo "  [✗] Bibata-Modern-Ice cursor NOT installed"; fi
+    @if [ -f "{{ home }}/.local/share/fonts/JetBrainsMono/JetBrainsMonoNerdFont-Regular.ttf" ]; then echo "  [✓] JetBrainsMono Nerd Font installed"; else echo "  [✗] JetBrainsMono Nerd Font NOT installed"; fi
+    @if fc-list 2>/dev/null | grep -qi Inter; then echo "  [✓] Inter font installed"; else echo "  [✗] Inter font NOT installed"; fi
+    @if [ -d /usr/share/icons/Papirus-Dark ]; then echo "  [✓] Papirus-Dark icons installed"; else echo "  [✗] Papirus-Dark icons NOT installed"; fi
+    @echo "==> Declared user Flatpaks:"
+    @for app in com.discordapp.Discord com.mattjakeman.ExtensionManager; do \
+        if flatpak info --user "$app" >/dev/null 2>&1; then \
+            printf "  [✓] %s installed\n" "$app"; \
+        else \
+            printf "  [✗] %s NOT installed (run: just flatpaks)\n" "$app"; \
+        fi \
+    done
 
 # Diagnose memory usage: top consumers, GNOME Shell footprint and enabled extensions
 mem:

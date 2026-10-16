@@ -49,6 +49,7 @@ system_packages:
   - NetworkManager-tui
   - gnome-calendar
   - gnome-control-center
+  - gnome-system-monitor
 
   # Multimedia Codecs (RPM Fusion GStreamer plugins)
   - gstreamer1-plugins-ugly

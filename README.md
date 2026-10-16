@@ -30,7 +30,7 @@
 | 擴充 | 用途 |
 | :--- | :--- |
 | Blur My Shell | 面板 / Dash / Overview 玻璃模糊 |
-| Just Perfection | 精簡 Shell 元素（隱藏項目、調整位置） |
+| Just Perfection | 精簡 Shell 元素（隱藏項目、調整位置、縮小 overview dash 圖示） |
 | Rounded Window Corners Reborn | 視窗圓角 |
 | PaperWM | 可捲動平鋪視窗管理（取代 Tiling Assistant） |
 | AppIndicator | 系統匣圖示支援 |
@@ -51,8 +51,8 @@
 | :--- | :--- |
 | <kbd>Super</kbd> | 開啟 Overview 總覽 / 搜尋 |
 | <kbd>Super</kbd> + <kbd>A</kbd> | 快速設定（Wi-Fi、藍牙、電源、音量、亮度） |
-| <kbd>Super</kbd> + <kbd>V</kbd> | 剪貼簿歷史（Clipboard History 擴充） |
-| <kbd>Print</kbd> / <kbd>Super</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> | 截圖 / 區域截圖 |
+| <kbd>Super</kbd> + <kbd>Shift</kbd> + <kbd>V</kbd> | 剪貼簿歷史（<kbd>Super</kbd>+<kbd>V</kbd> 是 GNOME 通知中心） |
+| <kbd>Print</kbd> | 截圖（開啟 UI 後框選區域） |
 | <kbd>Super</kbd> + <kbd>←</kbd> / <kbd>→</kbd> | 切換左右視窗（PaperWM） |
 | <kbd>Super</kbd> + <kbd>Ctrl</kbd> + <kbd>←</kbd> / <kbd>→</kbd> | 移動視窗（PaperWM） |
 | <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Esc</kbd> | 開啟系統監控 |
@@ -81,6 +81,7 @@ just stow             # 重新連結所有 dotfiles（衝突自動備份為 *.ba
 just stow-dry         # 預覽 stow 會做什麼，不實際變更
 just unstow           # 移除所有 dotfiles 軟連結
 just fix              # 拉取更新 + 安裝套件 + stow + gnome + 檢查
+just check            # 健檢：CLI 相依、宣告 vs 已啟用擴充、主題/字型/Flatpak
 just push             # 提交並推送修改至 GitHub
 ```
 

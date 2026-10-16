@@ -11,9 +11,9 @@ rounded-window-corners@fxgn
 #
 # --- Panel, tray & info ---
 appindicatorsupport@rgcjonas.gmail.com
-date-menu-formatter@marcinjakubowski
+date-menu-formatter@marcinjakubowski.github.com
 caffeine@patapon.info
 #
 # --- Workflow & tiling ---
 paperwm@paperwm.github.com
-clipboard-history@SuperMaxLv4
+clipboard-history@alexsaveau.dev
