@@ -65,8 +65,9 @@ gnome-fix-blur:
     @gnome-extensions enable blur-my-shell@aunetx 2>/dev/null || true
     @echo "==> Done. If the glitch returns after every login, see README (blur workaround)."
 
-# Beautify the GDM login screen: desktop-matching wallpaper (rebuilds the shell theme
-# gresource) + matching font/cursor/accent via /etc/dconf/db/gdm.d (needs root).
+# Beautify the GDM login screen: light theme (prefer-light) + desktop-matching wallpaper
+# (auto-reads the session's light wallpaper; rebuilds the shell theme gresource) plus
+# matching font/cursor/accent via /etc/dconf/db/gdm.d (needs root).
 # gnome-shell updates overwrite the gresource — re-run (just update does this automatically).
 # Args are forwarded to the script (e.g.: just gdm-theme --image ~/Pictures/wall.png).
 gdm-theme *args:
@@ -188,7 +189,14 @@ check:
     @if fc-list 2>/dev/null | grep -qi Inter; then echo "  [✓] Inter font installed"; else echo "  [✗] Inter font NOT installed"; fi
     @if [ -d /usr/share/icons/Papirus-Dark ]; then echo "  [✓] Papirus-Dark icons installed"; else echo "  [✗] Papirus-Dark icons NOT installed"; fi
     @if rpm -q gnome-rounded-blur >/dev/null 2>&1; then echo "  [✓] gnome-rounded-blur helper installed (dynamic blur corners)"; else echo "  [✗] gnome-rounded-blur NOT installed (run: just system, then re-login)"; fi
-    @if grep -aq 'dotfiles-gdm-theme' /usr/share/gnome-shell/gnome-shell-theme.gresource 2>/dev/null && [ -f /etc/dconf/db/gdm.d/90-dotfiles ]; then echo "  [✓] GDM login theme applied (wallpaper + greeter settings)"; else echo "  [!] GDM login theme NOT applied (run: just gdm-theme; re-run after gnome-shell updates)"; fi
+    @if grep -aq 'dotfiles-gdm-theme' /usr/share/gnome-shell/gnome-shell-theme.gresource 2>/dev/null && [ -f /etc/dconf/db/gdm.d/90-dotfiles ]; then echo "  [✓] GDM login theme applied (light wallpaper + greeter settings)"; else echo "  [!] GDM login theme NOT applied (run: just gdm-theme; re-run after gnome-shell updates)"; fi
+    @if [ -f /var/lib/dotfiles-gdm/source-uri ] && command -v gsettings >/dev/null 2>&1; then \
+        cur="$(gsettings get org.gnome.desktop.background picture-uri 2>/dev/null)"; \
+        stored="$(cat /var/lib/dotfiles-gdm/source-uri 2>/dev/null)"; \
+        if [ -n "$cur" ] && [ "$cur" != "$stored" ]; then \
+            echo "  [!] Desktop wallpaper changed (light) — run 'just gdm-theme' to sync the login background"; \
+        fi; \
+    fi
     @if [ -f "{{ home }}/.config/paperwm/user.css" ]; then echo "  [✓] PaperWM user.css deployed (selection border)"; else echo "  [✗] PaperWM user.css NOT deployed (run: just stow)"; fi
     @echo "==> Declared user Flatpaks:"
     @for app in com.discordapp.Discord com.mattjakeman.ExtensionManager; do \

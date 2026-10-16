@@ -14,7 +14,8 @@
   - **PaperWM** 提供可捲動的平鋪式視窗管理（scrollable tiling）。
   - **Colloid-Dark (grey / rimless)** GTK 主題 + **Papirus-Dark** 圖示 + **Bibata-Modern-Ice** 游標。
 - **GDM 登入畫面同步（`just gdm-theme`）**：
-  - 登入背景 = 桌面暗色桌布（重建 `gnome-shell-theme.gresource` 嵌入圖片）；greeter 的深色模式、字型、游標、accent 經 `/etc/dconf/db/gdm.d/`（Fedora 官方 `system-db:gdm`）與桌面一致。
+  - 淺色登入畫面 + 桌布同款背景：預設自動讀取桌面淺色桌布（`picture-uri`）嵌入主題，換桌布後重跑即同步（`just check` 會提示）。
+  - greeter 的淺色模式、字型、游標、accent 經 `/etc/dconf/db/gdm.d/`（Fedora 官方 `system-db:gdm`）與桌面一致。
 - **宣告式 GNOME 擴充管理 (gext)**：
   - EGO 擴充集中於 `gnome/extensions.txt`，本 repo 自帶的本地擴充列於 `gnome/extensions-local.txt`；清單即真相，未宣告的擴充會自動移除。
 - **dconf 設定即程式碼**：
@@ -126,7 +127,7 @@ just gnome-apply      # 快速載入 gnome/dconf.ini + 啟用擴充（不經 Ans
 just gnome-backup     # 將目前 GNOME 設定 dump 回 gnome/dconf.ini
 just gnome-update     # 更新所有已安裝擴充
 just gnome-fix-blur   # 修復 Blur My Shell 面板異常（半透明面板，見下方說明）
-just gdm-theme        # GDM 登入畫面美化（桌布同款背景 + 介面同步；需 sudo）
+just gdm-theme        # GDM 登入畫面美化（淺色 + 自動同步桌面桌布；需 sudo）
 just gdm-theme-reset  # 還原原廠 GDM 登入畫面
 just mem              # 診斷記憶體：前 16 大行程、GNOME Shell 佔用、已啟用擴充與 free -h
 just stow             # 重新連結所有 dotfiles（衝突自動備份為 *.bak，安全切換 repo）
@@ -159,14 +160,18 @@ just push             # 提交並推送修改至 GitHub
 > 重編版本。此依賴會帶入 Fedora 的 `gnome-shell-extension-blur-my-shell`
 > 系統套件，user 層 EGO 版本仍優先，不影響啟用的擴充。
 
-> **GDM 登入畫面（`just gdm-theme`）**：GNOME 46+ 的登入畫面背景不跟桌布、而是
-> 主題 gresource 內的純色，故 `scripts/gdm-theme.sh` 會把「與桌面相同的暗色桌布」
-> （`adwaita-d.jxl`，可用 `--image` 更換）嵌入並重建
-> `gnome-shell-theme.gresource`；greeter 的深色模式／字型（Inter）／游標（Bibata）／
-> accent 則寫入 `/etc/dconf/db/gdm.d/90-dotfiles`（Fedora 官方 `system-db:gdm`，
-> 不受套件更新影響）；游標另會從 `~/.local` 複製一份到 `/usr/share/icons`
-> （greeter 讀不到家目錄）。`gnome-shell` 更新會覆蓋 gresource——`just update` 會
-> 自動重套、`just check` 也會提示；`sudo just gdm-theme-reset` 可完全還原。
+> **GDM 登入畫面（`just gdm-theme`）**：登入畫面預設為**淺色**：
+> `color-scheme='prefer-light'` 寫在 `/etc/dconf/db/gdm.d/90-dotfiles`，greeter 據此
+> 載入主題內的 `gnome-shell-light.css`（GNOME 50 已無舊版 `gdm.css`）。背景不跟桌布、
+> 而是該 css 內 `#lockDialogGroup` 的純色，故 `scripts/gdm-theme.sh` 會把桌布圖片嵌入
+> 並重建 `gnome-shell-theme.gresource`——**只補淺色樣式檔**，工作階段鎖定畫面（深色）
+> 不受影響。背景預設自動讀取桌面目前的淺色桌布
+> （`org.gnome.desktop.background picture-uri`，讀不到時用 `adwaita-l.jxl`）：
+> **換桌布後執行 `just gdm-theme` 即同步**，`just check` 會提示尚未同步；也可用
+> `--image` 指定固定圖。字型（Inter）／游標（Bibata）／accent 同樣寫入 gdm profile
+> （Fedora 官方 `system-db:gdm`，不受套件更新影響）；游標另會從 `~/.local` 複製一份到
+> `/usr/share/icons`（greeter 讀不到家目錄）。`gnome-shell` 更新會覆蓋 gresource——
+> `just update` 會自動重套、`just check` 也會提示；`sudo just gdm-theme-reset` 可完全還原。
 > 重啟 GDM 會登出所有工作階段（腳本結尾詢問是否立即執行）。
 
 ### 3. 完全解除安裝 (Uninstall)
