@@ -4,5 +4,5 @@
   "description": "Hides the standalone Bluetooth status icon in the top panel while keeping the Quick Settings Bluetooth toggle fully functional.",
   "shell-version": ["45", "46", "47", "48", "49", "50"],
   "url": "https://github.com/codingpeanut/dotfiles",
-  "version-name": "1.0.0"
+  "version-name": "1.1.0"
 }

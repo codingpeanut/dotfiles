@@ -41,6 +41,7 @@
 
 > EGO 擴充清單定義於 `gnome/extensions.txt`，本 repo 自帶擴充於 `gnome/extensions-local.txt`；UUID 與 GNOME 50 相容性可於 <https://extensions.gnome.org> 查核。
 > 注意：PaperWM 與 Rounded Window Corners 有已知相容性問題（[PaperWM#763](https://github.com/paperwm/PaperWM/issues/763)），若出現視覺異常可考慮停用其一。
+> 藍牙圖示來源有二：GNOME 內建指示器（僅裝置連線時出現，由 Hide Bluetooth Indicator 擴充隱藏）；blueman-applet 自啟由 `~/.config/autostart/blueman.desktop`（`Hidden=true`，經 stow 部署）停用，blueman-manager 仍可手動使用。
 
 ---
 
