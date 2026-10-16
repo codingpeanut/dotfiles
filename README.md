@@ -92,7 +92,7 @@
 | <kbd>Super</kbd>+<kbd>O</kbd> | 開啟/關閉 Overview |
 | <kbd>Super</kbd>+<kbd>S</kbd> | 快速設定（Wi-Fi、藍牙、電源…） |
 | <kbd>Super</kbd>+<kbd>A</kbd> | 應用程式格（App Grid） |
-| <kbd>Super</kbd>+<kbd>T</kbd> | 開啟終端機（kitty） |
+| <kbd>Super</kbd>+<kbd>T</kbd> | 開啟終端機（Ptyxis，GNOME 預設） |
 | <kbd>Super</kbd>+<kbd>Alt</kbd>+<kbd>L</kbd> | 鎖定螢幕 |
 | <kbd>Print</kbd> / <kbd>Super</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> | 截圖 UI（框選區域） |
 | <kbd>Ctrl</kbd>+<kbd>Print</kbd> / <kbd>Alt</kbd>+<kbd>Print</kbd> | 直接全螢幕 / 視窗截圖 |
@@ -197,7 +197,7 @@ dotfiles/
 └── stow/                     # 按應用模組化的 GNU Stow 配置
     ├── gnome/                # GTK CSS / fontconfig / environment.d
     ├── bash/                 # Shell 環境與工具腳本
-    ├── kitty/                # Kitty 終端機
+    ├── kitty/                # Kitty 終端機（備用，日常使用 Ptyxis）
     ├── nvim/                 # Neovim / Vim
     ├── starship/             # Starship Prompt
     └── fcitx5/               # Fcitx5 輸入法
