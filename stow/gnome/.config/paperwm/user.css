@@ -1,0 +1,11 @@
+/* ~/.config/paperwm/user.css - managed by dotfiles (stow/gnome) */
+/* PaperWM selection border: GNOME 50's default .tile-preview fills the
+   ring around the focused window with the accent color (blue). Replace it
+   with a neutral translucent glass ring. Size and corner radii are
+   declared in gnome/dconf.ini ([shell/extensions/paperwm]).
+   Re-enable PaperWM to reload this file (no re-login needed). */
+
+.paperwm-selection.tile-preview {
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.30);
+}

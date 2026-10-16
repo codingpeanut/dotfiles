@@ -40,6 +40,8 @@
 
 > EGO 擴充清單定義於 `gnome/extensions.txt`，本 repo 自帶擴充於 `gnome/extensions-local.txt`；UUID 與 GNOME 50 相容性可於 <https://extensions.gnome.org> 查核。
 > 藍牙圖示來源有二：GNOME 內建指示器（僅裝置連線時出現，由 Hide Bluetooth Indicator 擴充隱藏）；blueman-applet 自啟由 `~/.config/autostart/blueman.desktop`（`Hidden=true`，經 stow 部署）停用，blueman-manager 仍可手動使用。
+> **PaperWM 選取框**：聚焦視窗的選取框在 GNOME 50 預設是強調色藍（`.tile-preview` 背景填充）；本 repo 以 `stow/gnome/.config/paperwm/user.css` 改為中性半透明玻璃框（PaperWM 只在此檔不存在時才會覆寫，故可安全以 stow 管理），尺寸/圓角於 `gnome/dconf.ini`（`selection-border-size=4`、`selection-border-radius-*=16`，同心對齊 GNOME 50 的 12px 視窗圓角）。改完 user.css 後執行 `gnome-extensions disable/enable paperwm@paperwm.github.com` 即時重載，免重登。
+> **Dash to Dock 模糊**：dock 本身無模糊，由 Blur My Shell 的 Dash to Dock 元件提供（`blur`/`static-blur`/`override-background`/`style-dash-to-dock=0` 已完整宣告；BMS 以 `.transparent-dash`（`!important`）清掉 dock 背景讓模糊層透出）。若 dock 沒模糊，重新 `just gnome-apply` 後執行 `just gnome-fix-blur`（重新掃描 dock），必要時重新登入。
 
 ---
 
