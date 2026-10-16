@@ -6,9 +6,13 @@ home := env("HOME")
 default:
     @just --list
 
-# Apply full configuration (system packages + GNOME + dotfiles + user services)
+# One-click full sync: git pull + system packages + GNOME + dotfiles + user services
 apply *args:
+    @echo "==> Pulling latest changes from Git..."
+    @git pull --rebase --autostash
     ansible-playbook -i ansible/inventory.ini ansible/playbook.yml --ask-become-pass {{ args }}
+    @echo ""
+    @echo "==> Done! If shell, theme or extensions changed, log out and back in (Wayland cannot restart GNOME Shell)."
 
 # Sync and apply dotfiles symlinks via GNU Stow (through Ansible)
 dotfiles *args:
@@ -47,8 +51,17 @@ gnome-apply:
     @echo "==> Loading gnome/dconf.ini into /org/gnome/ ..."
     @dconf load /org/gnome/ < gnome/dconf.ini
     @echo "==> Enabling declarative extensions (gext)..."
-    @grep -vE '^[[:space:]]*(#|$)' gnome/extensions.txt | while read -r uuid; do gext enable "$uuid" 2>/dev/null || true; done
+    @cat gnome/extensions.txt gnome/extensions-local.txt | grep -vE '^[[:space:]]*(#|$)' | while read -r uuid; do gext enable "$uuid" 2>/dev/null || true; done
     @echo "==> Done. Log out and back in to fully apply shell and theme changes."
+
+# Workaround for known Blur My Shell bug: half-transparent panel after login
+# (upstream issue aunetx/blur-my-shell#882). Toggling the extension fixes it.
+gnome-fix-blur:
+    @echo "==> Restarting Blur My Shell to fix the panel blur glitch..."
+    @gnome-extensions disable blur-my-shell@aunetx 2>/dev/null || true
+    @sleep 1
+    @gnome-extensions enable blur-my-shell@aunetx 2>/dev/null || true
+    @echo "==> Done. If the glitch returns after every login, see README (blur workaround)."
 
 # Capture the current GNOME settings from dconf back into the repo
 gnome-backup:

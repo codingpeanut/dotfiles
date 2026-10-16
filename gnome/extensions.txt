@@ -1,20 +1,19 @@
-# GNOME Shell extensions - declarative list (managed by gext)
+# GNOME Shell extensions - declarative EGO list (managed by gext)
 # One UUID per line. Lines starting with # are ignored.
 # Install / enable with:  just gnome-ext   (or: just gnome-apply)
 # Verify UUIDs and GNOME 50 support at https://extensions.gnome.org
+# Local (non-EGO) extensions shipped by this repo: gnome/extensions-local.txt
 #
 # --- Minimal glass core ---
 blur-my-shell@aunetx
 just-perfection-desktop@just-perfection
-space-bar@luchrioh
 rounded-window-corners@fxgn
 #
 # --- Panel, tray & info ---
 appindicatorsupport@rgcjonas.gmail.com
-Vitals@CoreCoding.com
 date-menu-formatter@marcinjakubowski
 caffeine@patapon.info
 #
-# --- Workflow ---
+# --- Workflow & tiling ---
+paperwm@paperwm.github.com
 clipboard-history@SuperMaxLv4
-tiling-assistant@leleat-on-github

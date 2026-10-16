@@ -1,0 +1,4 @@
+# Local extensions shipped inside this repo (stowed into
+# ~/.local/share/gnome-shell/extensions/, not installed from EGO).
+# Enable-only: gext will not try to install these.
+hide-bluetooth-indicator@codingpeanut.github.io

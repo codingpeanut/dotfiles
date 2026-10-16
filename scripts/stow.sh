@@ -16,6 +16,10 @@
 #     （絕不透過軟連結去更動其他 repo 的檔案）
 #   備份命名為 <path>.bak，若已存在則遞增為 <path>.bak.1、.bak.2 ...
 #
+# 所有 stow 操作皆使用 --no-folding：目錄一律建立為實體目錄，只對檔案建
+# 軟連結。避免整個目錄（例如 ~/.local/share/gnome-shell/extensions）被
+# 摺疊連結回 repo，導致其他程式寫入時直接改到 repo 內容。
+#
 # 用法:
 #   scripts/stow.sh stow   [pkg ...] [--dry-run]
 #   scripts/stow.sh unstow [pkg ...] [--dry-run]
@@ -157,16 +161,16 @@ for pkg in "${PKGS[@]}"; do
         preflight_package "$pkg"
         echo "==> [$pkg] stow -R ..."
         if [ "$DRY_RUN" = true ]; then
-            echo "  [dry-run] stow -v -R -t $TARGET -d $STOW_DIR $pkg"
-        elif ! stow -v -R -t "$TARGET" -d "$STOW_DIR" "$pkg"; then
+            echo "  [dry-run] stow -v -R --no-folding -t $TARGET -d $STOW_DIR $pkg"
+        elif ! stow -v -R --no-folding -t "$TARGET" -d "$STOW_DIR" "$pkg"; then
             echo "  [✗] stow 失敗: $pkg"
             FAILED=1
         fi
     else
         echo "==> [$pkg] unstow ..."
         if [ "$DRY_RUN" = true ]; then
-            echo "  [dry-run] stow -v -D -t $TARGET -d $STOW_DIR $pkg"
-        elif ! stow -v -D -t "$TARGET" -d "$STOW_DIR" "$pkg"; then
+            echo "  [dry-run] stow -v -D --no-folding -t $TARGET -d $STOW_DIR $pkg"
+        elif ! stow -v -D --no-folding -t "$TARGET" -d "$STOW_DIR" "$pkg"; then
             echo "  [✗] unstow 失敗: $pkg"
             FAILED=1
         fi

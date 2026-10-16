@@ -11,15 +11,17 @@
 - **現代簡約玻璃風**：
   - **Blur My Shell** 為面板、Dash 與 Overview 加上柔和模糊。
   - **Just Perfection** 精簡 Shell 元素，**Rounded Window Corners Reborn** 帶來圓角視窗。
+  - **PaperWM** 提供可捲動的平鋪式視窗管理（scrollable tiling）。
   - **Colloid-Dark (grey / rimless)** GTK 主題 + **Papirus-Dark** 圖示 + **Bibata-Modern-Ice** 游標。
 - **宣告式 GNOME 擴充管理 (gext)**：
-  - 所有擴充 UUID 集中於 `gnome/extensions.txt`，由 `gext` 安裝與啟用，一鍵同步。
+  - EGO 擴充集中於 `gnome/extensions.txt`，本 repo 自帶的本地擴充列於 `gnome/extensions-local.txt`；清單即真相，未宣告的擴充會自動移除。
 - **dconf 設定即程式碼**：
   - `gnome/dconf.ini` 保存 `/org/gnome/` 的完整外觀與快捷設定；`just gnome-backup` 固化、`just gnome-apply` 套用。
 - **GNU Stow 模組化軟連結管理**：
   - 檔案型設定（GTK CSS、fontconfig、environment.d）收於 `stow/gnome/`，不污染家目錄。
 - **Ansible + Justfile 宣告式維護**：
-  - `just gnome`、`just stow`、`just fix` 一鍵完成套件安裝、軟連結部署與設定套用。
+  - `just apply` 一鍵完成 `git pull` → 系統套件 → 軟連結部署 → GNOME 擴充同步 → dconf 套用；
+    也可分項執行 `just gnome`、`just stow`、`just fix`。
 
 ---
 
@@ -29,16 +31,16 @@
 | :--- | :--- |
 | Blur My Shell | 面板 / Dash / Overview 玻璃模糊 |
 | Just Perfection | 精簡 Shell 元素（隱藏項目、調整位置） |
-| Space Bar | i3 風格工作區指示器 |
 | Rounded Window Corners Reborn | 視窗圓角 |
+| PaperWM | 可捲動平鋪視窗管理（取代 Tiling Assistant） |
 | AppIndicator | 系統匣圖示支援 |
-| Vitals | CPU / 記憶體 / 溫度監控 |
 | Date Menu Formatter | 時鐘日期格式自訂 |
 | Caffeine | 防休眠 / 常亮切換 |
 | Clipboard History | 剪貼簿歷史 (Super+V 風格) |
-| Tiling Assistant | Windows 風格視窗貼齊 |
+| Hide Bluetooth Indicator | 隱藏面板獨立藍牙圖示（本 repo 自帶，非 EGO） |
 
-> 擴充清單定義於 `gnome/extensions.txt`；UUID 與 GNOME 50 相容性可於 <https://extensions.gnome.org> 查核。
+> EGO 擴充清單定義於 `gnome/extensions.txt`，本 repo 自帶擴充於 `gnome/extensions-local.txt`；UUID 與 GNOME 50 相容性可於 <https://extensions.gnome.org> 查核。
+> 注意：PaperWM 與 Rounded Window Corners 有已知相容性問題（[PaperWM#763](https://github.com/paperwm/PaperWM/issues/763)），若出現視覺異常可考慮停用其一。
 
 ---
 
@@ -50,8 +52,9 @@
 | <kbd>Super</kbd> + <kbd>A</kbd> | 快速設定（Wi-Fi、藍牙、電源、音量、亮度） |
 | <kbd>Super</kbd> + <kbd>V</kbd> | 剪貼簿歷史（Clipboard History 擴充） |
 | <kbd>Print</kbd> / <kbd>Super</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> | 截圖 / 區域截圖 |
-| <kbd>Super</kbd> + <kbd>←</kbd> / <kbd>→</kbd> | 視窗左右貼齊（Tiling Assistant） |
-| <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Esc</kbd> | 開啟系統監控（可搭配 Vitals） |
+| <kbd>Super</kbd> + <kbd>←</kbd> / <kbd>→</kbd> | 切換左右視窗（PaperWM） |
+| <kbd>Super</kbd> + <kbd>Ctrl</kbd> + <kbd>←</kbd> / <kbd>→</kbd> | 移動視窗（PaperWM） |
+| <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Esc</kbd> | 開啟系統監控 |
 
 ---
 
@@ -66,10 +69,12 @@ just bootstrap        # 或 scripts/bootstrap.sh，安裝 git/ansible/just/stow 
 
 ### 2. 日常維護指令
 ```bash
+just apply            # 一鍵搞定：git pull + 完整套用（系統套件 + stow + GNOME 擴充/主題 + dconf）
 just gnome            # 安裝擴充、主題、圖示、游標、字型並套用設定 (Ansible)
 just gnome-apply      # 快速載入 gnome/dconf.ini + 啟用擴充（不經 Ansible）
 just gnome-backup     # 將目前 GNOME 設定 dump 回 gnome/dconf.ini
 just gnome-update     # 更新所有已安裝擴充
+just gnome-fix-blur   # 修復 Blur My Shell 面板異常（半透明面板，見下方說明）
 just stow             # 重新連結所有 dotfiles（衝突自動備份為 *.bak，安全切換 repo）
 just stow-dry         # 預覽 stow 會做什麼，不實際變更
 just unstow           # 移除所有 dotfiles 軟連結
@@ -79,7 +84,15 @@ just push             # 提交並推送修改至 GitHub
 
 > `just stow` 由 `scripts/stow.sh` 安全包裝：部署前會掃描衝突，既有實體檔案或
 > 指向其他位置（例如舊 clone）的殘留軟連結都會先備份成 `*.bak`，且絕不會透過
-> 軟連結去更動其他 repo 的檔案。
+> 軟連結去更動其他 repo 的檔案。所有連結皆使用 `--no-folding`，目錄保持實體，
+> 避免其他程式（如 gext）寫入時誤改 repo。
+
+> **已知問題 — Blur My Shell 面板異常**：在 GNOME 50 / Fedora 44 上，Blur My
+> Shell 於登入後可能出現「面板一半透明／模糊未正確初始化」（多螢幕環境尤其
+> 常見），上游 issue
+> [aunetx/blur-my-shell#882](https://github.com/aunetx/blur-my-shell/issues/882)
+> 仍開啟中。暫時解法：執行 `just gnome-fix-blur`（等同停用再啟用擴充）。
+> 此問題與 Just Perfection 無關。
 
 ### 3. 完全解除安裝 (Uninstall)
 ```bash
@@ -105,7 +118,8 @@ dotfiles/
 ├── README.md
 │
 ├── gnome/                    # GNOME 宣告式 payload (非軟連結)
-│   ├── extensions.txt        # gext 擴充清單 (UUID)
+│   ├── extensions.txt        # gext EGO 擴充清單 (安裝 + 啟用)
+│   ├── extensions-local.txt  # 本 repo 自帶擴充清單 (僅啟用)
 │   └── dconf.ini             # /org/gnome/ 設定 dump (gnome-backup 生成)
 │
 ├── ansible/                  # 宣告式系統套件與配置自動化

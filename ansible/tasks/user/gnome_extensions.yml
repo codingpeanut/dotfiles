@@ -1,5 +1,11 @@
 ---
 # Declarative GNOME Shell extension management via gext (gnome-extensions-cli)
+#
+# Source of truth:
+#   - gnome/extensions.txt        : installed from extensions.gnome.org (EGO)
+#   - gnome/extensions-local.txt  : enabled only, shipped by this repo via Stow
+# Extensions found in ~/.local/share/gnome-shell/extensions that are declared
+# in neither list are uninstalled (declarative sync).
 
 - name: Resolve user home directory
   ansible.builtin.set_fact:
@@ -18,31 +24,44 @@
   changed_when: gext_install.rc == 0
   failed_when: false
 
-- name: Read the declarative extension list
+- name: Read the declarative EGO extension list
   ansible.builtin.shell:
     cmd: "grep -vE '^[[:space:]]*(#|$)' {{ playbook_dir }}/../gnome/extensions.txt"
   register: gnome_ext_list
   changed_when: false
 
-- name: List currently installed extensions
-  ansible.builtin.command:
-    cmd: "{{ gnome_home }}/.local/bin/gext list"
-  register: gnome_ext_installed
+- name: Read the declarative local extension list
+  ansible.builtin.shell:
+    cmd: "grep -vE '^[[:space:]]*(#|$)' {{ playbook_dir }}/../gnome/extensions-local.txt"
+  register: gnome_ext_local_list
   changed_when: false
+
+- name: Scan installed user extensions
+  ansible.builtin.find:
+    paths: "{{ gnome_home }}/.local/share/gnome-shell/extensions"
+    file_type: directory
+  register: gnome_ext_dirs
   failed_when: false
 
-- name: Install missing GNOME extensions
+- name: Install missing GNOME extensions from extensions.gnome.org
   ansible.builtin.command:
     cmd: "{{ gnome_home }}/.local/bin/gext install {{ item }}"
   loop: "{{ gnome_ext_list.stdout_lines | default([]) }}"
-  when: item not in gnome_ext_installed.stdout
-  register: gnome_ext_install_result
-  changed_when: gnome_ext_install_result.rc == 0
+  when: item not in (gnome_ext_dirs.files | default([]) | map(attribute='path') | map('basename') | list)
+  failed_when: false
+
+- name: Uninstall extensions that are no longer declared
+  ansible.builtin.command:
+    cmd: "{{ gnome_home }}/.local/bin/gext uninstall {{ item }}"
+  loop: "{{ gnome_ext_dirs.files | default([]) | map(attribute='path') | map('basename') | list }}"
+  when: >-
+    item not in (gnome_ext_list.stdout_lines | default([])) and
+    item not in (gnome_ext_local_list.stdout_lines | default([]))
   failed_when: false
 
 - name: Enable all declaratively managed extensions
   ansible.builtin.command:
     cmd: "{{ gnome_home }}/.local/bin/gext enable {{ item }}"
-  loop: "{{ gnome_ext_list.stdout_lines | default([]) }}"
+  loop: "{{ (gnome_ext_list.stdout_lines | default([])) + (gnome_ext_local_list.stdout_lines | default([])) }}"
   changed_when: false
   failed_when: false
