@@ -35,6 +35,10 @@
       ansible.builtin.import_tasks: tasks/system/copr.yml
       tags: [copr]
 
+    - name: Install rounded-blur helper for dynamic blur corners
+      ansible.builtin.import_tasks: tasks/system/rounded_blur.yml
+      tags: [copr, rounded_blur]
+
     - name: Install system RPM packages
       ansible.builtin.import_tasks: tasks/system/packages.yml
       tags: [packages]

@@ -1,0 +1,21 @@
+---
+- name: Install ublue-os/packages COPR definition (kept disabled by default)
+  ansible.builtin.copy:
+    dest: /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:ublue-os:packages.repo
+    mode: "0644"
+    content: |
+      [copr:copr.fedorainfracloud.org:ublue-os:packages]
+      name=Copr repo for packages owned by ublue-os
+      baseurl=https://download.copr.fedorainfracloud.org/results/ublue-os/packages/fedora-$releasever-$basearch/
+      type=rpm-md
+      skip_if_unavailable=True
+      gpgcheck=1
+      gpgkey=https://download.copr.fedorainfracloud.org/results/ublue-os/packages/pubkey.gpg
+      repo_gpgcheck=0
+      enabled=0
+
+- name: Install gnome-rounded-blur helper for Blur My Shell dynamic blur corners
+  ansible.builtin.dnf:
+    name: gnome-rounded-blur
+    state: present
+    enablerepo: copr:copr.fedorainfracloud.org:ublue-os:packages

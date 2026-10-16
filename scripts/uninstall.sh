@@ -321,7 +321,7 @@ remove_system_packages() {
     fi
 
     # 本專案額外安裝的 GNOME 美化套件（保留 GNOME 核心與共用工具）
-    local rice_pkgs=("gnome-tweaks" "sassc" "gtk-murrine-engine" "papirus-icon-theme" "rsms-inter-fonts")
+    local rice_pkgs=("gnome-tweaks" "sassc" "gtk-murrine-engine" "papirus-icon-theme" "rsms-inter-fonts" "gnome-rounded-blur")
     local copr_repos=()
 
     if [ "$DRY_RUN" = true ]; then
@@ -342,6 +342,11 @@ remove_system_packages() {
             for repo in "${copr_repos[@]}"; do
                 sudo dnf copr disable -y "$repo" 2>/dev/null || true
             done
+        fi
+
+        if [ -f "/etc/yum.repos.d/_copr:copr.fedorainfracloud.org:ublue-os:packages.repo" ]; then
+            echo "  [-] 移除 ublue-os/packages COPR 定義檔..."
+            sudo rm -f "/etc/yum.repos.d/_copr:copr.fedorainfracloud.org:ublue-os:packages.repo"
         fi
         echo -e "${GREEN}  [✓] 系統專用套件已移除。${NC}"
     fi

@@ -10,7 +10,7 @@
 
 - **現代簡約玻璃風**：
   - **Blur My Shell** 為面板、Dash 與 Overview 加上柔和模糊。
-  - **Just Perfection** 精簡 Shell 元素，**Rounded Window Corners Reborn** 帶來圓角視窗。
+  - **Just Perfection** 精簡 Shell 元素。
   - **PaperWM** 提供可捲動的平鋪式視窗管理（scrollable tiling）。
   - **Colloid-Dark (grey / rimless)** GTK 主題 + **Papirus-Dark** 圖示 + **Bibata-Modern-Ice** 游標。
 - **宣告式 GNOME 擴充管理 (gext)**：
@@ -31,16 +31,14 @@
 | :--- | :--- |
 | Blur My Shell | 面板 / Dash / Overview 玻璃模糊 |
 | Just Perfection | 精簡 Shell 元素（隱藏項目、調整位置、縮小 overview dash 圖示） |
-| Rounded Window Corners Reborn | 視窗圓角 |
 | PaperWM | 可捲動平鋪視窗管理（取代 Tiling Assistant） |
 | AppIndicator | 系統匣圖示支援 |
-| Date Menu Formatter | 時鐘日期格式自訂 |
+| Dash to Dock | 底部 dock，自動隱藏（滑到螢幕底緣顯示） |
 | Caffeine | 防休眠 / 常亮切換 |
 | Clipboard History | 剪貼簿歷史 (Super+V 風格) |
 | Hide Bluetooth Indicator | 隱藏面板獨立藍牙圖示（本 repo 自帶，非 EGO） |
 
 > EGO 擴充清單定義於 `gnome/extensions.txt`，本 repo 自帶擴充於 `gnome/extensions-local.txt`；UUID 與 GNOME 50 相容性可於 <https://extensions.gnome.org> 查核。
-> 注意：PaperWM 與 Rounded Window Corners 有已知相容性問題（[PaperWM#763](https://github.com/paperwm/PaperWM/issues/763)），若出現視覺異常可考慮停用其一。
 > 藍牙圖示來源有二：GNOME 內建指示器（僅裝置連線時出現，由 Hide Bluetooth Indicator 擴充隱藏）；blueman-applet 自啟由 `~/.config/autostart/blueman.desktop`（`Hidden=true`，經 stow 部署）停用，blueman-manager 仍可手動使用。
 
 ---
@@ -97,11 +95,15 @@ just push             # 提交並推送修改至 GitHub
 > 仍開啟中。暫時解法：執行 `just gnome-fix-blur`（等同停用再啟用擴充）。
 > 此問題與 Just Perfection 無關。
 
-> **Popup 背景多一層**：Blur My Shell 的 Popup blur「模糊類型」若為
-> 「動態（Dynamic）」，快選單／日曆等 popup 卡片會疊出第二層背景。
-> 本 repo 已在 `gnome/dconf.ini` 將 popup 固定為「靜態（Static）」
-> （`static-blur=true`），`just gnome-apply` 後生效；若曾在 UI 手動調整過，
-> 重新套用即覆蓋。Static 同時比 Dynamic 更省 GPU。
+> **Blur My Shell 動態模糊圓角（gnome-rounded-blur）**：BMS 動態模糊會另疊
+> 一層動態層，缺少圓角 helper 時該層邊角不吻合 popup 卡片（看起來像「多一層
+> 背景」）。本 repo 透過 `ublue-os/packages` COPR 安裝 `gnome-rounded-blur`
+> （`ansible/tasks/system/rounded_blur.yml`，`just system`），BMS v70+ 啟動時
+> 會偵測 `Blur` typelib（`/usr/lib64/girepository-1.0/Blur-1.0.typelib`）
+> 並自動為動態層套用圓角，因此 panel 與 popup 維持「動態（Dynamic）」。
+> 安裝後需重新登入生效；GNOME/mutter 更新後執行 `just update` 取得 COPR
+> 重編版本。此依賴會帶入 Fedora 的 `gnome-shell-extension-blur-my-shell`
+> 系統套件，user 層 EGO 版本仍優先，不影響啟用的擴充。
 
 ### 3. 完全解除安裝 (Uninstall)
 ```bash
