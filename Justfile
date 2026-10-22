@@ -65,16 +65,16 @@ gnome-fix-blur:
     @gnome-extensions enable blur-my-shell@aunetx 2>/dev/null || true
     @echo "==> Done. If the glitch returns after every login, see README (blur workaround)."
 
-# Beautify the GDM login screen: light theme (prefer-light) + desktop-matching wallpaper
-# (auto-reads the session's light wallpaper; rebuilds the shell theme gresource) plus
-# matching font/cursor/accent via /etc/dconf/db/gdm.d (needs root).
-# gnome-shell updates overwrite the gresource — re-run (just update does this automatically).
-# Args are forwarded to the script (e.g.: just gdm-theme --image ~/Pictures/wall.png).
+# 以桌面即時值鏡射 color-scheme（深/淺）、accent、GTK/icon 主題、字型、游標，
+# 桌布 picture-uri / picture-uri-dark 兩張都嵌進 gresource，light/dark 樣式檔都修補
+# （切換深淺不需重建）；gnome-shell 更新後 just update 會自動重跑。
+# 參數會轉給腳本（例: just gdm-theme --image ~/Pictures/wall.png）。
+# 套用 GDM 登入畫面主題（需 root；外觀與桌面同步）
 gdm-theme *args:
     @echo "==> Applying GDM login screen theme (root required)..."
     @sudo bash scripts/gdm-theme.sh {{ args }}
 
-# Restore the stock GDM login screen (background / fonts / cursor)
+# 還原原廠登入畫面（背景、字型、游標、dconf）
 gdm-theme-reset:
     @echo "==> Restoring stock GDM login screen (root required)..."
     @sudo bash scripts/gdm-theme.sh --reset
@@ -189,12 +189,29 @@ check:
     @if fc-list 2>/dev/null | grep -qi Inter; then echo "  [✓] Inter font installed"; else echo "  [✗] Inter font NOT installed"; fi
     @if [ -d /usr/share/icons/Papirus-Dark ]; then echo "  [✓] Papirus-Dark icons installed"; else echo "  [✗] Papirus-Dark icons NOT installed"; fi
     @if rpm -q gnome-rounded-blur >/dev/null 2>&1; then echo "  [✓] gnome-rounded-blur helper installed (dynamic blur corners)"; else echo "  [✗] gnome-rounded-blur NOT installed (run: just system, then re-login)"; fi
-    @if grep -aq 'dotfiles-gdm-theme' /usr/share/gnome-shell/gnome-shell-theme.gresource 2>/dev/null && [ -f /etc/dconf/db/gdm.d/90-dotfiles ]; then echo "  [✓] GDM login theme applied (light wallpaper + greeter settings)"; else echo "  [!] GDM login theme NOT applied (run: just gdm-theme; re-run after gnome-shell updates)"; fi
+    @if grep -aq 'dotfiles-gdm-theme' /usr/share/gnome-shell/gnome-shell-theme.gresource 2>/dev/null && { [ -f /etc/dconf/db/gdm.d/50-dotfiles-desktop-sync ] || [ -f /etc/dconf/db/gdm.d/90-dotfiles ]; }; then echo "  [✓] GDM login theme applied (desktop-matched wallpaper + greeter settings)"; else echo "  [!] GDM login theme NOT applied (run: just gdm-theme; re-run after gnome-shell updates)"; fi
     @if [ -f /var/lib/dotfiles-gdm/source-uri ] && command -v gsettings >/dev/null 2>&1; then \
-        cur="$(gsettings get org.gnome.desktop.background picture-uri 2>/dev/null)"; \
-        stored="$(cat /var/lib/dotfiles-gdm/source-uri 2>/dev/null)"; \
-        if [ -n "$cur" ] && [ "$cur" != "$stored" ]; then \
-            echo "  [!] Desktop wallpaper changed (light) — run 'just gdm-theme' to sync the login background"; \
+        c_light="$(gsettings get org.gnome.desktop.background picture-uri 2>/dev/null)"; \
+        c_dark="$(gsettings get org.gnome.desktop.background picture-uri-dark 2>/dev/null)"; \
+        s_light="$(sed -n 1p /var/lib/dotfiles-gdm/source-uri 2>/dev/null)"; \
+        s_dark="$(sed -n 2p /var/lib/dotfiles-gdm/source-uri 2>/dev/null)"; \
+        if [ -n "$s_light" ] && [ -n "$c_light" ] && { [ "$c_light" != "$s_light" ] || [ "$c_dark" != "$s_dark" ]; }; then \
+            echo "  [!] Desktop wallpaper changed — run 'just gdm-theme' to sync the login background"; \
+        fi; \
+    fi
+    @if [ -f /etc/dconf/db/gdm.d/50-dotfiles-desktop-sync ]; then f=/etc/dconf/db/gdm.d/50-dotfiles-desktop-sync; else f=/etc/dconf/db/gdm.d/90-dotfiles; fi; \
+     if [ -f "$f" ] && command -v gsettings >/dev/null 2>&1; then \
+        live="$(gsettings get org.gnome.desktop.interface color-scheme 2>/dev/null)"; \
+        stored="$(sed -n 's/^color-scheme=//p' "$f" 2>/dev/null | head -n1)"; \
+        if [ -n "$live" ] && [ -n "$stored" ] && [ "$live" != "$stored" ]; then \
+            echo "  [!] Desktop colour scheme changed ($live) — run 'just gdm-theme' to sync the login screen"; \
+        fi; \
+    fi
+    @if [ -f /var/lib/dotfiles-gdm/css.sha256 ] && [ -f gnome/gdm-greeter.css ]; then \
+        cur="$(sha256sum gnome/gdm-greeter.css | awk '{print $1}')"; \
+        stored="$(cat /var/lib/dotfiles-gdm/css.sha256 2>/dev/null)"; \
+        if [ -n "$stored" ] && [ "$cur" != "$stored" ]; then \
+            echo "  [!] Greeter CSS changed (gnome/gdm-greeter.css) — run 'just gdm-theme' to apply"; \
         fi; \
     fi
     @if [ -f "{{ home }}/.config/paperwm/user.css" ]; then echo "  [✓] PaperWM user.css deployed (selection border)"; else echo "  [✗] PaperWM user.css NOT deployed (run: just stow)"; fi

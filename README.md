@@ -14,8 +14,9 @@
   - **PaperWM** 提供可捲動的平鋪式視窗管理（scrollable tiling）。
   - **Colloid-Dark (grey / rimless)** GTK 主題 + **Papirus-Dark** 圖示 + **Bibata-Modern-Ice** 游標。
 - **GDM 登入畫面同步（`just gdm-theme`）**：
-  - 淺色登入畫面 + 桌布同款背景：預設自動讀取桌面淺色桌布（`picture-uri`）嵌入主題，換桌布後重跑即同步（`just check` 會提示）。
-  - greeter 的淺色模式、字型、游標、accent 經 `/etc/dconf/db/gdm.d/`（Fedora 官方 `system-db:gdm`）與桌面一致。
+  - 外觀與桌面同步：`color-scheme`（深/淺）、accent、GTK/icon 主題、字型、游標以桌面**即時值**為準，寫入 `/etc/dconf/db/gdm.d/50-dotfiles-desktop-sync`（Fedora 官方 `system-db:gdm`）。
+  - 桌布同款背景：`picture-uri` / `picture-uri-dark` 兩張都嵌入主題（light/dark 樣式檔各用各的），**切換深淺不需重建**。
+  - `sudo just gdm-theme-reset` 可完全還原（gresource、兩份 dconf、系統層游標）。
 - **宣告式 GNOME 擴充管理 (gext)**：
   - EGO 擴充集中於 `gnome/extensions.txt`，本 repo 自帶的本地擴充列於 `gnome/extensions-local.txt`；清單即真相，未宣告的擴充會自動移除。
 - **dconf 設定即程式碼**：
@@ -160,19 +161,33 @@ just push             # 提交並推送修改至 GitHub
 > 重編版本。此依賴會帶入 Fedora 的 `gnome-shell-extension-blur-my-shell`
 > 系統套件，user 層 EGO 版本仍優先，不影響啟用的擴充。
 
-> **GDM 登入畫面（`just gdm-theme`）**：登入畫面預設為**淺色**：
-> `color-scheme='prefer-light'` 寫在 `/etc/dconf/db/gdm.d/90-dotfiles`，greeter 據此
-> 載入主題內的 `gnome-shell-light.css`（GNOME 50 已無舊版 `gdm.css`）。背景不跟桌布、
-> 而是該 css 內 `#lockDialogGroup` 的純色，故 `scripts/gdm-theme.sh` 會把桌布圖片嵌入
-> 並重建 `gnome-shell-theme.gresource`——**只補淺色樣式檔**，工作階段鎖定畫面（深色）
-> 不受影響。背景預設自動讀取桌面目前的淺色桌布
-> （`org.gnome.desktop.background picture-uri`，讀不到時用 `adwaita-l.jxl`）：
-> **換桌布後執行 `just gdm-theme` 即同步**，`just check` 會提示尚未同步；也可用
-> `--image` 指定固定圖。字型（Inter）／游標（Bibata）／accent 同樣寫入 gdm profile
-> （Fedora 官方 `system-db:gdm`，不受套件更新影響）；游標另會從 `~/.local` 複製一份到
-> `/usr/share/icons`（greeter 讀不到家目錄）。`gnome-shell` 更新會覆蓋 gresource——
-> `just update` 會自動重套、`just check` 也會提示；`sudo just gdm-theme-reset` 可完全還原。
-> 重啟 GDM 會登出所有工作階段（腳本結尾詢問是否立即執行）。
+> **GDM 登入畫面（`just gdm-theme`）**：登入畫面**與桌面同步**。`scripts/gdm-theme.sh`
+> 以桌面**即時**的 `org.gnome.desktop.interface` 為準（鍵集合固定為腳本內的
+> `INTERFACE_KEYS`；讀不到工作階段時才退回 `gnome/dconf.ini` 快照），鏡射 greeter 的
+> `color-scheme`、accent、GTK/icon 主題、字型、游標，寫入 Fedora 官方支援的
+> `/etc/dconf/db/gdm.d/50-dotfiles-desktop-sync`（`system-db:gdm`，不受套件更新影響）。
+> 改完桌面（深淺、accent、字型、桌布）執行 `sudo just gdm-theme` 即同步——**非即時連動**，
+> `just check` 會提示尚未同步。
+> 注意 GNOME 的 `color-scheme='default'` 對 shell 而言等同深色（`getStyleVariant()`
+> 只在 `prefer-light` 時選淺色檔），greeter 比照辦理。
+> GNOME 50 依 `color-scheme` 載入 `gnome-shell-{light,dark}.css`（已無舊版 `gdm.css`）；
+> 背景是 `#lockDialogGroup` 的純色，故腳本把桌布嵌進主題並重建
+> `gnome-shell-theme.gresource`——**light 與 dark 兩個樣式檔都補**（各自嵌
+> `picture-uri` / `picture-uri-dark`，讀不到時用 `adwaita-{l,d}.jxl`），所以切換深淺
+> **不需要重建**；`high-contrast` 只換背景、不套玻璃感（保留高對比）。
+> 也可用 `--image` 指定固定圖。
+> 游標另會從 `~/.local` 複製一份到 `/usr/share/icons`（greeter 讀不到家目錄）。此外
+> `gnome/gdm-greeter.css` 把頂部面板、使用者清單改成半透明玻璃感（`gdm-theme` 依 CSS 檔的
+> sha256 決定是否重建）——覆寫一律限定 greeter 專屬選擇器（`#panel.login-screen`、
+> `.login-dialog-*`），**不影響桌面與鎖定畫面**（深色樣式檔三者共用，面板以
+> `.login-screen` 區分）。桌面的擴充（如 Blur my Shell）**無法**在登入畫面載入——GNOME 要求
+> 擴充宣告 `session-modes: ["gdm"]`，故只能以半透明近似真模糊。
+>
+> **可逆**：`sudo just gdm-theme-reset` 會還原原廠 gresource、移除兩份 dconf 與系統層游標
+> （腳本只在 `gnome-shell` 更新覆蓋 gresource 後才需重跑；`just update` 會自動重套、
+> `just check` 會提示未同步）。若手動刪掉狀態目錄 `/var/lib/dotfiles-gdm`，腳本會偵測到
+> 「已修補但無狀態」而拒絕重複疊加，並提示先 `sudo dnf reinstall gnome-shell` 還原原廠
+> gresource。重啟 GDM 會登出所有工作階段（腳本結尾詢問是否立即執行）。
 
 ### 3. 完全解除安裝 (Uninstall)
 ```bash
@@ -202,7 +217,8 @@ dotfiles/
 │   ├── extensions-local.txt  # 本 repo 自帶擴充清單 (僅啟用)
 │   ├── dconf.ini             # /org/gnome/ 設定 dump (gnome-backup 生成)
 │   ├── dconf-desktop.ini     # /desktop/ 設定 (ibus-chewing 切換鍵等)
-│   └── gdm-dconf.ini         # GDM greeter 設定 (gdm-theme 安裝至 gdm.d)
+│   ├── gdm-dconf.ini         # greeter 專屬設定 (gdm-theme 安裝成 90-dotfiles)
+│   └── gdm-greeter.css       # GDM greeter 視覺覆寫 (僅 greeter 專屬選擇器)
 │
 ├── ansible/                  # 宣告式系統套件與配置自動化
 │   ├── playbook.yml
