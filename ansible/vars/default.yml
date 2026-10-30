@@ -77,6 +77,7 @@ system_packages:
   - python3
   - python3-pip
   - gcc
+  - libatomic
   - cmake
   - ninja-build
 
@@ -127,3 +128,10 @@ opencode_v2:
   version: "2"
   auto_init: true
   init_config: null
+
+# Hermes Agent by Nous Research (official installer -> ~/.local/bin/hermes)
+hermes_agent:
+  enabled: true
+  channel: stable  # stable | main
+  skip_browser: false  # true = install without the managed Chromium
+  skip_computer_use: false  # true = install without cua-driver

@@ -28,3 +28,10 @@ user_services_extra: []
 #   version: "2"
 #   auto_init: true
 #   init_config: null
+
+# Hermes Agent (override defaults from vars/default.yml)
+# hermes_agent:
+#   enabled: true
+#   channel: stable
+#   skip_browser: false
+#   skip_computer_use: false

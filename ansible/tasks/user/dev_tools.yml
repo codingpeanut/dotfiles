@@ -1,5 +1,5 @@
 ---
-# Developer tools & AI agents (pi-coding-agent, opencode)
+# Developer tools & AI agents (pi-coding-agent, opencode, hermes)
 
 - name: Ensure user npm global bin directory exists
   ansible.builtin.file:
@@ -45,13 +45,43 @@
       when: not opencode_stat.stat.exists
       register: opencode_install_result
 
-    - name: Ensure ~/.local/bin is on PATH in shell configs
-      ansible.builtin.lineinfile:
-        path: "{{ item }}"
-        line: 'export PATH="$HOME/.local/bin:$PATH"'
-        create: true
-        mode: "0644"
-      loop:
-        - "{{ ansible_facts['user_dir'] | default(lookup('env', 'HOME')) }}/.bashrc"
-        - "{{ ansible_facts['user_dir'] | default(lookup('env', 'HOME')) }}/.zshrc"
-        - "{{ ansible_facts['user_dir'] | default(lookup('env', 'HOME')) }}/.profile"
+- name: Install Hermes Agent
+  when: hermes_agent.enabled | bool
+  tags: [hermes]
+  block:
+    - name: Check whether Hermes Agent is already installed
+      ansible.builtin.stat:
+        path: "{{ ansible_facts['user_dir'] | default(lookup('env', 'HOME')) }}/.local/bin/hermes"
+      register: hermes_stat
+
+    - name: Ensure user local bin directory exists
+      ansible.builtin.file:
+        path: "{{ ansible_facts['user_dir'] | default(lookup('env', 'HOME')) }}/.local/bin"
+        state: directory
+        mode: "0755"
+      when: not hermes_stat.stat.exists
+
+    - name: Ensure the local source cache directory exists
+      ansible.builtin.file:
+        path: "{{ ansible_facts['user_dir'] | default(lookup('env', 'HOME')) }}/.cache/dotfiles-src"
+        state: directory
+        mode: "0755"
+      when: not hermes_stat.stat.exists
+
+    - name: Download the Hermes Agent installer
+      ansible.builtin.get_url:
+        url: https://hermes-agent.nousresearch.com/install.sh
+        dest: "{{ ansible_facts['user_dir'] | default(lookup('env', 'HOME')) }}/.cache/dotfiles-src/hermes-install.sh"
+        mode: "0755"
+      when: not hermes_stat.stat.exists
+
+    - name: Install Hermes Agent (non-interactive)
+      ansible.builtin.command:
+        cmd: >-
+          {{ ansible_facts['user_dir'] | default(lookup('env', 'HOME')) }}/.cache/dotfiles-src/hermes-install.sh
+          --non-interactive
+          --channel {{ hermes_agent.channel }}
+          {{ '--skip-browser' if hermes_agent.skip_browser | bool else '' }}
+          {{ '--skip-computer-use' if hermes_agent.skip_computer_use | bool else '' }}
+        creates: "{{ ansible_facts['user_dir'] | default(lookup('env', 'HOME')) }}/.local/bin/hermes"
+      register: hermes_install_result

@@ -167,7 +167,7 @@ deps:
 # Check every declared item against the system: CLI deps, extensions, assets, Flatpaks
 check:
     @echo "==> Checking GNOME desktop and CLI dependencies..."
-    @for cmd in gnome-shell gnome-extensions dconf gsettings gext gnome-tweaks fc-cache sassc pipx ptyxis nvim starship fcitx5 nautilus fzf playerctl pavucontrol gnome-system-monitor; do \
+    @for cmd in gnome-shell gnome-extensions dconf gsettings gext gnome-tweaks fc-cache sassc pipx ptyxis nvim starship fcitx5 nautilus fzf playerctl pavucontrol gnome-system-monitor opencode hermes; do \
         if command -v "$cmd" >/dev/null 2>&1; then \
             printf "  [✓] %-22s found (%s)\n" "$cmd" "$(command -v "$cmd")"; \
         else \
