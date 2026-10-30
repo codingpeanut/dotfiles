@@ -1,5 +1,5 @@
 ---
-# Developer tools & AI agents (pi-coding-agent)
+# Developer tools & AI agents (pi-coding-agent, opencode)
 
 - name: Ensure user npm global bin directory exists
   ansible.builtin.file:
@@ -19,3 +19,39 @@
   register: npm_pi_result
   changed_when: "'added' in npm_pi_result.stdout or 'updated' in npm_pi_result.stdout"
   failed_when: npm_pi_result.rc != 0
+
+- name: Install OpenCode Desktop V2
+  when: opencode_v2.enabled | bool
+  tags: [opencode]
+  block:
+    - name: Check whether OpenCode is already installed
+      ansible.builtin.stat:
+        path: "{{ ansible_facts['user_dir'] | default(lookup('env', 'HOME')) }}/.local/bin/opencode"
+      register: opencode_stat
+
+    - name: Ensure user local bin directory exists
+      ansible.builtin.file:
+        path: "{{ ansible_facts['user_dir'] | default(lookup('env', 'HOME')) }}/.local/bin"
+        state: directory
+        mode: "0755"
+      when: not opencode_stat.stat.exists
+
+    - name: Install OpenCode V{{ opencode_v2.version }} with the official installer
+      ansible.builtin.command:
+        cmd: "curl -fsSL https://opencode.ai/v2/install | bash -s -- --version {{ opencode_v2.version }}"
+      environment:
+        AUTO_INIT: "{{ 'true' if opencode_v2.auto_init else 'false' }}"
+        INIT_CONFIG: "{{ opencode_v2.init_config | default('', true) }}"
+      when: not opencode_stat.stat.exists
+      register: opencode_install_result
+
+    - name: Ensure ~/.local/bin is on PATH in shell configs
+      ansible.builtin.lineinfile:
+        path: "{{ item }}"
+        line: 'export PATH="$HOME/.local/bin:$PATH"'
+        create: true
+        mode: "0644"
+      loop:
+        - "{{ ansible_facts['user_dir'] | default(lookup('env', 'HOME')) }}/.bashrc"
+        - "{{ ansible_facts['user_dir'] | default(lookup('env', 'HOME')) }}/.zshrc"
+        - "{{ ansible_facts['user_dir'] | default(lookup('env', 'HOME')) }}/.profile"

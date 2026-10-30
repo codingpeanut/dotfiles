@@ -122,3 +122,10 @@ stow_packages:
   - nvim
   - starship
   - fcitx5
+
+# OpenCode Desktop (official installer -> ~/.local/bin/opencode)
+opencode_v2:
+  enabled: true
+  version: "2"
+  auto_init: true
+  init_config: null

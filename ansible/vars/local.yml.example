@@ -21,3 +21,10 @@ stow_packages_extra: []
 
 # Extra user systemd services
 user_services_extra: []
+
+# OpenCode Desktop (override defaults from vars/default.yml)
+# opencode_v2:
+#   enabled: true
+#   version: "2"
+#   auto_init: true
+#   init_config: null
