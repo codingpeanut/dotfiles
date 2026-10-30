@@ -89,9 +89,9 @@ gdm-theme-reset:
 # Capture the current GNOME settings from dconf back into the repo
 gnome-backup:
     @echo "==> Backing up current /org/gnome/ settings to gnome/dconf.ini ..."
-    @dconf dump /org/gnome/ > gnome/dconf.ini
+    @dconf dump /org/gnome/ | awk 'BEGIN { skip=0 } /^\[desktop\/background\]/ { skip=1; next } /^\[/ { skip=0 } !skip' > gnome/dconf.ini
     @sed -i '/^restore-keybinds=/d' gnome/dconf.ini
-    @echo "==> Saved (PaperWM conflict-restore JSON filtered out). Review with 'git diff gnome/dconf.ini'."
+    @echo "==> Saved (wallpaper and PaperWM conflict-restore JSON filtered out). Review with 'git diff gnome/dconf.ini'."
 
 # List installed GNOME extensions and their state
 gnome-exts:

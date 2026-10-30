@@ -20,7 +20,8 @@
 - **宣告式 GNOME 擴充管理 (gext)**：
   - EGO 擴充集中於 `gnome/extensions.txt`，本 repo 自帶的本地擴充列於 `gnome/extensions-local.txt`，預設停用清單為 `gnome/extensions-disabled.txt`；清單即真相，未宣告的擴充會自動移除。
 - **dconf 設定即程式碼**：
-  - `gnome/dconf.ini` 保存 `/org/gnome/` 的完整外觀與快捷設定；`just gnome-backup` 固化、`just gnome-apply` 套用。
+  - `gnome/dconf.ini` 保存 `/org/gnome/` 的外觀與快捷設定；`just gnome-backup` 固化、`just gnome-apply` 套用。
+  - **桌布不由本 repo 管理**：`just apply` / `just gnome-apply` 不會變更桌面桌布，`just gnome-backup` 也會過濾 `[desktop/background]`；GDM 登入畫面則在執行 `just gdm-theme` 時讀取當下桌布。
 - **GNU Stow 模組化軟連結管理**：
   - 檔案型設定（GTK CSS、fontconfig、environment.d）收於 `stow/gnome/`，不污染家目錄。
 - **Ansible + Justfile 宣告式維護**：
