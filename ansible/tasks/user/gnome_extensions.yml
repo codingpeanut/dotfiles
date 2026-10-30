@@ -8,10 +8,6 @@
 # Extensions found in ~/.local/share/gnome-shell/extensions that are declared
 # in none of these lists are uninstalled (declarative sync).
 
-- name: Resolve user home directory
-  ansible.builtin.set_fact:
-    gnome_home: "{{ ansible_facts['user_dir'] | default(lookup('env', 'HOME')) }}"
-
 - name: Check whether gext is already installed
   ansible.builtin.stat:
     path: "{{ gnome_home }}/.local/bin/gext"

@@ -1,6 +1,9 @@
 ---
 # Default declarative configuration for Fedora GNOME
 
+# Resolved home directory for user-level tasks (available even with --tags)
+gnome_home: "{{ ansible_facts['user_dir'] | default(lookup('env', 'HOME')) }}"
+
 # COPR repositories to enable
 system_copr_repos:
   - atim/starship

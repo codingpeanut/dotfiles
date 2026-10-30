@@ -1,10 +1,6 @@
 ---
 # GNOME desktop settings applied declaratively (dconf bulk load + explicit gsettings)
 
-- name: Resolve user home directory
-  ansible.builtin.set_fact:
-    gnome_home: "{{ ansible_facts['user_dir'] | default(lookup('env', 'HOME')) }}"
-
 - name: Load declarative dconf settings (scope /org/gnome/)
   ansible.builtin.shell:
     cmd: "dconf load /org/gnome/ < {{ playbook_dir }}/../gnome/dconf.ini"

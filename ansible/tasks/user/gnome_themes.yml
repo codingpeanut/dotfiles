@@ -1,10 +1,6 @@
 ---
 # GNOME themes, icons, cursor and fonts
 
-- name: Resolve user home directory
-  ansible.builtin.set_fact:
-    gnome_home: "{{ ansible_facts['user_dir'] | default(lookup('env', 'HOME')) }}"
-
 - name: Ensure theme and font directories exist
   ansible.builtin.file:
     path: "{{ gnome_home }}/{{ item }}"
@@ -14,6 +10,7 @@
     - .local/share/themes
     - .local/share/icons
     - .local/share/fonts
+    - .local/share/fonts/JetBrainsMono
     - .cache/dotfiles-src
 
 - name: Check whether the Colloid GTK theme is installed
