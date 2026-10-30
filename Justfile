@@ -101,6 +101,16 @@ gnome-exts:
 gnome-update:
     @gext update --all
 
+# Restart IBus cleanly (fixes stale daemon / no Chinese input in terminals)
+im-reset:
+    -ibus exit
+    -pkill -x fcitx5
+    -systemctl --user reset-failed org.freedesktop.IBus.session.GNOME.service
+    systemctl --user start org.freedesktop.IBus.session.GNOME.service
+    @sleep 2
+    -ibus engine chewing
+    @ibus engine || true
+
 # Reset all GNOME settings to defaults and remove gext-managed extensions (destructive)
 gnome-reset:
     @echo "WARNING: this resets ALL /org/gnome/ settings and removes gext-managed extensions."

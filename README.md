@@ -50,7 +50,7 @@
 > 藍牙圖示：GNOME 內建指示器（僅裝置連線時出現）由 Hide Bluetooth Indicator 擴充隱藏；藍牙開關與裝置管理統一使用 GNOME Quick Settings / Settings。
 > **PaperWM 選取框**：聚焦視窗的選取框在 GNOME 50 預設是強調色藍（`.tile-preview` 背景填充）；本 repo 以 `stow/gnome/.config/paperwm/user.css` 改為中性半透明玻璃框（PaperWM 只在此檔不存在時才會覆寫，故可安全以 stow 管理），尺寸/圓角於 `gnome/dconf.ini`（`selection-border-size=4`、`selection-border-radius-*=16`，同心對齊 GNOME 50 的 12px 視窗圓角）。改完 user.css 後執行 `gnome-extensions disable/enable paperwm@paperwm.github.com` 即時重載，免重登。
 > **Dash to Dock 模糊**：dock 本身無模糊，由 Blur My Shell 的 Dash to Dock 元件提供；模糊類型為動態（`static-blur=false`，與 panel 相同的即時模糊層，視窗在 dock 後方也會被模糊；圓角由 `gnome-rounded-blur` helper 提供），`blur`/`override-background`/`style-dash-to-dock=0` 已完整宣告，BMS 以 `.transparent-dash`（`!important`）清掉 dock 背景讓模糊層透出；`settings-version=2` 防止 BMS 一次性遷移在全新安裝時把 dock 改回靜態模糊。若 dock 沒模糊，重新 `just gnome-apply` 後執行 `just gnome-fix-blur`（重新掃描 dock），必要時重新登入。
-> **中英切換鍵**：ibus-chewing 的 Chinese/Alphanumeric 切換鍵宣告為 <kbd>Shift</kbd>（`gnome/dconf-desktop.ini` → `chi-eng-mode-toggle`，上游預設為 Caps Lock；改值後 GSettings 綁定即時生效）；fcitx5 側對應設定為 `Shift_L`（`stow/fcitx5`，備用）。
+> **中英切換鍵**：預設使用 GNOME 原生的 **IBus + ibus-chewing**，Chinese/Alphanumeric 切換鍵宣告為 <kbd>Shift</kbd>（`gnome/dconf-desktop.ini` → `chi-eng-mode-toggle`，上游預設為 Caps Lock；改值後 GSettings 綁定即時生效）。Fcitx5 套件與設定仍保留在 `stow/fcitx5` 作為手動備用，但**不再自動啟動**，環境變數也統一指向 IBus，避免兩套輸入法互相搶佔。
 
 ---
 
@@ -131,6 +131,7 @@ just gnome            # 安裝擴充、主題、圖示、游標、字型並套�
 just gnome-apply      # 快速載入 gnome/dconf.ini + 同步擴充（含預設停用）
 just gnome-backup     # 將目前 GNOME 設定 dump 回 gnome/dconf.ini
 just gnome-update     # 更新所有已安裝擴充
+just im-reset         # 終端注音輸入異常時，重新啟動 IBus
 just gnome-fix-blur   # 修復 Blur My Shell 面板異常（半透明面板，見下方說明）
 just gdm-theme        # GDM 登入畫面美化（同步桌面深淺與桌布；需 sudo）
 just gdm-theme-reset  # 還原原廠 GDM 登入畫面

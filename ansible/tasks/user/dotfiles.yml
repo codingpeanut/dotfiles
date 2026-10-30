@@ -21,3 +21,21 @@
       {{ ((stow_packages | default([], true)) + (stow_packages_extra | default([], true))) | join(' ') }}
   register: stow_result
   changed_when: "'LINK:' in (stow_result.stderr | default(''))"
+
+# Stow cannot remove links for files that no longer exist in the package.
+# Clean up the old Fcitx5 autostart/environment entries so IBus is the only
+# input method that starts with the GNOME session.
+- name: Check for obsolete Fcitx5 stow symlinks
+  ansible.builtin.stat:
+    path: "{{ item }}"
+  loop:
+    - "{{ ansible_facts['user_dir'] | default(lookup('env', 'HOME')) }}/.config/autostart/fcitx5.desktop"
+    - "{{ ansible_facts['user_dir'] | default(lookup('env', 'HOME')) }}/.config/environment.d/10-fcitx5.conf"
+  register: fcitx5_obsolete_links
+
+- name: Remove obsolete Fcitx5 stow symlinks
+  ansible.builtin.file:
+    path: "{{ item.item }}"
+    state: absent
+  loop: "{{ fcitx5_obsolete_links.results }}"
+  when: item.stat.islnk | default(false)

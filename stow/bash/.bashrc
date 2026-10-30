@@ -11,9 +11,9 @@ export EDITOR="nvim"
 export VISUAL="nvim"
 
 # Chinese Input Method (Fcitx5)
-export GTK_IM_MODULE=fcitx
-export QT_IM_MODULE=fcitx
-export XMODIFIERS=@im=fcitx
+export GTK_IM_MODULE=ibus
+export QT_IM_MODULE=ibus
+export XMODIFIERS=@im=ibus
 
 # Terminal appearance
 export TERM=xterm-256color

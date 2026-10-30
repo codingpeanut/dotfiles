@@ -25,7 +25,9 @@ system_packages:
   - papirus-icon-theme
   - rsms-inter-fonts
 
-  # Chinese Input Method (Fcitx5 Framework & Engines)
+  # Chinese Input Method (IBus + Chewing; fcitx5 packages kept as a manual fallback)
+  - ibus
+  - ibus-chewing
   - fcitx5
   - fcitx5-chinese-addons
   - fcitx5-chewing
