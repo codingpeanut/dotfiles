@@ -6,7 +6,7 @@ if [ -f /etc/bashrc ]; then
 fi
 
 # User specific environment
-export PATH="$HOME/.npm-global/bin:$HOME/.local/bin:$HOME/bin:$PATH"
+export PATH="$HOME/.npm-global/bin:$HOME/.local/bin:$HOME/.opencode/bin:$HOME/bin:$PATH"
 export EDITOR="nvim"
 export VISUAL="nvim"
 

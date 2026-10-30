@@ -20,28 +20,35 @@
   changed_when: "'added' in npm_pi_result.stdout or 'updated' in npm_pi_result.stdout"
   failed_when: npm_pi_result.rc != 0
 
-- name: Install OpenCode Desktop V2
+- name: Install OpenCode CLI V2
   when: opencode_v2.enabled | bool
   tags: [opencode]
   block:
     - name: Check whether OpenCode is already installed
       ansible.builtin.stat:
-        path: "{{ ansible_facts['user_dir'] | default(lookup('env', 'HOME')) }}/.local/bin/opencode"
+        path: "{{ ansible_facts['user_dir'] | default(lookup('env', 'HOME')) }}/.opencode/bin/opencode"
       register: opencode_stat
 
-    - name: Ensure user local bin directory exists
+    - name: Ensure the local source cache directory exists
       ansible.builtin.file:
-        path: "{{ ansible_facts['user_dir'] | default(lookup('env', 'HOME')) }}/.local/bin"
+        path: "{{ ansible_facts['user_dir'] | default(lookup('env', 'HOME')) }}/.cache/dotfiles-src"
         state: directory
         mode: "0755"
       when: not opencode_stat.stat.exists
 
-    - name: Install OpenCode V{{ opencode_v2.version }} with the official installer
+    - name: Download the OpenCode installer
+      ansible.builtin.get_url:
+        url: https://opencode.ai/v2/install
+        dest: "{{ ansible_facts['user_dir'] | default(lookup('env', 'HOME')) }}/.cache/dotfiles-src/opencode-install.sh"
+        mode: "0755"
+      when: not opencode_stat.stat.exists
+
+    - name: Install OpenCode V2 with the official installer
       ansible.builtin.command:
-        cmd: "curl -fsSL https://opencode.ai/v2/install | bash -s -- --version {{ opencode_v2.version }}"
-      environment:
-        AUTO_INIT: "{{ 'true' if opencode_v2.auto_init else 'false' }}"
-        INIT_CONFIG: "{{ opencode_v2.init_config | default('', true) }}"
+        cmd: >-
+          {{ ansible_facts['user_dir'] | default(lookup('env', 'HOME')) }}/.cache/dotfiles-src/opencode-install.sh
+          --no-modify-path
+        creates: "{{ ansible_facts['user_dir'] | default(lookup('env', 'HOME')) }}/.opencode/bin/opencode"
       when: not opencode_stat.stat.exists
       register: opencode_install_result
 

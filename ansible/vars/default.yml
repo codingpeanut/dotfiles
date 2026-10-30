@@ -122,12 +122,9 @@ stow_packages:
   - starship
   - fcitx5
 
-# OpenCode Desktop (official installer -> ~/.local/bin/opencode)
+# OpenCode CLI V2 (official installer -> ~/.opencode/bin/opencode, latest stable)
 opencode_v2:
   enabled: true
-  version: "2"
-  auto_init: true
-  init_config: null
 
 # Hermes Agent by Nous Research (official installer -> ~/.local/bin/hermes)
 hermes_agent:
