@@ -18,7 +18,7 @@
 
 - name: Check whether the Colloid GTK theme is installed
   ansible.builtin.stat:
-    path: "{{ gnome_home }}/.local/share/themes/Colloid-Dark"
+    path: "{{ gnome_home }}/.local/share/themes/Colloid-Grey-Light"
   register: colloid_stat
 
 - name: Clone the Colloid GTK theme source
@@ -29,9 +29,9 @@
     depth: 1
   when: not colloid_stat.stat.exists
 
-- name: Install the Colloid GTK theme (dark / grey / rimless)
+- name: Install the Colloid GTK theme (light + dark / grey / rimless / normal buttons)
   ansible.builtin.command:
-    cmd: "./install.sh -c dark -t grey --tweaks rimless"
+    cmd: "./install.sh -c light dark -t grey --tweaks rimless normal"
     chdir: "{{ gnome_home }}/.cache/dotfiles-src/Colloid-gtk-theme"
   when: not colloid_stat.stat.exists
   register: colloid_install

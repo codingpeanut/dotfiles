@@ -1,6 +1,7 @@
 # GNOME Shell extensions - declarative EGO list (managed by gext)
 # One UUID per line. Lines starting with # are ignored.
 # Install / enable with:  just gnome-ext   (or: just gnome-apply)
+# Extensions installed but disabled by default: gnome/extensions-disabled.txt
 # Verify UUIDs and GNOME 50 support at https://extensions.gnome.org
 # Local (non-EGO) extensions shipped by this repo: gnome/extensions-local.txt
 #

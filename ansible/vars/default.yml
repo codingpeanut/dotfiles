@@ -41,7 +41,6 @@ system_packages:
   # Desktop Utilities & File Management
   - nautilus
   - file-roller
-  - blueman
   - bluez
   - bluez-tools
   - nm-connection-editor
@@ -65,7 +64,6 @@ system_packages:
   - vim-enhanced
 
   # Shell, Prompt & Terminal Aesthetics
-  - btop
   - starship
   - zoxide
   - fzf

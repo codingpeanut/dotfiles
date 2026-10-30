@@ -302,7 +302,7 @@ do_apply() {
         warn "讀不到桌面工作階段（找不到使用者？），改用 repo 的 gnome/dconf.ini 快照"
     fi
     COLOR_SCHEME="$(desktop_color_scheme)"
-    [[ -n "$COLOR_SCHEME" ]] || COLOR_SCHEME="prefer-dark"
+    [[ -n "$COLOR_SCHEME" ]] || COLOR_SCHEME="prefer-light"
 
     # 兩張桌布：淺色 picture-uri、深色 picture-uri-dark（讀不到就用預設）
     local light_image="$DEFAULT_IMAGE_LIGHT" dark_image="$DEFAULT_IMAGE_DARK"

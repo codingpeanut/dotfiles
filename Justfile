@@ -52,8 +52,15 @@ gnome-apply:
     @dconf load /org/gnome/ < gnome/dconf.ini
     @echo "==> Loading gnome/dconf-desktop.ini into /desktop/ ..."
     @dconf load /desktop/ < gnome/dconf-desktop.ini
-    @echo "==> Enabling declarative extensions (gext)..."
-    @cat gnome/extensions.txt gnome/extensions-local.txt | grep -vE '^[[:space:]]*(#|$)' | while read -r uuid; do gext enable "$uuid" 2>/dev/null || true; done
+    @echo "==> Syncing declarative extension state (gext)..."
+    @disabled=$(cat gnome/extensions-disabled.txt 2>/dev/null | grep -vE '^[[:space:]]*(#|$)' | sort -u); \
+     cat gnome/extensions.txt gnome/extensions-local.txt | grep -vE '^[[:space:]]*(#|$)' | while read -r uuid; do \
+        if echo "$disabled" | grep -qx "$uuid"; then \
+            gext disable "$uuid" 2>/dev/null || true; \
+        else \
+            gext enable "$uuid" 2>/dev/null || true; \
+        fi; \
+     done
     @echo "==> Done. Log out and back in to fully apply shell and theme changes."
 
 # Workaround for known Blur My Shell bug: half-transparent panel after login
@@ -153,26 +160,33 @@ bootstrap:
 # Install GNOME desktop dependencies directly (fallback when not using Ansible)
 deps:
     @echo "==> Installing GNOME desktop dependencies..."
-    sudo dnf install -y gnome-tweaks gnome-extensions-app dconf pipx python3-gobject sassc gtk-murrine-engine glib2 glib2-devel papirus-icon-theme rsms-inter-fonts nautilus file-roller blueman bluez bluez-tools nm-connection-editor network-manager-applet NetworkManager-tui gnome-calendar gnome-control-center gnome-system-monitor pavucontrol playerctl wl-clipboard cliphist brightnessctl ddcutil libnotify cava btop starship zoxide fzf eza bat fastfetch nautilus fcitx5 fcitx5-chinese-addons fcitx5-chewing fcitx5-configtool fcitx5-gtk3 fcitx5-gtk4 fcitx5-qt5 fcitx5-qt6 google-noto-sans-cjk-fonts google-noto-serif-cjk-fonts google-noto-color-emoji-fonts jetbrains-mono-fonts
+    sudo dnf install -y gnome-tweaks gnome-extensions-app dconf pipx python3-gobject sassc gtk-murrine-engine glib2 glib2-devel papirus-icon-theme rsms-inter-fonts nautilus file-roller bluez bluez-tools nm-connection-editor network-manager-applet NetworkManager-tui gnome-calendar gnome-control-center gnome-system-monitor pavucontrol playerctl wl-clipboard cliphist brightnessctl ddcutil libnotify cava starship zoxide fzf eza bat fastfetch nautilus fcitx5 fcitx5-chinese-addons fcitx5-chewing fcitx5-configtool fcitx5-gtk3 fcitx5-gtk4 fcitx5-qt5 fcitx5-qt6 google-noto-sans-cjk-fonts google-noto-serif-cjk-fonts google-noto-color-emoji-fonts jetbrains-mono-fonts
     sudo systemctl enable --now bluetooth || true
     @echo "==> Dependencies installed. Run 'just gnome' and 'just stow'."
 
 # Check every declared item against the system: CLI deps, extensions, assets, Flatpaks
 check:
     @echo "==> Checking GNOME desktop and CLI dependencies..."
-    @for cmd in gnome-shell gnome-extensions dconf gsettings gext gnome-tweaks fc-cache sassc pipx ptyxis nvim starship fcitx5 nautilus btop fzf playerctl blueman-manager pavucontrol gnome-system-monitor; do \
+    @for cmd in gnome-shell gnome-extensions dconf gsettings gext gnome-tweaks fc-cache sassc pipx ptyxis nvim starship fcitx5 nautilus fzf playerctl pavucontrol gnome-system-monitor; do \
         if command -v "$cmd" >/dev/null 2>&1; then \
             printf "  [✓] %-22s found (%s)\n" "$cmd" "$(command -v "$cmd")"; \
         else \
             printf "  [✗] %-22s NOT FOUND\n" "$cmd"; \
         fi \
     done
-    @echo "==> GNOME extensions (declared vs enabled):"
+    @echo "==> GNOME extensions (declared vs desired state):"
     @declared=$(cat gnome/extensions.txt gnome/extensions-local.txt | grep -vE '^[[:space:]]*(#|$)' | sort -u); \
+    disabled=$(cat gnome/extensions-disabled.txt 2>/dev/null | grep -vE '^[[:space:]]*(#|$)' | sort -u); \
     enabled=$(gnome-extensions list --enabled 2>/dev/null | sort -u); \
     ok=1; \
     for uuid in $declared; do \
-        if echo "$enabled" | grep -qx "$uuid"; then \
+        if echo "$disabled" | grep -qx "$uuid"; then \
+            if echo "$enabled" | grep -qx "$uuid"; then \
+                printf "  [✗] %s (disabled by default but currently enabled)\n" "$uuid"; ok=0; \
+            else \
+                printf "  [✓] %s (disabled by default)\n" "$uuid"; \
+            fi; \
+        elif echo "$enabled" | grep -qx "$uuid"; then \
             printf "  [✓] %s\n" "$uuid"; \
         else \
             printf "  [✗] %s (declared but NOT enabled)\n" "$uuid"; ok=0; \
@@ -181,14 +195,15 @@ check:
     for uuid in $enabled; do \
         echo "$declared" | grep -qx "$uuid" || printf "  [!] %s (enabled but not declared)\n" "$uuid"; \
     done; \
-    if [ "$ok" = 1 ]; then echo "  ==> All declared extensions enabled."; else echo "  ==> Missing ones: run 'just gnome-ext'."; fi
+    if [ "$ok" = 1 ]; then echo "  ==> All declared extensions match the desired state."; else echo "  ==> Run 'just gnome-apply' to fix."; fi
     @echo "==> Desktop assets:"
-    @if [ -d "{{ home }}/.local/share/themes/Colloid-Dark" ]; then echo "  [✓] Colloid-Dark theme installed"; else echo "  [✗] Colloid-Dark theme NOT installed"; fi
+    @if [ -d "{{ home }}/.local/share/themes/Colloid-Grey-Light" ] && [ -d "{{ home }}/.local/share/themes/Colloid-Grey-Dark" ]; then echo "  [✓] Colloid-Grey-Light / Dark themes installed"; else echo "  [✗] Colloid themes NOT installed (run: just gnome-theme)"; fi
     @if [ -d "{{ home }}/.local/share/icons/Bibata-Modern-Ice" ]; then echo "  [✓] Bibata-Modern-Ice cursor installed"; else echo "  [✗] Bibata-Modern-Ice cursor NOT installed"; fi
     @if [ -f "{{ home }}/.local/share/fonts/JetBrainsMono/JetBrainsMonoNerdFont-Regular.ttf" ]; then echo "  [✓] JetBrainsMono Nerd Font installed"; else echo "  [✗] JetBrainsMono Nerd Font NOT installed"; fi
     @if fc-list 2>/dev/null | grep -qi Inter; then echo "  [✓] Inter font installed"; else echo "  [✗] Inter font NOT installed"; fi
-    @if [ -d /usr/share/icons/Papirus-Dark ]; then echo "  [✓] Papirus-Dark icons installed"; else echo "  [✗] Papirus-Dark icons NOT installed"; fi
+    @if [ -d /usr/share/icons/Papirus-Light ] && [ -d /usr/share/icons/Papirus-Dark ]; then echo "  [✓] Papirus-Light / Dark icons installed"; else echo "  [✗] Papirus icons NOT installed"; fi
     @if rpm -q gnome-rounded-blur >/dev/null 2>&1; then echo "  [✓] gnome-rounded-blur helper installed (dynamic blur corners)"; else echo "  [✗] gnome-rounded-blur NOT installed (run: just system, then re-login)"; fi
+    @if [ "$(systemctl --user show gnome-software.service -p Nice --value 2>/dev/null)" = "10" ] && [ "$(systemctl --user show gnome-software.service -p CPUWeight --value 2>/dev/null)" = "50" ]; then echo "  [✓] GNOME Software background priority tuned"; else echo "  [!] GNOME Software background priority NOT applied (run: just user)"; fi
     @if grep -aq 'dotfiles-gdm-theme' /usr/share/gnome-shell/gnome-shell-theme.gresource 2>/dev/null && { [ -f /etc/dconf/db/gdm.d/50-dotfiles-desktop-sync ] || [ -f /etc/dconf/db/gdm.d/90-dotfiles ]; }; then echo "  [✓] GDM login theme applied (desktop-matched wallpaper + greeter settings)"; else echo "  [!] GDM login theme NOT applied (run: just gdm-theme; re-run after gnome-shell updates)"; fi
     @if [ -f /var/lib/dotfiles-gdm/source-uri ] && command -v gsettings >/dev/null 2>&1; then \
         c_light="$(gsettings get org.gnome.desktop.background picture-uri 2>/dev/null)"; \

@@ -1,0 +1,10 @@
+# GNOME Shell extensions that are installed but disabled by default.
+# One UUID per line. Lines starting with # are ignored.
+#
+# This list overrides gnome/extensions.txt and gnome/extensions-local.txt:
+# the extension is still installed/updated, but it will not be enabled.
+# To enable one, remove its UUID here and update the enabled/disabled lists
+# in gnome/dconf.ini, then run `just gnome-apply` (or `just gnome`).
+#
+# --- Installed but off by default ---
+dash-to-dock@micxgx.gmail.com

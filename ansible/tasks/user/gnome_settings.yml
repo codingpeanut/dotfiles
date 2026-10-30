@@ -25,9 +25,9 @@
   ansible.builtin.command:
     cmd: "gsettings set {{ item.key }} {{ item.value }}"
   loop:
-    - { key: "org.gnome.desktop.interface color-scheme", value: "'prefer-dark'" }
-    - { key: "org.gnome.desktop.interface gtk-theme", value: "'Colloid-Dark'" }
-    - { key: "org.gnome.desktop.interface icon-theme", value: "'Papirus-Dark'" }
+    - { key: "org.gnome.desktop.interface color-scheme", value: "'prefer-light'" }
+    - { key: "org.gnome.desktop.interface gtk-theme", value: "'Colloid-Grey-Light'" }
+    - { key: "org.gnome.desktop.interface icon-theme", value: "'Papirus-Light'" }
     - { key: "org.gnome.desktop.interface cursor-theme", value: "'Bibata-Modern-Ice'" }
     - { key: "org.gnome.desktop.interface cursor-size", value: "24" }
     - { key: "org.gnome.desktop.interface font-name", value: "'Inter 11'" }

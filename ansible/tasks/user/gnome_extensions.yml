@@ -2,10 +2,11 @@
 # Declarative GNOME Shell extension management via gext (gnome-extensions-cli)
 #
 # Source of truth:
-#   - gnome/extensions.txt        : installed from extensions.gnome.org (EGO)
-#   - gnome/extensions-local.txt  : enabled only, shipped by this repo via Stow
+#   - gnome/extensions.txt          : installed from extensions.gnome.org (EGO)
+#   - gnome/extensions-local.txt    : enabled only, shipped by this repo via Stow
+#   - gnome/extensions-disabled.txt : installed/declared but disabled by default
 # Extensions found in ~/.local/share/gnome-shell/extensions that are declared
-# in neither list are uninstalled (declarative sync).
+# in none of these lists are uninstalled (declarative sync).
 
 - name: Resolve user home directory
   ansible.builtin.set_fact:
@@ -36,6 +37,12 @@
   register: gnome_ext_local_list
   changed_when: false
 
+- name: Read the declarative disabled extension list
+  ansible.builtin.shell:
+    cmd: "grep -vE '^[[:space:]]*(#|$)' {{ playbook_dir }}/../gnome/extensions-disabled.txt"
+  register: gnome_ext_disabled_list
+  changed_when: false
+
 - name: Scan installed user extensions
   ansible.builtin.find:
     paths: "{{ gnome_home }}/.local/share/gnome-shell/extensions"
@@ -59,9 +66,16 @@
     item not in (gnome_ext_local_list.stdout_lines | default([]))
   failed_when: false
 
-- name: Enable all declaratively managed extensions
+- name: Enable declaratively managed extensions (except disabled ones)
   ansible.builtin.command:
     cmd: "{{ gnome_home }}/.local/bin/gext enable {{ item }}"
-  loop: "{{ (gnome_ext_list.stdout_lines | default([])) + (gnome_ext_local_list.stdout_lines | default([])) }}"
+  loop: "{{ ((gnome_ext_list.stdout_lines | default([])) + (gnome_ext_local_list.stdout_lines | default([]))) | difference(gnome_ext_disabled_list.stdout_lines | default([])) }}"
+  changed_when: false
+  failed_when: false
+
+- name: Keep declaratively disabled extensions disabled
+  ansible.builtin.command:
+    cmd: "gnome-extensions disable {{ item }}"
+  loop: "{{ gnome_ext_disabled_list.stdout_lines | default([]) }}"
   changed_when: false
   failed_when: false

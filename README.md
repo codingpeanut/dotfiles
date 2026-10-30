@@ -12,13 +12,13 @@
   - **Blur My Shell** 為面板、Dash 與 Overview 加上柔和模糊。
   - **Just Perfection** 精簡 Shell 元素。
   - **PaperWM** 提供可捲動的平鋪式視窗管理（scrollable tiling）。
-  - **Colloid-Dark (grey / rimless)** GTK 主題 + **Papirus-Dark** 圖示 + **Bibata-Modern-Ice** 游標。
+  - **Colloid-Grey-Light（預設淺色；深色為 Colloid-Grey-Dark）** GTK 主題 + **Papirus-Light** 圖示 + **Bibata-Modern-Ice** 游標，`color-scheme=prefer-light`。
 - **GDM 登入畫面同步（`just gdm-theme`）**：
   - 外觀與桌面同步：`color-scheme`（深/淺）、accent、GTK/icon 主題、字型、游標以桌面**即時值**為準，寫入 `/etc/dconf/db/gdm.d/50-dotfiles-desktop-sync`（Fedora 官方 `system-db:gdm`）。
   - 桌布同款背景：`picture-uri` / `picture-uri-dark` 兩張都嵌入主題（light/dark 樣式檔各用各的），**切換深淺不需重建**。
   - `sudo just gdm-theme-reset` 可完全還原（gresource、兩份 dconf、系統層游標）。
 - **宣告式 GNOME 擴充管理 (gext)**：
-  - EGO 擴充集中於 `gnome/extensions.txt`，本 repo 自帶的本地擴充列於 `gnome/extensions-local.txt`；清單即真相，未宣告的擴充會自動移除。
+  - EGO 擴充集中於 `gnome/extensions.txt`，本 repo 自帶的本地擴充列於 `gnome/extensions-local.txt`，預設停用清單為 `gnome/extensions-disabled.txt`；清單即真相，未宣告的擴充會自動移除。
 - **dconf 設定即程式碼**：
   - `gnome/dconf.ini` 保存 `/org/gnome/` 的完整外觀與快捷設定；`just gnome-backup` 固化、`just gnome-apply` 套用。
 - **GNU Stow 模組化軟連結管理**：
@@ -26,6 +26,8 @@
 - **Ansible + Justfile 宣告式維護**：
   - `just apply` 一鍵完成 `git pull` → 系統套件 → 軟連結部署 → GNOME 擴充同步 → dconf 套用；
     也可分項執行 `just gnome`、`just stow`、`just fix`。
+- **登入反應優化**：
+  - 以 systemd user drop-in 調降 `gnome-software` 背景服務的 CPU/IO 優先權，避免它剛進桌面時載入 AppStream／圖示與 GNOME Shell 搶資源；由 `ansible/tasks/user/services.yml` 宣告部署，`just check` 會驗證。
 
 ---
 
@@ -37,13 +39,14 @@
 | Just Perfection | 精簡 Shell 元素（隱藏項目、調整位置、縮小 overview dash 圖示） |
 | PaperWM | 可捲動平鋪視窗管理（取代 Tiling Assistant） |
 | AppIndicator | 系統匣圖示支援 |
-| Dash to Dock | 底部 dock，自動隱藏（滑到螢幕底緣顯示） |
+| Dash to Dock | 底部 dock，自動隱藏（滑到螢幕底緣顯示）；**預設停用** |
 | Caffeine | 防休眠 / 常亮切換 |
 | Clipboard History | 剪貼簿歷史 (Super+V 風格) |
 | Hide Bluetooth Indicator | 隱藏面板獨立藍牙圖示（本 repo 自帶，非 EGO） |
 
-> EGO 擴充清單定義於 `gnome/extensions.txt`，本 repo 自帶擴充於 `gnome/extensions-local.txt`；UUID 與 GNOME 50 相容性可於 <https://extensions.gnome.org> 查核。
-> 藍牙圖示來源有二：GNOME 內建指示器（僅裝置連線時出現，由 Hide Bluetooth Indicator 擴充隱藏）；blueman-applet 自啟由 `~/.config/autostart/blueman.desktop`（`Hidden=true`，經 stow 部署）停用，blueman-manager 仍可手動使用。
+> EGO 擴充清單定義於 `gnome/extensions.txt`，本 repo 自帶擴充於 `gnome/extensions-local.txt`，預設停用清單為 `gnome/extensions-disabled.txt`；UUID 與 GNOME 50 相容性可於 <https://extensions.gnome.org> 查核。
+> **Dash to Dock 預設停用**：UUID 仍保留在 `extensions.txt` 以確保安裝，但列於 `extensions-disabled.txt`；要啟用時請把它從停用清單移除，並同步更新 `gnome/dconf.ini` 的 `enabled-extensions` / `disabled-extensions`，再執行 `just gnome-apply`。
+> 藍牙圖示：GNOME 內建指示器（僅裝置連線時出現）由 Hide Bluetooth Indicator 擴充隱藏；藍牙開關與裝置管理統一使用 GNOME Quick Settings / Settings。
 > **PaperWM 選取框**：聚焦視窗的選取框在 GNOME 50 預設是強調色藍（`.tile-preview` 背景填充）；本 repo 以 `stow/gnome/.config/paperwm/user.css` 改為中性半透明玻璃框（PaperWM 只在此檔不存在時才會覆寫，故可安全以 stow 管理），尺寸/圓角於 `gnome/dconf.ini`（`selection-border-size=4`、`selection-border-radius-*=16`，同心對齊 GNOME 50 的 12px 視窗圓角）。改完 user.css 後執行 `gnome-extensions disable/enable paperwm@paperwm.github.com` 即時重載，免重登。
 > **Dash to Dock 模糊**：dock 本身無模糊，由 Blur My Shell 的 Dash to Dock 元件提供；模糊類型為動態（`static-blur=false`，與 panel 相同的即時模糊層，視窗在 dock 後方也會被模糊；圓角由 `gnome-rounded-blur` helper 提供），`blur`/`override-background`/`style-dash-to-dock=0` 已完整宣告，BMS 以 `.transparent-dash`（`!important`）清掉 dock 背景讓模糊層透出；`settings-version=2` 防止 BMS 一次性遷移在全新安裝時把 dock 改回靜態模糊。若 dock 沒模糊，重新 `just gnome-apply` 後執行 `just gnome-fix-blur`（重新掃描 dock），必要時重新登入。
 > **中英切換鍵**：ibus-chewing 的 Chinese/Alphanumeric 切換鍵宣告為 <kbd>Shift</kbd>（`gnome/dconf-desktop.ini` → `chi-eng-mode-toggle`，上游預設為 Caps Lock；改值後 GSettings 綁定即時生效）；fcitx5 側對應設定為 `Shift_L`（`stow/fcitx5`，備用）。
@@ -124,18 +127,18 @@ just bootstrap        # 或 scripts/bootstrap.sh，安裝 git/ansible/just/stow 
 ```bash
 just apply            # 一鍵搞定：git pull + 完整套用（系統套件 + stow + GNOME 擴充/主題 + dconf）
 just gnome            # 安裝擴充、主題、圖示、游標、字型並套用設定 (Ansible)
-just gnome-apply      # 快速載入 gnome/dconf.ini + 啟用擴充（不經 Ansible）
+just gnome-apply      # 快速載入 gnome/dconf.ini + 同步擴充（含預設停用）
 just gnome-backup     # 將目前 GNOME 設定 dump 回 gnome/dconf.ini
 just gnome-update     # 更新所有已安裝擴充
 just gnome-fix-blur   # 修復 Blur My Shell 面板異常（半透明面板，見下方說明）
-just gdm-theme        # GDM 登入畫面美化（淺色 + 自動同步桌面桌布；需 sudo）
+just gdm-theme        # GDM 登入畫面美化（同步桌面深淺與桌布；需 sudo）
 just gdm-theme-reset  # 還原原廠 GDM 登入畫面
 just mem              # 診斷記憶體：前 16 大行程、GNOME Shell 佔用、已啟用擴充與 free -h
 just stow             # 重新連結所有 dotfiles（衝突自動備份為 *.bak，安全切換 repo）
 just stow-dry         # 預覽 stow 會做什麼，不實際變更
 just unstow           # 移除所有 dotfiles 軟連結
 just fix              # 拉取更新 + 安裝套件 + stow + gnome + 檢查
-just check            # 健檢：CLI 相依、宣告 vs 已啟用擴充、主題/字型/Flatpak
+just check            # 健檢：CLI 相依、宣告 vs 目標擴充狀態、主題/字型/Flatpak
 just push             # 提交並推送修改至 GitHub
 ```
 
@@ -213,12 +216,13 @@ dotfiles/
 ├── README.md
 │
 ├── gnome/                    # GNOME 宣告式 payload (非軟連結)
-│   ├── extensions.txt        # gext EGO 擴充清單 (安裝 + 啟用)
-│   ├── extensions-local.txt  # 本 repo 自帶擴充清單 (僅啟用)
-│   ├── dconf.ini             # /org/gnome/ 設定 dump (gnome-backup 生成)
-│   ├── dconf-desktop.ini     # /desktop/ 設定 (ibus-chewing 切換鍵等)
-│   ├── gdm-dconf.ini         # greeter 專屬設定 (gdm-theme 安裝成 90-dotfiles)
-│   └── gdm-greeter.css       # GDM greeter 視覺覆寫 (僅 greeter 專屬選擇器)
+│   ├── extensions.txt          # gext EGO 擴充清單 (安裝 + 啟用)
+│   ├── extensions-local.txt    # 本 repo 自帶擴充清單 (僅啟用)
+│   ├── extensions-disabled.txt # 已安裝但預設停用的擴充
+│   ├── dconf.ini               # /org/gnome/ 設定 dump (gnome-backup 生成)
+│   ├── dconf-desktop.ini       # /desktop/ 設定 (ibus-chewing 切換鍵等)
+│   ├── gdm-dconf.ini           # greeter 專屬設定 (gdm-theme 安裝成 90-dotfiles)
+│   └── gdm-greeter.css         # GDM greeter 視覺覆寫 (僅 greeter 專屬選擇器)
 │
 ├── ansible/                  # 宣告式系統套件與配置自動化
 │   ├── playbook.yml

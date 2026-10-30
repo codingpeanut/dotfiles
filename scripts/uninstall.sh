@@ -268,6 +268,12 @@ cleanup_artifacts() {
 
     # 3. 移除本專案安裝的主題、快取與殘留檔案
     local items_to_clean=(
+        "$TARGET_HOME/.local/share/themes/Colloid-Grey-Light"
+        "$TARGET_HOME/.local/share/themes/Colloid-Grey-Light-hdpi"
+        "$TARGET_HOME/.local/share/themes/Colloid-Grey-Light-xhdpi"
+        "$TARGET_HOME/.local/share/themes/Colloid-Grey-Dark"
+        "$TARGET_HOME/.local/share/themes/Colloid-Grey-Dark-hdpi"
+        "$TARGET_HOME/.local/share/themes/Colloid-Grey-Dark-xhdpi"
         "$TARGET_HOME/.local/share/themes/Colloid-Dark"
         "$TARGET_HOME/.local/share/themes/Colloid-Dark-Compact"
         "$TARGET_HOME/.local/share/themes/Colloid-Dark-Grey"
