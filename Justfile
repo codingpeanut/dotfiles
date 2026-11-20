@@ -48,10 +48,8 @@ gnome-settings *args:
 
 # Fast dconf apply without Ansible (loads gnome/dconf.ini into /org/gnome/)
 gnome-apply:
-    @echo "==> Loading gnome/dconf.ini into /org/gnome/ ..."
-    @dconf load /org/gnome/ < gnome/dconf.ini
-    @echo "==> Loading gnome/dconf-desktop.ini into /desktop/ ..."
-    @dconf load /desktop/ < gnome/dconf-desktop.ini
+    # Extensions first: disabling PaperWM restores the native GNOME keybindings,
+    # which must happen before dconf loads the Windows 11 profile over them.
     @echo "==> Syncing declarative extension state (gext)..."
     @disabled=$(cat gnome/extensions-disabled.txt 2>/dev/null | grep -vE '^[[:space:]]*(#|$)' | sort -u); \
      cat gnome/extensions.txt gnome/extensions-local.txt | grep -vE '^[[:space:]]*(#|$)' | while read -r uuid; do \
@@ -61,6 +59,10 @@ gnome-apply:
             gext enable "$uuid" 2>/dev/null || true; \
         fi; \
      done
+    @echo "==> Loading gnome/dconf.ini into /org/gnome/ ..."
+    @dconf load /org/gnome/ < gnome/dconf.ini
+    @echo "==> Loading gnome/dconf-desktop.ini into /desktop/ ..."
+    @dconf load /desktop/ < gnome/dconf-desktop.ini
     @echo "==> Done. Log out and back in to fully apply shell and theme changes."
 
 # Workaround for known Blur My Shell bug: half-transparent panel after login

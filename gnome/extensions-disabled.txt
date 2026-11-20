@@ -8,3 +8,4 @@
 #
 # --- Installed but off by default ---
 dash-to-dock@micxgx.gmail.com
+paperwm@paperwm.github.com

@@ -11,7 +11,7 @@
 - **現代簡約玻璃風**：
   - **Blur My Shell** 為面板、Dash 與 Overview 加上柔和模糊。
   - **Just Perfection** 精簡 Shell 元素。
-  - **PaperWM** 提供可捲動的平鋪式視窗管理（scrollable tiling）。
+  - **GNOME 原生視窗管理** 搭配 **Windows 11 風格鍵位**（半屏貼齊、最大化、工作列 app）；**PaperWM** 仍保留為可選的捲動平鋪模式（預設停用）。
   - **Colloid-Grey-Light（預設淺色；深色為 Colloid-Grey-Dark）** GTK 主題 + **Papirus-Light** 圖示 + **Bibata-Modern-Ice** 游標，`color-scheme=prefer-light`。
 - **GDM 登入畫面同步（`just gdm-theme`）**：
   - 外觀與桌面同步：`color-scheme`（深/淺）、accent、GTK/icon 主題、字型、游標以桌面**即時值**為準，寫入 `/etc/dconf/db/gdm.d/50-dotfiles-desktop-sync`（Fedora 官方 `system-db:gdm`）。
@@ -38,17 +38,17 @@
 | :--- | :--- |
 | Blur My Shell | 面板 / Dash / Overview 玻璃模糊 |
 | Just Perfection | 精簡 Shell 元素（隱藏項目、調整位置、縮小 overview dash 圖示） |
-| PaperWM | 可捲動平鋪視窗管理（取代 Tiling Assistant） |
+| PaperWM | 可捲動平鋪視窗管理（**預設停用**；Windows 11 鍵位使用 GNOME 原生視窗管理） |
 | AppIndicator | 系統匣圖示支援 |
 | Dash to Dock | 底部 dock，自動隱藏（滑到螢幕底緣顯示）；**預設停用** |
 | Caffeine | 防休眠 / 常亮切換 |
-| Clipboard History | 剪貼簿歷史 (Super+V 風格) |
+| Clipboard History | 剪貼簿歷史（<kbd>Win</kbd>+<kbd>V</kbd>） |
 | Hide Bluetooth Indicator | 隱藏面板獨立藍牙圖示（本 repo 自帶，非 EGO） |
 
 > EGO 擴充清單定義於 `gnome/extensions.txt`，本 repo 自帶擴充於 `gnome/extensions-local.txt`，預設停用清單為 `gnome/extensions-disabled.txt`；UUID 與 GNOME 50 相容性可於 <https://extensions.gnome.org> 查核。
-> **Dash to Dock 預設停用**：UUID 仍保留在 `extensions.txt` 以確保安裝，但列於 `extensions-disabled.txt`；要啟用時請把它從停用清單移除，並同步更新 `gnome/dconf.ini` 的 `enabled-extensions` / `disabled-extensions`，再執行 `just gnome-apply`。
+> **Dash to Dock / PaperWM 預設停用**：UUID 仍保留在 `extensions.txt` 以確保安裝，但列於 `extensions-disabled.txt`；要啟用時請把它從停用清單移除，並同步更新 `gnome/dconf.ini` 的 `enabled-extensions` / `disabled-extensions`，再執行 `just gnome-apply`。PaperWM 的 niri 鍵位仍保留在 `dconf.ini`，但停用時不生效。
 > 藍牙圖示：GNOME 內建指示器（僅裝置連線時出現）由 Hide Bluetooth Indicator 擴充隱藏；藍牙開關與裝置管理統一使用 GNOME Quick Settings / Settings。
-> **PaperWM 選取框**：聚焦視窗的選取框在 GNOME 50 預設是強調色藍（`.tile-preview` 背景填充）；本 repo 以 `stow/gnome/.config/paperwm/user.css` 改為中性半透明玻璃框（PaperWM 只在此檔不存在時才會覆寫，故可安全以 stow 管理），尺寸/圓角於 `gnome/dconf.ini`（`selection-border-size=4`、`selection-border-radius-*=16`，同心對齊 GNOME 50 的 12px 視窗圓角）。改完 user.css 後執行 `gnome-extensions disable/enable paperwm@paperwm.github.com` 即時重載，免重登。
+> **PaperWM 選取框（選用，啟用 PaperWM 時才生效）**：聚焦視窗的選取框在 GNOME 50 預設是強調色藍（`.tile-preview` 背景填充）；本 repo 以 `stow/gnome/.config/paperwm/user.css` 改為中性半透明玻璃框（PaperWM 只在此檔不存在時才會覆寫，故可安全以 stow 管理），尺寸/圓角於 `gnome/dconf.ini`（`selection-border-size=4`、`selection-border-radius-*=16`，同心對齊 GNOME 50 的 12px 視窗圓角）。改完 user.css 後執行 `gnome-extensions disable/enable paperwm@paperwm.github.com` 即時重載，免重登。
 > **Dash to Dock 模糊**：dock 本身無模糊，由 Blur My Shell 的 Dash to Dock 元件提供；模糊類型為動態（`static-blur=false`，與 panel 相同的即時模糊層，視窗在 dock 後方也會被模糊；圓角由 `gnome-rounded-blur` helper 提供），`blur`/`override-background`/`style-dash-to-dock=0` 已完整宣告，BMS 以 `.transparent-dash`（`!important`）清掉 dock 背景讓模糊層透出；`settings-version=2` 防止 BMS 一次性遷移在全新安裝時把 dock 改回靜態模糊。若 dock 沒模糊，重新 `just gnome-apply` 後執行 `just gnome-fix-blur`（重新掃描 dock），必要時重新登入。
 > **中英切換鍵**：預設使用 GNOME 原生的 **IBus + ibus-chewing**，Chinese/Alphanumeric 切換鍵宣告為 <kbd>Shift</kbd>（`gnome/dconf-desktop.ini` → `chi-eng-mode-toggle`，上游預設為 Caps Lock；改值後 GSettings 綁定即時生效）。Fcitx5 套件與設定仍保留在 `stow/fcitx5` 作為手動備用，但**不再自動啟動**，環境變數也統一指向 IBus，避免兩套輸入法互相搶佔。
 
@@ -56,61 +56,46 @@
 
 ## ⌨️ 常用操作
 
-快捷鍵以 **niri 預設鍵位**為藍本（`Mod` = <kbd>Super</kbd>），完整宣告於 `gnome/dconf.ini`。
+快捷鍵以 **Windows 11** 為藍本（`Win` = <kbd>Super</kbd>），完整宣告於 `gnome/dconf.ini`。PaperWM 預設停用，視窗由 GNOME 原生管理。
 
-**視窗 / column**
-
-| 操作 | 功能 |
-| :--- | :--- |
-| <kbd>Super</kbd>+<kbd>←</kbd>/<kbd>→</kbd> 或 <kbd>H</kbd>/<kbd>L</kbd> | focus 左/右 column |
-| <kbd>Super</kbd>+<kbd>↑</kbd>/<kbd>↓</kbd> 或 <kbd>K</kbd>/<kbd>J</kbd> | focus 上/下視窗（column 內） |
-| <kbd>Super</kbd>+<kbd>Ctrl</kbd>+方向/HJKL | 移動視窗（column/stack 內） |
-| <kbd>Super</kbd>+<kbd>Shift</kbd>+方向/HJKL | focus 其他螢幕 |
-| <kbd>Super</kbd>+<kbd>Shift</kbd>+<kbd>Ctrl</kbd>+方向/HJKL | 移動視窗到其他螢幕 |
-| <kbd>Super</kbd>+<kbd>Home</kbd>/<kbd>End</kbd> | 第一/最後 column |
-| <kbd>Super</kbd>+<kbd>[</kbd>/<kbd>]</kbd> | 視窗推入/拉出相鄰 space（drift） |
-| <kbd>Super</kbd>+<kbd>,</kbd>/<kbd>.</kbd> | 吸入/吐出 column（slurp / barf） |
-| <kbd>Super</kbd>+<kbd>C</kbd> | column 置中 |
-| <kbd>Super</kbd>+<kbd>V</kbd> | 浮動視窗切換（scratch layer） |
-| <kbd>Super</kbd>+<kbd>Q</kbd> | 關閉視窗（<kbd>Alt</kbd>+<kbd>F4</kbd> 亦可） |
-
-**寬高 / 最大化**
+**視窗 / 工作區**
 
 | 操作 | 功能 |
 | :--- | :--- |
-| <kbd>Super</kbd>+<kbd>R</kbd> / <kbd>Shift</kbd>+<kbd>R</kbd> | 循環 column 寬度（1/3 ↔ 1/2 ↔ 2/3） |
-| <kbd>Super</kbd>+<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd> | 循環視窗高度 |
-| <kbd>Super</kbd>+<kbd>−</kbd>/<kbd>=</kbd>（加 <kbd>Shift</kbd> 調高度） | 寬/高 ±10% |
-| <kbd>Super</kbd>+<kbd>F</kbd> / <kbd>Shift</kbd>+<kbd>F</kbd> | 最大化 column / 全螢幕 |
-| <kbd>Super</kbd>+<kbd>M</kbd> | 最大化到螢幕邊緣 |
-
-**Workspace**
-
-| 操作 | 功能 |
-| :--- | :--- |
-| <kbd>Super</kbd>+<kbd>Page⇣</kbd>/<kbd>Page⇡</kbd> 或 <kbd>U</kbd>/<kbd>I</kbd> | 切換下/上 workspace |
-| <kbd>Super</kbd>+<kbd>Ctrl</kbd>+<kbd>Page⇣</kbd>/<kbd>Page⇡</kbd> 或 <kbd>Ctrl</kbd>+<kbd>U</kbd>/<kbd>I</kbd> | 移動 column 到下/上 workspace |
-| <kbd>Super</kbd>+<kbd>1</kbd>…<kbd>4</kbd> | 切換到 workspace 1-4 |
-| <kbd>Super</kbd>+<kbd>Ctrl</kbd>+<kbd>1</kbd>…<kbd>4</kbd> | 移動 column 到 workspace 1-4 |
+| <kbd>Win</kbd>+<kbd>←</kbd>/<kbd>→</kbd> | 左右半屏貼齊 |
+| <kbd>Win</kbd>+<kbd>↑</kbd> / <kbd>↓</kbd> | 最大化 / 還原 |
+| <kbd>Win</kbd>+<kbd>D</kbd> | 顯示桌面 |
+| <kbd>Win</kbd>+<kbd>Ctrl</kbd>+<kbd>←</kbd>/<kbd>→</kbd> | 切換 workspace |
+| <kbd>Win</kbd>+<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>←</kbd>/<kbd>→</kbd> | 移動視窗到 workspace |
+| <kbd>Alt</kbd>+<kbd>Tab</kbd> / <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>Tab</kbd> | 切換 app（前/後） |
+| <kbd>Alt</kbd>+<kbd>F4</kbd> | 關閉視窗 |
+| <kbd>Win</kbd>+<kbd>Tab</kbd> / <kbd>Win</kbd>+<kbd>S</kbd> | Overview / 搜尋 |
+| <kbd>Win</kbd>+<kbd>1</kbd>…<kbd>9</kbd> | 工作列釘選 app |
+| <kbd>Win</kbd>+<kbd>Shift</kbd>+<kbd>1</kbd>…<kbd>9</kbd> | 開新 app instance |
 
 **系統 / 其他**
 
 | 操作 | 功能 |
 | :--- | :--- |
-| <kbd>Super</kbd> | Overview 總覽 / 搜尋 |
-| <kbd>Super</kbd>+<kbd>O</kbd> | 開啟/關閉 Overview |
-| <kbd>Super</kbd>+<kbd>S</kbd> | 快速設定（Wi-Fi、藍牙、電源…） |
-| <kbd>Super</kbd>+<kbd>A</kbd> | 應用程式格（App Grid） |
-| <kbd>Super</kbd>+<kbd>T</kbd> | 開啟終端機（Ptyxis，GNOME 預設） |
-| <kbd>Super</kbd>+<kbd>Alt</kbd>+<kbd>L</kbd> | 鎖定螢幕 |
-| <kbd>Print</kbd> / <kbd>Super</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> | 截圖 UI（框選區域） |
-| <kbd>Ctrl</kbd>+<kbd>Print</kbd> / <kbd>Alt</kbd>+<kbd>Print</kbd> | 直接全螢幕 / 視窗截圖 |
-| <kbd>Super</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd> | 剪貼簿歷史 |
-| <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Esc</kbd> | 系統監控 |
+| <kbd>Win</kbd> | Overview 總覽 / 搜尋 |
+| <kbd>Win</kbd>+<kbd>A</kbd> | 快速設定（Wi-Fi、藍牙、電源…） |
+| <kbd>Win</kbd>+<kbd>N</kbd> | 通知中心 |
+| <kbd>Win</kbd>+<kbd>E</kbd> | 檔案總管（Nautilus） |
+| <kbd>Win</kbd>+<kbd>I</kbd> | GNOME 設定 |
+| <kbd>Win</kbd>+<kbd>L</kbd> | 鎖定螢幕 |
+| <kbd>Win</kbd>+<kbd>R</kbd> | 執行對話框（<kbd>Alt</kbd>+<kbd>F2</kbd> 亦可） |
+| <kbd>Win</kbd>+<kbd>V</kbd> | 剪貼簿歷史 |
+| <kbd>Win</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd> / <kbd>Print</kbd> | 截圖 UI（框選區域） |
+| <kbd>Win</kbd>+<kbd>Print</kbd> / <kbd>Shift</kbd>+<kbd>Print</kbd> | 全螢幕截圖 |
+| <kbd>Alt</kbd>+<kbd>Print</kbd> | 視窗截圖 |
+| <kbd>Win</kbd>+<kbd>Space</kbd> | 輸入法切換 |
+| <kbd>Win</kbd>+<kbd>P</kbd> | 投影模式 |
+| <kbd>Super</kbd>+<kbd>T</kbd> | 終端機（Ptyxis；額外保留） |
+| <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Esc</kbd> | 系統監控（額外保留） |
 
-> **刻意與 GNOME 預設不同**：<kbd>Super</kbd>+<kbd>L</kbd> 改為 focus 右欄（鎖定搬到 <kbd>Super</kbd>+<kbd>Alt</kbd>+<kbd>L</kbd>）；<kbd>Super</kbd>+<kbd>1</kbd>…<kbd>9</kbd> 改切 workspace（原「開釘選 app」已清空）；<kbd>Super</kbd>+<kbd>V</kbd>/<kbd>M</kbd> 改浮動/最大化（原通知清單快捷已清空）。PaperWM 啟用時會**自動暫停**衝突的 GNOME 原生鍵（<kbd>Super</kbd>+<kbd>↑</kbd>/<kbd>↓</kbd>、<kbd>Super</kbd>+<kbd>H</kbd>、<kbd>Super</kbd>+<kbd>Home</kbd>/<kbd>End</kbd>、<kbd>Super</kbd>+<kbd>Shift</kbd>+方向、<kbd>Super</kbd>+<kbd>PageUp</kbd>/<kbd>Down</kbd>），停用時自動還原。
-> **Dash to Dock 搶鍵已讓位**：D2D 預設 `hot-keys=true`（<kbd>Super</kbd>+數字開釘選 app）與 `shortcut=['<Super>q']`（顯示 dock），且比 PaperWM 先註冊而贏走按鍵；已宣告 `hot-keys=false` + `shortcut=@as []` 釋放給 PaperWM 關窗（<kbd>Super</kbd>+<kbd>Q</kbd>）與 workspace 數字鍵。
-> **未實作（PaperWM/GNOME 無對應）**：niri 的 `Mod+W`（tab 欄）、`Mod+Ctrl+F`（expand）、`Mod+Ctrl+R`（重設高度）、`Mod+Ctrl+Home/End`、`Mod+Shift+U/I`（移動 workspace）、`Mod+D`（啟動器，系統未安裝）、`Mod+Escape`（shortcut inhibitor）、`Mod+Shift+E`（結束 session）、`Mod+Shift+P`（關閉螢幕）。
+> **與 Windows 11 的差異**：<kbd>Win</kbd>+<kbd>Ctrl</kbd>+<kbd>D</kbd> / <kbd>F4</kbd>（新增/關閉虛擬桌面）GNOME 沒有原生快捷鍵，先用 Overview 操作；<kbd>Win</kbd>+<kbd>.</kbd>（emoji）與 <kbd>Win</kbd>+<kbd>X</kbd>（快速選單）沒有直接對應。未最大化時按 <kbd>Win</kbd>+<kbd>↓</kbd> 只會還原、不會最小化；最小化使用 GNOME 預設的 <kbd>Super</kbd>+<kbd>H</kbd>。最大化統一用 <kbd>Win</kbd>+<kbd>↑</kbd>。目前 `favorite-apps` 只有 5 個項目，<kbd>Win</kbd>+<kbd>6</kbd>…<kbd>9</kbd> 暫時沒有對應 app。
+> **PaperWM 選用模式**：PaperWM 仍安裝但列於 `extensions-disabled.txt`；niri 鍵位保留在 `gnome/dconf.ini`，停用時不生效。目前尚未提供 `just paperwm` 一鍵切換；手動啟用時仍需自行避開 Windows 原生鍵（例如 `Win+Ctrl+方向`、`Win+H`）與 PaperWM 的衝突，之後可再加雙 profile 切換。
+> **Dash to Dock 預設停用**：<kbd>Win</kbd>+數字鍵由 GNOME Shell 直接處理 `favorite-apps`，不依賴 dock；D2D 的 `hot-keys=false` / `shortcut=@as []` 仍保留，避免啟用時搶鍵。
 > `just gnome-backup` 會自動過濾 PaperWM 的 `restore-keybinds` 欄位（衝突還原清單），避免污染 dconf.ini。
 
 ---
