@@ -7,5 +7,4 @@
 # in gnome/dconf.ini, then run `just gnome-apply` (or `just gnome`).
 #
 # --- Installed but off by default ---
-dash-to-dock@micxgx.gmail.com
 paperwm@paperwm.github.com
